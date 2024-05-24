@@ -1,83 +1,87 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
-import { Card, Button, Input, Label, ButtonLink } from "../components/ui";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; 
+import { Link, useNavigate } from "react-router-dom";
 import { Button2 } from "../components/ui/Button";
-import { useUser } from "../UserProvider";
+import { useAuth } from "../context/AuthContext";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, Message, Button, Input, Label } from "../components/ui";
+import { loginSchema } from "../schemas/auth";
+import { motion } from "framer-motion";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const user = useUser();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
 
-  function sendLoginRequest(event) {
-    event.preventDefault(); // Prevent default form submission
-    
-    setErrorMsg("");
-    const reqBody = {
-      "email": email,
-      "password": password
-    };
-    console.log("Request body:", reqBody); // Add this line for debugging
-    
-    fetch("http://localhost:3000/api/login", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "post",
-      body: JSON.stringify(reqBody),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.text();
-        } else {
-          throw new Error('Failed to login');
-        }
-      })
-      .then((data) => {
-        user.setJwt(data);
-        console.log(data);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+  const { signin, errors: loginErrors, isAuthenticated, isAdmin } = useAuth();
+  const onSubmit = (data) => signin(data);
+
+  useEffect(() => {
+    console.log("isAuthenticated:", isAuthenticated);
+    console.log("isAdmin:", isAdmin);
+    if (isAuthenticated) {
+      if (isAdmin) {
+        console.log("Redirecting to admin page...");
+        navigate("/admin");
+      } else {
         console.log("Redirecting to homepage...");
         navigate("/homepage");
-      })
-      .catch((error) => {
-        console.error("Login error:", error);
-        setErrorMsg(error.message);
-      });
-  }
-  
+      }
+    }
+  }, [isAuthenticated, isAdmin]);
+
   return (
-    <section className="bg-red-900 min-h-screen flex justify-center Ítems-center">
-      <div className="w-80 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-red-900 dark:border-red-900">
-        <div className="p-6 space-y-4 md:space-y-6 sm:p-8 h-full">
-          <h1 className="text-white text-3xl font-bold mb-4">Sign in to your account</h1>
-          <form className="space-y-4" onSubmit={sendLoginRequest}>
+    <motion.section
+      className="bg-red-900 h-screen w-screen flex justify-center items-center"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="w-80 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-red-900 dark:border-red-900"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <div className="p-6 space-y-4 md:space-y-6 sm:p-4 h-full">
+          <h1 className="text-white text-3xl font-bold mb-4">
+            Sign in to your account
+          </h1>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="text-white" htmlFor="email">Your email</label>
+              <label className="text-white" htmlFor="email">
+                Your email
+              </label>
               <Input
+                label="Write your email"
                 type="email"
                 name="email"
-                placeholder="name@company.com"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                placeholder="youremail@domain.tld"
+                {...register("email", { required: true })}
               />
+              <p>{errors.email?.message}</p>
             </div>
             <div>
-              <label className="text-white" htmlFor="password">Password</label>
+              <label className="text-white" htmlFor="password">
+                Password
+              </label>
               <Input
                 type="password"
                 name="password"
-                placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                placeholder="Write your password"
+                {...register("password", { required: true, minLength: 6 })}
               />
+              <p>{errors.password?.message}</p>
             </div>
             <Button2
               type="submit"
@@ -85,11 +89,10 @@ const LoginPage = () => {
             >
               Sign in
             </Button2>
-        
           </form>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
-}
-export default LoginPage
+};
+export default LoginPage;

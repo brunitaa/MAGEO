@@ -1,94 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
-import { onAuthStateChanged, getAuth } from "firebase/auth";
-import { auth } from '../firebase';
-import { useNavigate, Link } from 'react-router-dom';
-import Sidebar from '../components/SideBar';
+import React, { useEffect, useState } from "react";
+import { Card, Col, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import ajax from "../Services/fetchService";
 
-const UserRequestsPage = () => {
-  const [userRequests, setUserRequests] = useState([]);
+const Profile = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        navigate("/");
-        console.log("user is logged out");
-      }
-    });
-  }, [navigate]);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const fetchUserRequests = async () => {
-      try {
-        const auth = getAuth();
-        const user = auth.currentUser;
-
-        if (user) {
-          const userID = user.uid;
-          const db = getFirestore();
-          const requestsRef = collection(db, 'eventos');
-          const q = query(requestsRef, where('userID', '==', userID));
-          const querySnapshot = await getDocs(q);
-
-          const userRequestsData = [];
-          querySnapshot.forEach(doc => {
-            userRequestsData.push({ id: doc.id, ...doc.data() });
-          });
-          setUserRequests(userRequestsData);
-        } else {
-          console.log("No hay usuario autenticado");
-          navigate("/");
-        }
-      } catch (error) {
-        console.error('Error fetching user requests:', error);
-      }
-    };
-
-    fetchUserRequests();
-  }, [navigate]);
-
-  const handleEditRequest = (eventId) => {
-    navigate(`/edit-request/${eventId}`);
-  };
+    // Fetch user data when component mounts
+    if (user.jwt) {
+      console.log(user.jwt);
+      ajax("api/profile/" + user.id, "GET", user.jwt)
+        .then((data) => {
+          setUserData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    } else {
+      console.warn("No valid jwt found, redirecting to login page");
+      navigate("/loginPage");
+    }
+  }, [user]);
 
   return (
-    <div className="flex">
-      
-        <Sidebar/>
-      
-      <section className="flex-grow" style={{ margin: '10px 20px' }}>
-        
-        <h1 className="text-3xl font-bold mb-4" style={{ padding: '20px' }}>Mis Solicitudes</h1>
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Envío</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comentarios</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Editar</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {userRequests.map(request => (
-              <tr key={request.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{request.nombre_evento}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{request.fecha_solicitud}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{request.estado}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{request.comentario}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {request.estado === 'Pendiente' || request.estado === 'Aceptado' ? (
-                    <Link to={`/edit-request/${request.id}`} className="text-indigo-600 hover:text-indigo-900">Editar</Link>
-                  ) : null}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+    <div>
+      <h1>Profile</h1>
+      {userData && (
+        <Row>
+          <Col md={6}>
+            <Card>
+              <Card.Body>
+                <Card.Title>User Information</Card.Title>
+                <Card.Text>
+                  <strong>Name:</strong> {userData.username} {userData.apellido}
+                  <br />
+                  <strong>Email:</strong> {userData.correo_electronico}
+                  <br />
+                  <strong>Phone:</strong> {userData.telefono}
+                  <br />
+                  <strong>Date of Birth:</strong> {userData.fecha_nacimiento}
+                  <br />
+                  <strong>Gender:</strong> {userData.genero}
+                  <br />
+                  <strong>Location:</strong> {userData.sede},{" "}
+                  {userData.departamento}
+                  <br />
+                  <strong>Role:</strong> {userData.role}
+                  <br />
+                  <strong>Position:</strong> {userData.cargo}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      )}
     </div>
   );
-}
+};
 
-export default UserRequestsPage;
+export default Profile;

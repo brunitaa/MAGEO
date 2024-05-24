@@ -8,18 +8,8 @@ import Sidebar from '../components/SideBar';
 function Manual() {
   const [userRequests, setUserRequests] = useState([]);
   const navigate = useNavigate();
-  useEffect(()=>{
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const uid = user.uid;
-          console.log("uid", uid)
-        } else {
-          navigate("/")
-          console.log("user is logged out")
-        }
-      });
-     
-}, [])
+  
+ 
 
   return (
     <div className="flex">

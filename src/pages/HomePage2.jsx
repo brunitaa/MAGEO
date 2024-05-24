@@ -1,88 +1,194 @@
-import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
-import { onAuthStateChanged, getAuth } from "firebase/auth";
-import { auth } from '../firebase';
-import { useNavigate, Link } from 'react-router-dom';
-import Sidebar from '../components/SideBar';
-import { useUser } from '../UserProvider';
+import { useEffect } from "react";
+import { useEventRequest } from "../context/EventsContext";
+import { EventCard } from "../components/Tasks/EventCard";
+import Sidebar from "../components/SideBar";
+import { useAdvertisingRequest } from "../context/AdvertisementContext";
+import { AdvertisementCard } from "../components/Tasks/AdvertisementCard";
+import Protocol from "./Protocol";
+import { useprotocolRequest } from "../context/ProtocolContext";
+import { ProtocolCard } from "../components/Tasks/ProtocolCard";
+import { LogisticCard } from "../components/Tasks/LogisticCard";
+import { useLogisticRequest } from "../context/LogisticContext";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const UserRequestsPage = () => {
-  const user = useUser();
-  const [userRequests, setUserRequests] = useState([]);
+export function HomePage2() {
+  const { events, getMyEvents } = useEventRequest([]);
+
+  const { advertisements, getMyAdvertisements } = useAdvertisingRequest([]);
+  const { protocols, getMyProtocols } = useprotocolRequest([]);
+  const { logistics, getMyLogistics } = useLogisticRequest([]);
+  const isAdmin = useAuth();
   const navigate = useNavigate();
 
-
   useEffect(() => {
-    const fetchUserRequests = async () => {
-      try {
-        const auth = getAuth();
-        const user = auth.currentUser;
-
-        if (user) {
-          const userID = user.uid;
-          const db = getFirestore();
-          const requestsRef = collection(db, 'eventos');
-          const q = query(requestsRef, where('userID', '==', userID));
-          const querySnapshot = await getDocs(q);
-
-          const userRequestsData = [];
-          querySnapshot.forEach(doc => {
-            userRequestsData.push({ id: doc.id, ...doc.data() });
-          });
-          setUserRequests(userRequestsData);
-        } else {
-          console.log("No hay usuario autenticado");
-          //navigate("/");
-        }
-      } catch (error) {
-        console.error('Error fetching user requests:', error);
-      }
-    };
-
-    fetchUserRequests();
-  }, [navigate]);
-
-  const handleEditRequest = (eventId) => {
-    navigate(`/edit-request/${eventId}`);
-  };
+    getMyEvents();
+    getMyAdvertisements();
+    getMyProtocols();
+    getMyLogistics();
+  }, []);
 
   return (
     <div className="flex">
-      
-        <Sidebar/>
-      
-      <section className="flex-grow" style={{ margin: '10px 20px' }}>
-        
-        <h1 className="text-3xl font-bold mb-4" style={{ padding: '20px' }}>Mis Solicitudes</h1>
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Envío</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comentarios</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Editar</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {userRequests.map(request => (
-              <tr key={request.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{request.nombre_evento}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{request.fecha_solicitud}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{request.estado}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{request.comentario}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {request.estado === 'Pendiente' || request.estado === 'Aceptado' ? (
-                    <Link to={`/edit-request/${request.id}`} className="text-indigo-600 hover:text-indigo-900">Editar</Link>
-                  ) : null}
-                </td>
-              </tr>
+      <Sidebar />
+      <div className="ml-4">
+        <motion.h1
+          className="text-2xl font-bold mb-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Mis Formularios
+        </motion.h1>
+        <section className="mt-8">
+          <motion.h2
+            className="text-2xl font-bold mb-4"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Eventos
+          </motion.h2>
+          {events.length === 0 && (
+            <motion.div
+              className="flex justify-center items-center p-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <div>
+                <h1 className="font-bold text-xl">
+                  No hay eventos aún, por favor añade uno nuevo.
+                </h1>
+              </div>
+            </motion.div>
+          )}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {events.map((event) => (
+              <EventCard event={event} key={event._id} />
             ))}
-          </tbody>
-        </table>
-      </section>
+          </motion.div>
+        </section>
+        <section className="mt-8">
+          <motion.h2
+            className="text-2xl font-bold mb-4"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Protocolos
+          </motion.h2>
+          {protocols.length === 0 && (
+            <motion.div
+              className="flex justify-center items-center p-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <div>
+                <h1 className="font-bold text-xl">
+                  No hay formularios de protocolo aún, por favor añade uno
+                  nuevo.
+                </h1>
+              </div>
+            </motion.div>
+          )}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {protocols.map((protocol) => (
+              <ProtocolCard protocol={protocol} key={protocol._id} />
+            ))}
+          </motion.div>
+        </section>
+
+        <section className="mt-8">
+          <motion.h2
+            className="text-2xl font-bold mb-4"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Logística
+          </motion.h2>
+          {logistics.length === 0 && (
+            <motion.div
+              className="flex justify-center items-center p-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <div>
+                <h1 className="font-bold text-xl">
+                  No hay formularios de logistica aún, por favor añade uno
+                  nuevo.
+                </h1>
+              </div>
+            </motion.div>
+          )}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {logistics.map((logistic) => (
+              <LogisticCard
+                logistic={logistic}
+                isAdmin={isAdmin}
+                key={logistic._id}
+              />
+            ))}
+          </motion.div>
+        </section>
+
+        <section className="mt-8">
+          <motion.h2
+            className="text-2xl font-bold mb-4"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Piezas
+          </motion.h2>
+          {advertisements.length === 0 && (
+            <motion.div
+              className="flex justify-center items-center p-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <div>
+                <h1 className="font-bold text-xl">
+                  No hay piezas publicitarias aún, por favor añade uno nuevo.
+                </h1>
+              </div>
+            </motion.div>
+          )}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {advertisements.map((advertisement) => (
+              <AdvertisementCard
+                advertisement={advertisement}
+                key={advertisement._id}
+              />
+            ))}
+          </motion.div>
+        </section>
+      </div>
     </div>
   );
 }
-
-export default UserRequestsPage;
