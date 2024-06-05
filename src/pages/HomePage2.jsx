@@ -30,9 +30,9 @@ export function HomePage2() {
   }, []);
 
   return (
-    <div className="flex">
+    <div className="flex bg-red-100">
       <Sidebar />
-      <div className="ml-4">
+      <div className="ml-64 mr-4 mt-4 p-4">
         <motion.h1
           className="text-2xl font-bold mb-4"
           initial={{ opacity: 0, y: -20 }}

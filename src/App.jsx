@@ -11,11 +11,9 @@ import EventForm from "./pages/Events";
 import AdvertisingPiece from "./pages/AdvertisingPiece";
 import { AdvertisingProvider } from "./context/AdvertisementContext";
 import { AdminHomePage } from "./pages/admin/Admin";
-import Form2 from "./pages/Form2";
 import EventFormAdmin from "./pages/admin/Events";
 import { SpectatorProvider } from "./context/SpectatorContext";
 import { SpectatorsPage } from "./pages/admin/Spectators";
-import ProtocoloLogistica from "./pages/Form2";
 import AdvertisingPieceAdmin from "./pages/admin/AdvertisingPiece";
 import Protocol from "./pages/Protocol";
 import { ProtocolProvider } from "./context/ProtocolContext";
@@ -37,8 +35,6 @@ function App() {
               <EventProvider>
                 <BrowserRouter>
                   <div className="flex flex-col min-h-screen">
-                    <Navbar></Navbar>
-
                     <main className="flex-grow min-h-screen">
                       <div className="mx-auto px-10 md:px-0 min--screen">
                         <Routes>
@@ -105,7 +101,6 @@ function App() {
                               path="/user/logistic/:id"
                               element={<Logistic />}
                             />
-                            <Route path="/test" element={<Form2 />} />
                           </Route>
                         </Routes>
                       </div>

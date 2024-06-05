@@ -8,7 +8,7 @@ import { useAdvertisingRequest } from "../context/AdvertisementContext";
 import { useForm } from "react-hook-form";
 import { useSpectatorRequest } from "../context/SpectatorContext";
 import "animate.css";
-import { Textarea } from "react-bootstrap-icons";
+import "tailwindcss/tailwind.css"; // Asegúrate de importar Tailwind CSS
 dayjs.extend(utc);
 
 const AdvertisingPiece = () => {
@@ -24,29 +24,23 @@ const AdvertisingPiece = () => {
     formState: { errors },
   } = useForm();
   const [successMessage, setSuccessMessage] = useState("");
+  const [focusedInput, setFocusedInput] = useState(null);
+
+  const handleFocus = (field) => setFocusedInput(field);
+  const handleBlur = () => setFocusedInput(null);
 
   const onSubmit = async (data) => {
     try {
       if (params.id) {
-        updateAdvertisement(params.id, {
-          ...data,
-        });
+        updateAdvertisement(params.id, { ...data });
         setSuccessMessage("Cambios guardados exitosamente");
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 3000);
+        setTimeout(() => setSuccessMessage(""), 3000);
       } else {
-        createAdvertisement({
-          ...data,
-        });
+        createAdvertisement({ ...data });
         setSuccessMessage("Creado Exitosamente");
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 3000);
+        setTimeout(() => setSuccessMessage(""), 3000);
       }
-      setTimeout(() => {
-        navigate("/homepage");
-      }, 6000);
+      setTimeout(() => navigate("/homepage"), 6000);
     } catch (error) {
       console.log(error);
     }
@@ -75,15 +69,22 @@ const AdvertisingPiece = () => {
   }, []);
 
   return (
-    <div className="flex">
-      <SidebarForms />
+    <div className="flex bg-red-100">
+      <SidebarForms></SidebarForms>
       <div className="flex-grow flex justify-center items-center p-6">
-        <form
-          className="w-full max-w-4xl bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <h1 className="text-3xl font-bold mb-4">Pieza publicitaria</h1>
-          <div className="mb-4">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="bg-white p-4 mb-4 border-t-8 border-red-600 rounded-lg">
+            <h1 className="text-3xl  mb-2">Pieza publicitaria</h1>
+            <p className="text-gray-600">
+              Por favor, completa la siguiente información para crear o editar
+              una pieza publicitaria.
+            </p>
+          </div>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
             <Label>
               Titulo:
               <Input
@@ -92,59 +93,115 @@ const AdvertisingPiece = () => {
                 placeholder="Nombre del Evento"
                 {...register("title")}
                 required
+                onFocus={() => handleFocus("title")}
+                onBlur={handleBlur}
               />
             </Label>
           </div>
-          <div className="mb-4 flex gap-4">
-            <Label className="flex-1">
-              Area:
-              <Input
-                placeholder="Area"
-                type="text"
-                name="area"
-                {...register("area")}
-                required
-              />
-            </Label>
-            <Label className="flex-1">
-              Objetivos:
-              <Input
-                type="text"
-                placeholder="Objetivos"
-                name="goals"
-                {...register("goals")}
-                required
-              />
-            </Label>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "area" || focusedInput === "goals"
+                ? "border-red-500"
+                : "border-gray-300"
+            } rounded-lg`}
+          >
+            <div className="flex gap-4">
+              <Label className="flex-1 block text-gray-700 text-sm  mb-2">
+                Area:
+                <Input
+                  placeholder="Area"
+                  type="text"
+                  name="area"
+                  {...register("area")}
+                  required
+                  onFocus={() => handleFocus("area")}
+                  onBlur={handleBlur}
+                  className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                    focusedInput === "area"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                />
+              </Label>
+              <Label className="flex-1 block text-gray-700 text-sm  mb-2">
+                Objetivos:
+                <Input
+                  type="text"
+                  placeholder="Objetivos"
+                  name="goals"
+                  {...register("goals")}
+                  required
+                  onFocus={() => handleFocus("goals")}
+                  onBlur={handleBlur}
+                  className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                    focusedInput === "goals"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                />
+              </Label>
+            </div>
           </div>
-          <div className="mb-4 flex gap-4">
-            <Label className="block text-gray-700 text-sm font-bold mb-2">
-              Dirigido a
-              <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("spectators")}
-                defaultValue={spectators.length > 0 ? spectators[0].title : ""}
-                required
-              >
-                <option value="">Selecciona un espectador</option>
-                {spectators.map((spectator, index) => (
-                  <option key={index} value={spectator._id}>
-                    {spectator.title}
-                  </option>
-                ))}
-              </select>
-            </Label>
-            <Label>
-              Alcanze:
-              <select name="scope" {...register("scope")} required>
-                <option value="">Selecciona alcance</option>
-                <option value="regional">Regional</option>
-                <option value="national">National</option>
-              </select>
-            </Label>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "spectators" || focusedInput === "scope"
+                ? "border-red-500"
+                : "border-gray-300"
+            } rounded-lg`}
+          >
+            <div className="flex gap-4">
+              <Label>
+                Dirigido a:
+                <select
+                  className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                    focusedInput === "spectators"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                  {...register("spectators")}
+                  defaultValue={
+                    spectators.length > 0 ? spectators[0].title : ""
+                  }
+                  required
+                  onFocus={() => handleFocus("spectators")}
+                  onBlur={handleBlur}
+                >
+                  <option value="">Selecciona un espectador</option>
+                  {spectators.map((spectator, index) => (
+                    <option key={index} value={spectator._id}>
+                      {spectator.title}
+                    </option>
+                  ))}
+                </select>
+              </Label>
+              <Label>
+                Alcanze:
+                <select
+                  name="scope"
+                  {...register("scope")}
+                  required
+                  onFocus={() => handleFocus("scope")}
+                  onBlur={handleBlur}
+                  className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                    focusedInput === "scope"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <option value="">Selecciona alcance</option>
+                  <option value="regional">Regional</option>
+                  <option value="national">National</option>
+                </select>
+              </Label>
+            </div>
           </div>
-          <div className="mb-4"></div>
-          <div className="mb-4">
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "description"
+                ? "border-red-500"
+                : "border-gray-300"
+            } rounded-lg`}
+          >
             <Label>
               Descripción:
               <Input
@@ -153,10 +210,23 @@ const AdvertisingPiece = () => {
                 name="description"
                 {...register("description")}
                 required
+                onFocus={() => handleFocus("description")}
+                onBlur={handleBlur}
+                className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                  focusedInput === "description"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
               />
             </Label>
           </div>
-          <div className="mb-4">
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "visual_references"
+                ? "border-blue-500"
+                : "border-gray-300"
+            } rounded-lg`}
+          >
             <Label>
               Referencias Visuales:
               <Input
@@ -164,10 +234,23 @@ const AdvertisingPiece = () => {
                 type="text"
                 name="visual_references"
                 {...register("visual_references")}
+                onFocus={() => handleFocus("visual_references")}
+                onBlur={handleBlur}
+                className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                  focusedInput === "visual_references"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
               />
             </Label>
-          </div>
-          <div className="mb-4">
+          </div>{" "}
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "registrations_links"
+                ? "border-red-500"
+                : "border-gray-300"
+            } rounded-lg`}
+          >
             <Label>
               Link de Registro:
               <Input
@@ -175,11 +258,18 @@ const AdvertisingPiece = () => {
                 type="text"
                 name="registrations_links"
                 {...register("registrations_links")}
+                onFocus={() => handleFocus("registrations_links")}
+                onBlur={handleBlur}
+                className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                  focusedInput === "registrations_links"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
               />
             </Label>
           </div>
           {successMessage && (
-            <div className="bg-green-500 text-white p-2 mb-4 rounded animate__animated animate__fadeIn">
+            <div className="bg-green-500 text-white p-2 mb-2 rounded animate__animated animate__fadeIn">
               {successMessage}
             </div>
           )}

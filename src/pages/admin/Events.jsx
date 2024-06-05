@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { Button, Card, Label } from "../../components/ui";
+import { Button, Input, Label } from "../../components/ui";
 import { useEventRequest } from "../../context/EventsContext";
 import { useForm, useFieldArray } from "react-hook-form";
 import { format, formatISO } from "date-fns";
@@ -13,6 +13,7 @@ dayjs.extend(utc);
 function EventFormAdmin() {
   const [successMessage, setSuccessMessage] = useState("");
   const params = useParams();
+  const [focusedInput, setFocusedInput] = useState(null);
   const { createEvent, getEvent, updateEvent, acceptEvent, rejectEvent } =
     useEventRequest();
   const { spectators, getSpectators } = useSpectatorRequest();
@@ -160,22 +161,26 @@ function EventFormAdmin() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex bg-red-100">
         <SidebarForms></SidebarForms>
         <div className="flex-grow flex justify-center items-center p-6">
           <form
             className="w-full max-w-4xl bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <h1 className="text-3xl font-bold mb-4">Formulario de Solicitud</h1>
-            <div className="mb-4">
+            <h1 className="text-3xl  mb-4">Formulario de Solicitud</h1>
+            <div
+              className={`mb-2 p-4 border bg-white ${
+                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              } rounded-lg`}
+            >
               <Label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-gray-700 text-sm  mb-2"
                 htmlFor="event_name"
               >
                 Estado
               </Label>
-              <input
+              <Input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                 name="state"
                 type="text"
@@ -184,12 +189,12 @@ function EventFormAdmin() {
                 readOnly
               />
               <Label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-gray-700 text-sm  mb-2"
                 htmlFor="event_name"
               >
                 Nombre del Evento
               </Label>
-              <input
+              <Input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                 name="event_name"
                 type="text"
@@ -199,9 +204,13 @@ function EventFormAdmin() {
                 autoFocus
               />
             </div>
-            <div className="mb-4">
+            <div
+              className={`mb-2 p-4 border bg-white ${
+                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              } rounded-lg`}
+            >
               <Label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-gray-700 text-sm  mb-2"
                 htmlFor="event_description"
               >
                 Descripción del Evento
@@ -215,14 +224,20 @@ function EventFormAdmin() {
               />
             </div>
             <div className="grid grid-cols-2 gap-4 ">
-              <div className="mb-4">
+              <div
+                className={`mb-2 p-4 border bg-white ${
+                  focusedInput === "title"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg`}
+              >
                 <Label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-gray-700 text-sm  mb-2"
                   htmlFor="area"
                 >
                   Area
                 </Label>
-                <input
+                <Input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="area"
                   type="text"
@@ -231,14 +246,20 @@ function EventFormAdmin() {
                   required
                 />
               </div>
-              <div className="mb-4">
+              <div
+                className={`mb-2 p-4 border bg-white ${
+                  focusedInput === "title"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg`}
+              >
                 <Label
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-gray-700 text-sm  mb-2"
                   htmlFor="campus"
                 >
                   Sede
                 </Label>
-                <input
+                <Input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="campus"
                   type="text"
@@ -250,11 +271,17 @@ function EventFormAdmin() {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 ">
-              <div className="mb-4">
-                <Label className="block text-gray-700 text-sm font-bold mb-2">
+              <div
+                className={`mb-2 p-4 border bg-white ${
+                  focusedInput === "title"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg`}
+              >
+                <Label className="block text-gray-700 text-sm  mb-2">
                   Link de Registro
                 </Label>
-                <input
+                <Input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="registration_link"
                   type="text"
@@ -263,8 +290,14 @@ function EventFormAdmin() {
                   {...register("registration_link")}
                 />
               </div>
-              <div className="mb-4">
-                <Label className="block text-gray-700 text-sm font-bold mb-2">
+              <div
+                className={`mb-2 p-4 border bg-white ${
+                  focusedInput === "title"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg`}
+              >
+                <Label className="block text-gray-700 text-sm  mb-2">
                   Control de asistencia
                 </Label>
                 <select
@@ -281,18 +314,24 @@ function EventFormAdmin() {
               </div>
             </div>
             {/* Sección de programación (schedules) */}
-            <h2 className="text-xl font-bold mb-2">Horarios</h2>
+            <h2 className="text-xl  mb-2">Horarios</h2>
             {fields.map((schedule, index) => (
               <div key={schedule.id}>
-                <h3 className="text-lg font-bold mb-2">Horario {index + 1}</h3>
-                <div className="mb-4">
+                <h3 className="text-lg  mb-2">Horario {index + 1}</h3>
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
                   <Label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm  mb-2"
                     htmlFor={`schedules[${index}].place`}
                   >
                     Lugar
                   </Label>
-                  <input
+                  <Input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                     name={`schedules[${index}].place`}
                     type="text"
@@ -302,14 +341,20 @@ function EventFormAdmin() {
                     })}
                   />
                 </div>
-                <div className="mb-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
                   <Label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm  mb-2"
                     htmlFor={`schedules[${index}].date`}
                   >
                     Fecha
                   </Label>
-                  <input
+                  <Input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                     name={`schedules[${index}].date`}
                     type="date"
@@ -319,14 +364,20 @@ function EventFormAdmin() {
                     })}
                   />
                 </div>
-                <div className="mb-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
                   <Label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm  mb-2"
                     htmlFor={`schedules[${index}].time`}
                   >
                     Hora
                   </Label>
-                  <input
+                  <Input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                     name={`schedules[${index}].time`}
                     type="time"
@@ -336,9 +387,15 @@ function EventFormAdmin() {
                     })}
                   />
                 </div>
-                <div className="mb-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
                   <Label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm  mb-2"
                     htmlFor={`schedules[${index}].time`}
                   >
                     Modalidad
@@ -356,9 +413,15 @@ function EventFormAdmin() {
                     <option value="In person">Presencial</option>
                   </select>
                 </div>
-                <div className="mb-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
                   <Label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm  mb-2"
                     htmlFor="eventType"
                   >
                     Tipo de Evento
@@ -391,9 +454,15 @@ function EventFormAdmin() {
                     </option>
                   </select>
                 </div>
-                <div className="mb-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
                   <Label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm  mb-2"
                     htmlFor={`schedules[${index}].place`}
                   >
                     Dirigido a
@@ -413,8 +482,14 @@ function EventFormAdmin() {
                     ))}
                   </select>
                 </div>
-                <div className="mb-4">
-                  <Label className="block text-gray-700 text-sm font-bold mb-2">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
+                  <Label className="block text-gray-700 text-sm  mb-2">
                     Alcance del Evento
                   </Label>
                   <select
@@ -429,9 +504,15 @@ function EventFormAdmin() {
                     <option value="Nacional">Nacional</option>
                   </select>
                 </div>
-                <div className="mb-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
                   <Label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm  mb-2"
                     htmlFor="event_description"
                   >
                     Descripción
@@ -444,9 +525,15 @@ function EventFormAdmin() {
                     required
                   />
                 </div>
-                <div className="mb-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
                   <Label
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-sm  mb-2"
                     htmlFor="coordination"
                   >
                     Coordinación con
@@ -469,11 +556,17 @@ function EventFormAdmin() {
                     </option>
                   </select>
                 </div>
-                <div className="mb-4">
-                  <Label className="block text-gray-700 text-sm font-bold mb-2">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
+                  <Label className="block text-gray-700 text-sm  mb-2">
                     Objetivo de la Actividad
                   </Label>
-                  <input
+                  <Input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="activity_objective"
                     type="text"
@@ -484,11 +577,17 @@ function EventFormAdmin() {
                     })}
                   />
                 </div>
-                <div className="mb-4">
-                  <Label className="block text-gray-700 text-sm font-bold mb-2">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
+                  <Label className="block text-gray-700 text-sm  mb-2">
                     Link al material Visual
                   </Label>
-                  <input
+                  <Input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="links_to_visual_material"
                     type="text"
@@ -509,7 +608,7 @@ function EventFormAdmin() {
               <Button
                 type="button"
                 onClick={() => append({})}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-2"
+                className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded mx-2"
               >
                 Agregar Horario
               </Button>
@@ -517,7 +616,7 @@ function EventFormAdmin() {
               <Button
                 type="button"
                 onClick={() => remove({})}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-2"
+                className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded mx-2"
               >
                 Eliminar Horario
               </Button>
@@ -525,11 +624,15 @@ function EventFormAdmin() {
             <br />
 
             <br></br>
-            <div className="mb-4">
-              <Label className="block text-gray-700 text-sm font-bold mb-2">
+            <div
+              className={`mb-2 p-4 border bg-white ${
+                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              } rounded-lg`}
+            >
+              <Label className="block text-gray-700 text-sm  mb-2">
                 Observaciones
               </Label>
-              <input
+              <Input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="observations"
                 type="text"
@@ -540,14 +643,14 @@ function EventFormAdmin() {
             <button
               type="button"
               onClick={() => onAccept()}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
             >
               Aceptar
             </button>
             <button
               type="button"
               onClick={() => onReject()}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
             >
               Denegar
             </button>
@@ -559,7 +662,7 @@ function EventFormAdmin() {
             <br />
             <button
               type="submit"
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-green-500 hover:bg-green-700 text-white  py-2 px-4 rounded"
             >
               Enviar
             </button>

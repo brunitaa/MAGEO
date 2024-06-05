@@ -31,6 +31,7 @@ export function SpectatorsPage() {
     getSpectatorsAdmin();
   }, []);
 
+  const [focusedInput, setFocusedInput] = useState(null);
   const onSubmit = async (data) => {
     try {
       if (params.id) {
@@ -63,9 +64,9 @@ export function SpectatorsPage() {
   }, []);
 
   return (
-    <div className="flex">
+    <div className="flex bg-red-100">
       <Sidebar />
-      <div className="w-full max-w-4xl mx-auto">
+      <div style={{ margin: "10px 20px" }}>
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={handleSubmit(onSubmit)}
@@ -73,7 +74,11 @@ export function SpectatorsPage() {
           <header>
             <h1 className="text-xl font-bold mb-4">Crear Espectadores</h1>
           </header>
-          <div className="mb-4">
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
             <label
               htmlFor="title"
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -82,7 +87,11 @@ export function SpectatorsPage() {
             </label>
             <Input id="title" type="text" {...register("title")} required />
           </div>
-          <div className="mb-4">
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
             <label
               htmlFor="value"
               className="block text-gray-700 text-sm font-bold mb-2"

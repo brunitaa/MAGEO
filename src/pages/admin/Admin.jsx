@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useEventRequest } from "../../context/EventsContext";
 import { EventCard } from "../../components/Tasks/EventCard";
 import Sidebar from "../../components/SideBar";
@@ -32,9 +32,11 @@ export function AdminHomePage() {
   return (
     <div className="flex">
       <Sidebar></Sidebar>
-      <div className="ml-4">
+      <div className="ml-64 mr-4 mt-4 p-4">
+        {" "}
+        {/* Ajuste del margen izquierdo */}
         <motion.h1
-          className="text-2xl font-bold mb-4"
+          className="text-2xl  mb-4"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -43,7 +45,7 @@ export function AdminHomePage() {
         </motion.h1>
         <section className="mt-8">
           <motion.h2
-            className="text-2xl font-bold mb-4"
+            className="text-2xl  mb-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -58,7 +60,7 @@ export function AdminHomePage() {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <div>
-                <h1 className="font-bold text-xl">
+                <h1 className=" text-xl">
                   No hay eventos aún, por favor añade uno nuevo.
                 </h1>
               </div>
@@ -77,7 +79,7 @@ export function AdminHomePage() {
         </section>
         <section className="mt-8">
           <motion.h2
-            className="text-2xl font-bold mb-4"
+            className="text-2xl  mb-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -92,7 +94,7 @@ export function AdminHomePage() {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <div>
-                <h1 className="font-bold text-xl">
+                <h1 className=" text-xl">
                   No hay formularios de protocolo aún, por favor añade uno
                   nuevo.
                 </h1>
@@ -110,10 +112,9 @@ export function AdminHomePage() {
             ))}
           </motion.div>
         </section>
-
         <section className="mt-8">
           <motion.h2
-            className="text-2xl font-bold mb-4"
+            className="text-2xl  mb-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -128,7 +129,7 @@ export function AdminHomePage() {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <div>
-                <h1 className="font-bold text-xl">
+                <h1 className=" text-xl">
                   No hay formularios de logistica aún, por favor añade uno
                   nuevo.
                 </h1>
@@ -150,10 +151,9 @@ export function AdminHomePage() {
             ))}
           </motion.div>
         </section>
-
         <section className="mt-8">
           <motion.h2
-            className="text-2xl font-bold mb-4"
+            className="text-2xl  mb-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -168,7 +168,7 @@ export function AdminHomePage() {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <div>
-                <h1 className="font-bold text-xl">
+                <h1 className=" text-xl">
                   No hay piezas publicitarias aún, por favor añade uno nuevo.
                 </h1>
               </div>

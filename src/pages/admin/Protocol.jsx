@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Label } from "../../components/ui/Label";
+import { Label, Input } from "../../components/ui/index";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useprotocolRequest } from "../../context/ProtocolContext";
@@ -8,6 +8,7 @@ function ProtocolAdmin() {
   const params = useParams();
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
+  const [focusedInput, setFocusedInput] = useState(null);
   const [ÍtemsRequerimientosServicios, setÍtemsRequerimientosServicios] =
     useState([
       {
@@ -296,18 +297,15 @@ function ProtocolAdmin() {
   }, []);
 
   return (
-    <div className="flex">
+    <div className="flex bg-red-100">
       <div style={{ margin: "10px 20px" }}>
-        <form
-          style={{ margin: "10px 20px" }}
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 min-h-screen max-w-4xl mx-auto"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <h3 className="text-2xl font-bold mb-4">
-            3.1 Requerimientos y Servicios
-          </h3>
-
-          <div className="bg-white flex Ítems-center justify-between mt-4">
+        <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
+          <h3 className="text-2xl  mb-4">3.1 Requerimientos y Servicios</h3>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
             <table className="table-auto">
               <thead>
                 <tr>
@@ -356,7 +354,7 @@ function ProtocolAdmin() {
                       </select>
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -372,7 +370,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -390,7 +388,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -399,7 +397,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -408,7 +406,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -426,7 +424,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -439,7 +437,7 @@ function ProtocolAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveRow(index)}
                       >
                         Eliminar
@@ -451,18 +449,21 @@ function ProtocolAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddRow}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl font-bold mb-4">
+          <h3 className="text-2xl  mb-4">
             3.2 Participantes en la Inauguración
           </h3>
-
-          <div className="bg-white flex Ítems-center justify-between mt-4">
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
             <table className="table-auto">
               <thead>
                 <tr>
@@ -493,7 +494,7 @@ function ProtocolAdmin() {
                 {Participants.map((participant, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="name"
@@ -502,7 +503,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="quantity"
@@ -515,7 +516,7 @@ function ProtocolAdmin() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -527,7 +528,7 @@ function ProtocolAdmin() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -536,7 +537,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -547,7 +548,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -560,7 +561,7 @@ function ProtocolAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveParticipant(index)}
                       >
                         Eliminar
@@ -572,19 +573,19 @@ function ProtocolAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddParticipant}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-
-          <h3 className="text-2xl font-bold mb-4">
-            3.3 Participantes en la Clausura
-          </h3>
-
-          <div className="bg-white flex Ítems-center justify-between mt-4">
+          <h3 className="text-2xl  mb-4">3.3 Participantes en la Clausura</h3>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
             <table className="table-auto">
               <thead>
                 <tr>
@@ -615,7 +616,7 @@ function ProtocolAdmin() {
                 {Participants2.map((participant, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="name"
@@ -624,7 +625,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="quantity"
@@ -637,7 +638,7 @@ function ProtocolAdmin() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -647,7 +648,7 @@ function ProtocolAdmin() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -656,7 +657,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -667,7 +668,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -678,7 +679,7 @@ function ProtocolAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveParticipant2(index)}
                       >
                         Eliminar
@@ -690,17 +691,19 @@ function ProtocolAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddParticipant2}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-
-          <h3 className="text-2xl font-bold mb-4">3.4 Maestro de Ceremonia</h3>
-
-          <div className="bg-white flex Ítems-center justify-between mt-4">
+          <h3 className="text-2xl  mb-4">3.4 Maestro de Ceremonia</h3>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
             <table className="table-auto">
               <thead>
                 <tr>
@@ -729,7 +732,7 @@ function ProtocolAdmin() {
                 {Participants2.map((participant, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="name"
@@ -740,7 +743,7 @@ function ProtocolAdmin() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="last_name"
@@ -753,7 +756,7 @@ function ProtocolAdmin() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -763,7 +766,7 @@ function ProtocolAdmin() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -788,12 +791,15 @@ function ProtocolAdmin() {
               </tbody>
             </table>
           </div>
-
-          <div className="mb-4">
-            <Label className="block text-gray-700 text-sm font-bold mb-2">
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
+            <Label className="block text-gray-700 text-sm  mb-2">
               Observaciones
             </Label>
-            <input
+            <Input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="links_to_visual_material"
               type="text"
@@ -801,19 +807,17 @@ function ProtocolAdmin() {
               {...register(`observations`)}
             />
           </div>
-
           <button
             type="button"
             onClick={() => onAccept()}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
           >
             Aceptar
           </button>
-
           <button
             type="button"
             onClick={() => onReject()}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
           >
             Denegar
           </button>
@@ -831,7 +835,7 @@ function ProtocolAdmin() {
           )}
           <button
             type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-green-500 hover:bg-green-700 text-white  py-2 px-4 rounded"
           >
             Enviar
           </button>

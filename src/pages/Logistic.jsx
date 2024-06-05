@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Label } from "../components/ui/Label";
+import { Label } from "../components/ui";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useLogisticRequest } from "../context/LogisticContext";
@@ -8,10 +8,12 @@ import utc from "dayjs/plugin/utc";
 import SidebarForms from "../components/SideBarForms";
 dayjs.extend(utc);
 import "animate.css";
+import { Input } from "../components/ui";
 
 function Logistic() {
   const params = useParams();
   const navigate = useNavigate();
+  const [focusedInput, setFocusedInput] = useState(null);
   const [mueblesServicios, setmueblesServicios] = useState([
     {
       ÍtemName: "",
@@ -383,19 +385,24 @@ function Logistic() {
   }, []);
 
   return (
-    <div className="flex">
+    <div className="flex bg-red-100">
       <SidebarForms></SidebarForms>
-      <div style={{ margin: "10px 20px" }}>
-        <form
-          style={{ margin: "10px 20px" }}
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 min-h-screen max-w-4xl mx-auto"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <h3 className="text-2xl font-bold mb-4">
-            2.1 Mobiliario y Servicios
-          </h3>
+      <div>
+        <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
+          <div className="bg-white p-4 mb-4 border-t-8 border-red-600 rounded-lg">
+            <h1 className="text-3xl  mb-2">Logística</h1>
+            <p className="text-gray-600">
+              Por favor, completa la siguiente información sobre la logística de
+              tu evento.
+            </p>
+          </div>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
+            <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
 
-          <div className="bg-white flex Ítems-center justify-between mt-4">
             <table className="table-auto">
               <thead>
                 <tr>
@@ -427,15 +434,15 @@ function Logistic() {
                 {mueblesServicios.map((mueble, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`furniture_services[${index}].name`)}
                         required
-                      ></input>
+                      ></Input>
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -452,7 +459,7 @@ function Logistic() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -461,7 +468,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -470,7 +477,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -486,7 +493,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -499,7 +506,7 @@ function Logistic() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveRow(index)}
                       >
                         Eliminar
@@ -511,16 +518,20 @@ function Logistic() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddRow}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl font-bold mb-4">2.2 Material de apoyo</h3>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
+            <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
 
-          <div className="bg-white flex Ítems-center justify-between mt-4">
             <table className="table-auto">
               <thead>
                 <tr>
@@ -552,15 +563,15 @@ function Logistic() {
                 {materialApoyo.map((material, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`support_material[${index}].name`)}
                         required
-                      ></input>
+                      ></Input>
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -577,7 +588,7 @@ function Logistic() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -586,7 +597,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -595,7 +606,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -611,7 +622,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -622,7 +633,7 @@ function Logistic() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveMaterial(index)}
                       >
                         Eliminar
@@ -634,16 +645,20 @@ function Logistic() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddMateril}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl font-bold mb-4">2.3 Alimentación</h3>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
+            <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
 
-          <div className="bg-white flex Ítems-center justify-between mt-4">
             <table className="table-auto">
               <thead>
                 <tr>
@@ -675,15 +690,15 @@ function Logistic() {
                 {foodServices.map((food, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`food_services[${index}].name`)}
                         required
-                      ></input>
+                      ></Input>
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -697,7 +712,7 @@ function Logistic() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -706,7 +721,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -715,7 +730,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -728,7 +743,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -739,7 +754,7 @@ function Logistic() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveFood(index)}
                       >
                         Eliminar
@@ -751,30 +766,31 @@ function Logistic() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddFood}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl font-bold mb-4">2.4 Disertantes</h3>
+          <div className={`mb-2 p-4  bg-white rounded-lg`}>
+            <h3 className="text-2xl mb-4">2.4 Disertantes</h3>
 
-          <div className="bg-white flex Ítems-center justify-between mt-4">
             <table className="table-auto w-full">
               <tbody>
                 {disertantes.map((disertante, index) => (
                   <React.Fragment key={index}>
-                    <tr key={index}>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                    <tr>
+                      <td className="px-4 py-2">
+                        <div>
+                          <h4 className="text-xl mb-2">Disertante</h4>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Nombre del disertante
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="nombre"
+                            name={`speakers[${index}].name`}
                             {...register(`speakers[${index}].name`)}
                             placeholder="Nombre del disertante"
                           />
@@ -782,15 +798,15 @@ function Logistic() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                      <td className="px-4 py-2">
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Día de llegada
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="datetime-local"
-                            name="diaLlegada"
+                            name={`speakers[${index}].arrival_date_and_time`}
                             {...register(
                               `speakers[${index}].arrival_date_and_time`
                             )}
@@ -798,15 +814,15 @@ function Logistic() {
                           />
                         </div>
                       </td>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                      <td className="px-4 py-2">
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Día de retorno
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="datetime-local"
-                            name="diaRetorno"
+                            name={`speakers[${index}].return_date_and_time`}
                             {...register(
                               `speakers[${index}].return_date_and_time`
                             )}
@@ -816,37 +832,32 @@ function Logistic() {
                       </td>
                     </tr>
                     <tr>
-                      <td>
-                        <Label>Alojamiento</Label>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                      <td className="px-4 py-2">
+                        <h4 className="text-xl mb-2">Alojamiento</h4>
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Nombre
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="alojamiento"
+                            name={`speakers[${index}].accommodation.name`}
                             {...register(
                               `speakers[${index}].accommodation.name`
                             )}
-                            placeholder="Alojamiento"
+                            placeholder="Nombre del alojamiento"
                           />
                         </div>
                       </td>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                      <td className="px-4 py-2">
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Dirección
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="alojamiento"
+                            name={`speakers[${index}].accommodation.address`}
                             {...register(
                               `speakers[${index}].accommodation.address`
                             )}
@@ -855,120 +866,115 @@ function Logistic() {
                         </div>
                       </td>
                     </tr>
-                    <tr></tr>
                     <tr>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                      <td className="px-4 py-2">
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Email
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="alojamiento"
-                            placeholder="Email"
+                            name={`speakers[${index}].accommodation.email`}
                             {...register(
                               `speakers[${index}].accommodation.email`
                             )}
+                            placeholder="Email"
                           />
                         </div>
                       </td>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
-                            Telefono
+                      <td className="px-4 py-2">
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
+                            Teléfono
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="alojamiento"
-                            placeholder="Telefono"
+                            name={`speakers[${index}].accommodation.phone`}
                             {...register(
                               `speakers[${index}].accommodation.phone`
                             )}
+                            placeholder="Teléfono"
                           />
                         </div>
                       </td>
                     </tr>
-                    <tr></tr>
                     <tr>
-                      <td>
-                        <Label>Responsable de Recojo y Retorno</Label>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                      <td className="px-4 py-2">
+                        <h4 className="text-xl mb-2">
+                          Responsable de Recojo y Retorno
+                        </h4>
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Nombre
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="responsable"
-                            placeholder="Nombre"
+                            name={`speakers[${index}].responsible_person.first_name`}
                             {...register(
                               `speakers[${index}].responsible_person.first_name`
                             )}
+                            placeholder="Nombre"
                           />
                         </div>
                       </td>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                      <td className="px-4 py-2">
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Apellido
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="responsable"
-                            placeholder="Apellido"
+                            name={`speakers[${index}].responsible_person.last_name`}
                             {...register(
                               `speakers[${index}].responsible_person.last_name`
                             )}
+                            placeholder="Apellido"
                           />
                         </div>
                       </td>
                     </tr>
                     <tr>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
+                      <td className="px-4 py-2">
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
                             Email
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="alojamiento"
-                            placeholder="Email"
+                            name={`speakers[${index}].responsible_person.email`}
                             {...register(
                               `speakers[${index}].responsible_person.email`
                             )}
+                            placeholder="Email"
                           />
                         </div>
                       </td>
-                      <td className="border px-4 py-2">
-                        <div className="mb-4">
-                          <Label className="block text-gray-700 text-sm font-bold mb-2">
-                            Telefono
+                      <td className="px-4 py-2">
+                        <div>
+                          <Label className="block text-gray-700 text-sm mb-2">
+                            Teléfono
                           </Label>
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            name="alojamiento"
-                            placeholder="Telefono"
+                            name={`speakers[${index}].responsible_person.phone`}
                             {...register(
                               `speakers[${index}].responsible_person.phone`
                             )}
+                            placeholder="Teléfono"
                           />
                         </div>
                       </td>
                     </tr>
                     <tr>
-                      <td className="border px-4 py-2">
+                      <td className="px-4 py-2">
                         <button
-                          className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                          className="bg-red-800 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                           onClick={() => handleRemoveDisertante(index)}
                           type="button"
                         >
@@ -981,18 +987,21 @@ function Logistic() {
               </tbody>
             </table>
           </div>
-
           <button
-            className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddDisertante}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar Disertante
           </button>
-          <h3 className="text-2xl font-bold mb-4">2.5 Transporte</h3>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
+            <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
 
-          <div className="bg-white flex Ítems-center justify-between mt-4">
             <table className="table-auto">
               <thead>
                 <tr>
@@ -1024,7 +1033,7 @@ function Logistic() {
                 {transport.map((transport, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`transport_services[${index}].name`)}
@@ -1032,7 +1041,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -1049,7 +1058,7 @@ function Logistic() {
                     </td>
 
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -1058,7 +1067,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -1067,7 +1076,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
@@ -1083,7 +1092,7 @@ function Logistic() {
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <input
+                      <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
@@ -1096,7 +1105,7 @@ function Logistic() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveTransport(index)}
                       >
                         Eliminar
@@ -1108,22 +1117,25 @@ function Logistic() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddTransport}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-
-          <div className="mb-4">
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
             <Label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 text-sm  mb-2"
               htmlFor="event_name"
             >
               Estado
             </Label>
-            <input
+            <Input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
               name="state"
               type="text"
@@ -1133,16 +1145,14 @@ function Logistic() {
               {...register(`state`)}
             />
           </div>
-
           {successMessage && (
             <div className="bg-green-500 text-white p-2 mb-4 rounded animate__animated animate__fadeIn">
               {successMessage}
             </div>
           )}
-
           <button
             type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-green-500 hover:bg-green-700 text-white  py-2 px-4 rounded"
           >
             Enviar
           </button>

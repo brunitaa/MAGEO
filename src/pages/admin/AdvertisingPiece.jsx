@@ -5,7 +5,7 @@ import utc from "dayjs/plugin/utc";
 import { useForm, useFieldArray } from "react-hook-form";
 import { format, formatISO } from "date-fns";
 import { useSpectatorRequest } from "../../context/SpectatorContext";
-import { Label, Button } from "../../components/ui";
+import { Label, Button, Input } from "../../components/ui";
 import { useAdvertisingRequest } from "../../context/AdvertisementContext";
 import SidebarForms from "../../components/SideBarForms";
 dayjs.extend(utc);
@@ -13,6 +13,7 @@ dayjs.extend(utc);
 const AdvertisingPieceAdmin = () => {
   const params = useParams();
   const navigate = useNavigate();
+  const [focusedInput, setFocusedInput] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const { spectators, getSpectators } = useSpectatorRequest();
   const {
@@ -111,12 +112,12 @@ const AdvertisingPieceAdmin = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex bg-red-100">
       <SidebarForms></SidebarForms>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
           Title:
-          <input
+          <Input
             type="text"
             name="title"
             placeholder="Nombre del Evento"
@@ -127,15 +128,19 @@ const AdvertisingPieceAdmin = () => {
 
         <label>
           Area:
-          <input type="text" name="area" {...register("area")} readOnly />
+          <Input type="text" name="area" {...register("area")} readOnly />
         </label>
 
         <label>
           Goals:
-          <input type="text" name="goals" {...register("goals")} readOnly />
+          <Input type="text" name="goals" {...register("goals")} readOnly />
         </label>
-        <div className="mb-4">
-          <Label className="block text-gray-700 text-sm font-bold mb-2">
+        <div
+          className={`mb-2 p-4 border bg-white ${
+            focusedInput === "title" ? "border-red-500" : "border-gray-300"
+          } rounded-lg`}
+        >
+          <Label className="block text-gray-700 text-sm  mb-2">
             Dirigido a
           </Label>
           <select
@@ -161,11 +166,11 @@ const AdvertisingPieceAdmin = () => {
         </label>
         <label>
           Description:
-          <input type="text" name="description" {...register("description")} />
+          <Input type="text" name="description" {...register("description")} />
         </label>
         <label>
           Visual References:
-          <input
+          <Input
             type="text"
             name="visual_references"
             {...register("visual_references")}
@@ -173,17 +178,21 @@ const AdvertisingPieceAdmin = () => {
         </label>
         <label>
           Registrations Links:
-          <input
+          <Input
             type="text"
             name="registrations_links"
             {...register("registrations_links")}
           />
         </label>
-        <div className="mb-4">
-          <Label className="block text-gray-700 text-sm font-bold mb-2">
+        <div
+          className={`mb-2 p-4 border bg-white ${
+            focusedInput === "title" ? "border-red-500" : "border-gray-300"
+          } rounded-lg`}
+        >
+          <Label className="block text-gray-700 text-sm  mb-2">
             Observaciones
           </Label>
-          <input
+          <Input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="observations"
             type="text"
@@ -194,7 +203,7 @@ const AdvertisingPieceAdmin = () => {
         <button
           type="button"
           onClick={() => onAccept()}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
         >
           Aceptar
         </button>
@@ -202,7 +211,7 @@ const AdvertisingPieceAdmin = () => {
         <button
           type="button"
           onClick={() => onReject()}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
         >
           Denegar
         </button>

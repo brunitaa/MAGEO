@@ -5,11 +5,13 @@ import { useForm } from "react-hook-form";
 import { useprotocolRequest } from "../context/ProtocolContext";
 import SidebarForms from "../components/SideBarForms";
 import "animate.css";
+import { Input } from "../components/ui";
 
 function Protocol() {
   const params = useParams();
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState("");
+  const [focusedInput, setFocusedInput] = useState(null);
   const [ÍtemsRequerimientosServicios, setÍtemsRequerimientosServicios] =
     useState([
       {
@@ -250,20 +252,32 @@ function Protocol() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex bg-red-100">
         <SidebarForms></SidebarForms>
-        <div className="flex">
+        <div>
           <div style={{ margin: "10px 20px" }}>
             <form
               style={{ margin: "10px 20px" }}
-              className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 min-h-screen max-w-4xl mx-auto"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <h3 className="text-2xl font-bold mb-4">
-                3.1 Requerimientos y Servicios
-              </h3>
+              <div className="bg-white p-4 mb-4 border-t-8 border-red-600 rounded-lg">
+                <h1 className="text-3xl  mb-2">Protocolo</h1>
+                <p className="text-gray-600">
+                  Por favor, completa la siguiente información sobre el
+                  protocolo de tu evento.
+                </p>
+              </div>
+              <div
+                className={`mb-2 p-4 border bg-white ${
+                  focusedInput === "title"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg`}
+              >
+                <h1 className="text-3xl  mb-2">
+                  3.1 Requerimientos y Servicios
+                </h1>
 
-              <div className="bg-white flex Ítems-center justify-between mt-4">
                 <table className="table-auto">
                   <thead>
                     <tr>
@@ -295,15 +309,15 @@ function Protocol() {
                     {ÍtemsRequerimientosServicios.map((Ítem, index) => (
                       <tr key={index}>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             name="ÍtemName"
                             {...register(`service_requirements[${index}].name`)}
                             required
-                          ></input>
+                          ></Input>
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="unit_price"
@@ -322,7 +336,7 @@ function Protocol() {
                         </td>
 
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -333,7 +347,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -342,7 +356,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="unit_price"
@@ -360,7 +374,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -373,7 +387,7 @@ function Protocol() {
                         <td className="border px-4 py-2">
                           <button
                             type="button"
-                            className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                             onClick={() => handleRemoveRow(index)}
                           >
                             Eliminar
@@ -385,18 +399,24 @@ function Protocol() {
                 </table>
               </div>
               <button
-                className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={handleAddRow}
                 type="button"
                 style={{ margin: "10px 20px" }}
               >
                 Agregar fila
               </button>
-              <h3 className="text-2xl font-bold mb-4">
-                3.2 Participantes en la Inauguración
-              </h3>
+              <div
+                className={`mb-2 p-4 border bg-white ${
+                  focusedInput === "title"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg`}
+              >
+                <h3 className="text-2xl  mb-4">
+                  3.2 Participantes en la Inauguración
+                </h3>
 
-              <div className="bg-white flex Ítems-center justify-between mt-4">
                 <table className="table-auto">
                   <thead>
                     <tr>
@@ -427,7 +447,7 @@ function Protocol() {
                     {Participants.map((participant, index) => (
                       <tr key={index}>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="name"
@@ -436,7 +456,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="quantity"
@@ -449,7 +469,7 @@ function Protocol() {
                         </td>
 
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -461,7 +481,7 @@ function Protocol() {
                         </td>
 
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -472,7 +492,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -483,7 +503,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -496,7 +516,7 @@ function Protocol() {
                         <td className="border px-4 py-2">
                           <button
                             type="button"
-                            className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                             onClick={() => handleRemoveParticipant(index)}
                           >
                             Eliminar
@@ -508,19 +528,24 @@ function Protocol() {
                 </table>
               </div>
               <button
-                className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={handleAddParticipant}
                 type="button"
                 style={{ margin: "10px 20px" }}
               >
                 Agregar fila
               </button>
+              <div
+                className={`mb-2 p-4 border bg-white ${
+                  focusedInput === "title"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg`}
+              >
+                <h3 className="text-2xl  mb-4">
+                  3.3 Participantes en la Clausura
+                </h3>
 
-              <h3 className="text-2xl font-bold mb-4">
-                3.3 Participantes en la Clausura
-              </h3>
-
-              <div className="bg-white flex Ítems-center justify-between mt-4">
                 <table className="table-auto">
                   <thead>
                     <tr>
@@ -551,7 +576,7 @@ function Protocol() {
                     {Participants2.map((participant, index) => (
                       <tr key={index}>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="name"
@@ -560,7 +585,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="quantity"
@@ -573,7 +598,7 @@ function Protocol() {
                         </td>
 
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -585,7 +610,7 @@ function Protocol() {
                         </td>
 
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -594,7 +619,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -605,7 +630,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -616,7 +641,7 @@ function Protocol() {
                         <td className="border px-4 py-2">
                           <button
                             type="button"
-                            className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                            className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                             onClick={() => handleRemoveParticipant2(index)}
                           >
                             Eliminar
@@ -628,19 +653,22 @@ function Protocol() {
                 </table>
               </div>
               <button
-                className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={handleAddParticipant2}
                 type="button"
                 style={{ margin: "10px 20px" }}
               >
                 Agregar fila
               </button>
+              <div
+                className={`mb-2 p-4 border bg-white ${
+                  focusedInput === "title"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } rounded-lg`}
+              >
+                <h3 className="text-2xl  mb-4">3.4 Maestro de Ceremonia</h3>
 
-              <h3 className="text-2xl font-bold mb-4">
-                3.4 Maestro de Ceremonia
-              </h3>
-
-              <div className="bg-white flex Ítems-center justify-between mt-4">
                 <table className="table-auto">
                   <thead>
                     <tr>
@@ -665,7 +693,7 @@ function Protocol() {
                     {Master.map((master, index) => (
                       <tr key={index}>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="name"
@@ -676,7 +704,7 @@ function Protocol() {
                           />
                         </td>
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="last_name"
@@ -689,7 +717,7 @@ function Protocol() {
                         </td>
 
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -701,7 +729,7 @@ function Protocol() {
                         </td>
 
                         <td className="border px-4 py-2">
-                          <input
+                          <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="observations"
@@ -738,7 +766,7 @@ function Protocol() {
               <br />
               <button
                 type="submit"
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-red-900 hover:bg-red-800 text-white  py-2 px-4 rounded"
               >
                 Enviar
               </button>
