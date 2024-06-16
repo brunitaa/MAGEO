@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.event-card-container {
+  height: 400px;
+  width: 400px;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.event-card-footer {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 16px;
+}
+
+.event-card-text {
+  font-size: 14px;
+
+  margin-bottom: 16px;
+
+  font-weight: normal;
+}

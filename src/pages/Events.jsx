@@ -33,27 +33,28 @@ function EventForm() {
   const onSubmit = async (data) => {
     try {
       data.schedules.forEach((schedule) => {
-        // Formatea la fecha
-        schedule.date = format(
-          new Date(schedule.date),
-          "yyyy-MM-dd'T'HH:mm:ssxxx"
+        // Combina la fecha con la hora para start_time y end_time
+        const combinedStartTime = new Date(
+          `${schedule.date}T${schedule.start_time}`
+        );
+        const combinedEndTime = new Date(
+          `${schedule.date}T${schedule.end_time}`
         );
 
-        // Formatea el tiempo
-        schedule.time = format(
-          new Date(`2000-01-01T${schedule.time}`),
-          "yyyy-MM-dd'T'HH:mm:ssxxx"
-        );
+        // Formatea la fecha y hora al estilo ISO 8601 para MongoDB
+        schedule.date = new Date(schedule.date).toISOString();
+        schedule.start_time = combinedStartTime.toISOString();
+        schedule.end_time = combinedEndTime.toISOString();
       });
+
+      // Lógica para crear o actualizar el evento
       if (params.id) {
-        console.log(params.id);
-        updateEvent(params.id, {
+        await updateEvent(params.id, {
           ...data,
         });
         setSuccessMessage("Cambios guardados exitosamente");
       } else {
-        console.log(data);
-        createEvent({
+        await createEvent({
           ...data,
         });
         setSuccessMessage("Creado Exitosamente");
@@ -68,46 +69,47 @@ function EventForm() {
 
   useEffect(() => {
     getSpectators();
-    console.log(spectators);
+
     const loadEvent = async () => {
       if (params.id) {
         const event = await getEvent(params.id);
-        console.log(event);
+
+        // Asigna valores al formulario
         setValue("event_name", event.event_name);
         setValue("event_description", event.event_description);
-        setValue(
-          "date",
-          event.date ? dayjs(event.date).utc().format("YYYY-MM-DD") : ""
-        );
         setValue("campus", event.campus);
         setValue("area", event.area);
         setValue("registration_link", event.registration_link);
-        setValue("attendance_control", event.attendance_control);
+        setValue(
+          "attendance_control",
+          event.attendance_control ? "true" : "false"
+        );
 
-        // Asegúrate de que event.schedules exista y sea un array antes de asignarlo
+        // Formatea y asigna los valores de los horarios (schedules)
         if (event.schedules && Array.isArray(event.schedules)) {
-          // Aquí puedes ajustar cómo asignas los valores de los schedules según tu estructura de datos
           event.schedules.forEach((schedule, index) => {
             setValue(`schedules[${index}].place`, schedule.place);
             setValue(
               `schedules[${index}].date`,
-              schedule.date ? schedule.date.slice(0, 10) : ""
+              dayjs(schedule.date).format("YYYY-MM-DD")
             );
             setValue(
-              `schedules[${index}].time`,
-              schedule.time ? schedule.time.slice(0, 10) : ""
+              `schedules[${index}].start_time`,
+              dayjs(schedule.start_time).format("HH:mm")
             );
-
+            setValue(
+              `schedules[${index}].end_time`,
+              dayjs(schedule.end_time).format("HH:mm")
+            );
             setValue(
               `schedules[${index}].links_to_visual_material`,
               schedule.links_to_visual_material
             );
             setValue(`schedules[${index}].event_type`, schedule.event_type);
-            setValue(`schedules[${index}].spectator`, schedule.spectator);
+            setValue(`schedules[${index}].spectators`, schedule.spectators); // Ajusta según cómo manejas los espectadores
             setValue(`schedules[${index}].coordination`, schedule.coordination);
             setValue(`schedules[${index}].scope`, schedule.scope);
             setValue(`schedules[${index}].description`, schedule.description);
-            setValue(`schedules[${index}].spectator`, schedule.spectator);
             setValue(
               `schedules[${index}].activity_objective`,
               schedule.activity_objective
@@ -117,6 +119,7 @@ function EventForm() {
         }
       }
     };
+
     loadEvent();
   }, []);
 
@@ -125,7 +128,7 @@ function EventForm() {
       <SidebarForms></SidebarForms>
       <div className="flex-grow flex justify-center items-center p-6">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="bg-white p-4 mb-4 border-t-8 border-red-600 rounded-lg">
+          <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
             <h1 className="text-3xl  mb-2">Fomulario de Solicitud</h1>
             <p className="text-gray-600">
               Por favor, completa la siguiente información acerca de tu evento.
@@ -133,7 +136,9 @@ function EventForm() {
           </div>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <Label
@@ -152,7 +157,9 @@ function EventForm() {
           </div>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <Label
@@ -173,7 +180,9 @@ function EventForm() {
           </div>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <Label
@@ -193,7 +202,9 @@ function EventForm() {
           <div className="grid grid-cols-2 gap-4 ">
             <div
               className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
               } rounded-lg`}
             >
               <Label
@@ -213,7 +224,9 @@ function EventForm() {
             </div>
             <div
               className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
               } rounded-lg`}
             >
               <Label
@@ -236,7 +249,9 @@ function EventForm() {
           <div className="grid grid-cols-2 gap-4 ">
             <div
               className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
               } rounded-lg`}
             >
               <Label className="block text-gray-700 text-sm  mb-2">
@@ -253,7 +268,9 @@ function EventForm() {
             </div>
             <div
               className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
               } rounded-lg`}
             >
               <Label className="block text-gray-700 text-sm  mb-2">
@@ -274,83 +291,122 @@ function EventForm() {
           </div>
 
           {/* Sección de programación (schedules) */}
-          <h2 className="text-xl  mb-2">Horarios</h2>
+
+          <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
+            <h1 className="text-3xl  mb-2">Horarios</h1>
+            <p className="text-gray-600">
+              Por favor, añade todos los horarios del evento.
+            </p>
+          </div>
+
           {fields.map((schedule, index) => (
             <div key={schedule.id}>
-              <h3 className="text-lg  mb-2">Horario {index + 1}</h3>
-              <div
-                className={`mb-2 p-4 border bg-white ${
-                  focusedInput === "title"
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-lg`}
-              >
-                <Label
-                  className="block text-gray-700 text-sm  mb-2"
-                  htmlFor={`schedules[${index}].place`}
+              <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg flex items-center justify-between">
+                <h1 className="text-3xl mb-2">Horario {index + 1}</h1>
+                <Button type="button" onClick={() => remove(index)}>
+                  Eliminar
+                </Button>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-univalleColorOne"
+                      : "border-gray-300"
+                  } rounded-lg`}
                 >
-                  Lugar
-                </Label>
-                <Input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                  name={`schedules[${index}].place`}
-                  type="text"
-                  placeholder="Lugar"
-                  {...register(`schedules[${index}].place`, {
-                    required: true,
-                  })}
-                />
+                  <Label
+                    className="block text-gray-700 text-sm  mb-2"
+                    htmlFor={`schedules[${index}].place`}
+                  >
+                    Lugar
+                  </Label>
+                  <Input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                    name={`schedules[${index}].place`}
+                    type="text"
+                    placeholder="Lugar"
+                    {...register(`schedules[${index}].place`, {
+                      required: true,
+                    })}
+                  />
+                </div>
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-univalleColorOne"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
+                  <Label
+                    className="block text-gray-700 text-sm  mb-2"
+                    htmlFor={`schedules[${index}].date`}
+                  >
+                    Fecha
+                  </Label>
+                  <Input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                    name={`schedules[${index}].date`}
+                    type="date"
+                    placeholder="Fecha"
+                    {...register(`schedules[${index}].date`, {
+                      required: true,
+                    })}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-univalleColorOne"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
+                  <Label
+                    className="block text-gray-700 text-sm  mb-2"
+                    htmlFor={`schedules[${index}].start_time`}
+                  >
+                    Hora de comienzo
+                  </Label>
+                  <Input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                    name={`schedules[${index}].start_time`}
+                    type="time"
+                    placeholder="Hora"
+                    {...register(`schedules[${index}].start_time`, {
+                      required: true,
+                    })}
+                  />
+                </div>
+                <div
+                  className={`mb-2 p-4 border bg-white ${
+                    focusedInput === "title"
+                      ? "border-univalleColorOne"
+                      : "border-gray-300"
+                  } rounded-lg`}
+                >
+                  <Label
+                    className="block text-gray-700 text-sm  mb-2"
+                    htmlFor={`schedules[${index}].end_time`}
+                  >
+                    Hora de finalizacion
+                  </Label>
+                  <Input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                    name={`schedules[${index}].end_time`}
+                    type="time"
+                    placeholder="Hora"
+                    {...register(`schedules[${index}].end_time`, {
+                      required: true,
+                    })}
+                  />
+                </div>
               </div>
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-lg`}
-              >
-                <Label
-                  className="block text-gray-700 text-sm  mb-2"
-                  htmlFor={`schedules[${index}].date`}
-                >
-                  Fecha
-                </Label>
-                <Input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                  name={`schedules[${index}].date`}
-                  type="date"
-                  placeholder="Fecha"
-                  {...register(`schedules[${index}].date`, {
-                    required: true,
-                  })}
-                />
-              </div>
-              <div
-                className={`mb-2 p-4 border bg-white ${
-                  focusedInput === "title"
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-lg`}
-              >
-                <Label
-                  className="block text-gray-700 text-sm  mb-2"
-                  htmlFor={`schedules[${index}].time`}
-                >
-                  Hora
-                </Label>
-                <Input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                  name={`schedules[${index}].time`}
-                  type="time"
-                  placeholder="Hora"
-                  {...register(`schedules[${index}].time`, {
-                    required: true,
-                  })}
-                />
-              </div>
-              <div
-                className={`mb-2 p-4 border bg-white ${
-                  focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -376,7 +432,7 @@ function EventForm() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -415,7 +471,7 @@ function EventForm() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -443,7 +499,7 @@ function EventForm() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -465,7 +521,7 @@ function EventForm() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -486,7 +542,7 @@ function EventForm() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -517,7 +573,7 @@ function EventForm() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -538,7 +594,7 @@ function EventForm() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -568,13 +624,6 @@ function EventForm() {
               Agregar Horario
             </Button>
             <div className="divider"></div>
-            <Button
-              type="button"
-              onClick={() => remove({})}
-              className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded mx-2"
-            >
-              Eliminar Horario
-            </Button>
           </div>
 
           <br />

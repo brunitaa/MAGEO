@@ -2,8 +2,9 @@ import { useAuth } from "../../context/AuthContext";
 import { useprotocolRequest } from "../../context/ProtocolContext";
 import { Button, ButtonLink, Card } from "../ui";
 
-export function ProtocolCard({ protocol, isAdmin }) {
+export function ProtocolCard({ protocol }) {
   const { deleteProtocol } = useprotocolRequest();
+  const { isAdmin } = useAuth();
   console.log(isAdmin);
 
   const handleDelete = async () => {
@@ -23,9 +24,9 @@ export function ProtocolCard({ protocol, isAdmin }) {
       <div className="flex gap-x-2 items-center">
         <Button onClick={handleDelete}>Delete</Button>
         {isAdmin ? (
-          <ButtonLink to={`/admin/protocol/${protocol._id}`}>Edit</ButtonLink>
+          <ButtonLink to={`/admin/protocol/${protocol._id}`}>View</ButtonLink>
         ) : (
-          <ButtonLink to={`/user/protocol/${protocol._id}`}>View</ButtonLink>
+          <ButtonLink to={`/user/protocol/${protocol._id}`}>Edit</ButtonLink>
         )}
       </div>
     </Card>

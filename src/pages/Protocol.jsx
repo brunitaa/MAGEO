@@ -133,9 +133,6 @@ function Protocol() {
           setSuccessMessage("");
         }, 3000);
       }
-      setTimeout(() => {
-        navigate("/homepage");
-      }, 6000);
     } catch (error) {
       console.log(error);
     }
@@ -260,7 +257,7 @@ function Protocol() {
               style={{ margin: "10px 20px" }}
               onSubmit={handleSubmit(onSubmit)}
             >
-              <div className="bg-white p-4 mb-4 border-t-8 border-red-600 rounded-lg">
+              <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
                 <h1 className="text-3xl  mb-2">Protocolo</h1>
                 <p className="text-gray-600">
                   Por favor, completa la siguiente información sobre el
@@ -270,7 +267,7 @@ function Protocol() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -409,7 +406,7 @@ function Protocol() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -538,7 +535,7 @@ function Protocol() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -663,7 +660,7 @@ function Protocol() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -766,7 +763,7 @@ function Protocol() {
               <br />
               <button
                 type="submit"
-                className="bg-red-900 hover:bg-red-800 text-white  py-2 px-4 rounded"
+                className="bg-univalleColorOne hover:bg-red-800 text-white  py-2 px-4 rounded"
               >
                 Enviar
               </button>

@@ -42,13 +42,13 @@ const LoginPage = () => {
 
   return (
     <motion.section
-      className="bg-red-900 h-screen w-screen flex justify-center items-center"
+      className="bg-univalleColorOne h-screen w-screen flex justify-center items-center"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="w-80 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-red-900 dark:border-red-900"
+        className="w-80 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-univalleColorOne dark:border-red-900"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}

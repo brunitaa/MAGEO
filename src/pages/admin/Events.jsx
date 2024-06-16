@@ -171,7 +171,9 @@ function EventFormAdmin() {
             <h1 className="text-3xl  mb-4">Formulario de Solicitud</h1>
             <div
               className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
               } rounded-lg`}
             >
               <Label
@@ -206,7 +208,9 @@ function EventFormAdmin() {
             </div>
             <div
               className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
               } rounded-lg`}
             >
               <Label
@@ -227,7 +231,7 @@ function EventFormAdmin() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -249,7 +253,7 @@ function EventFormAdmin() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -274,7 +278,7 @@ function EventFormAdmin() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -293,7 +297,7 @@ function EventFormAdmin() {
               <div
                 className={`mb-2 p-4 border bg-white ${
                   focusedInput === "title"
-                    ? "border-red-500"
+                    ? "border-univalleColorOne"
                     : "border-gray-300"
                 } rounded-lg`}
               >
@@ -321,7 +325,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -344,7 +348,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -367,7 +371,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -390,7 +394,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -416,7 +420,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -457,7 +461,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -485,7 +489,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -507,7 +511,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -528,7 +532,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -559,7 +563,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -580,7 +584,7 @@ function EventFormAdmin() {
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
-                      ? "border-red-500"
+                      ? "border-univalleColorOne"
                       : "border-gray-300"
                   } rounded-lg`}
                 >
@@ -626,7 +630,9 @@ function EventFormAdmin() {
             <br></br>
             <div
               className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title" ? "border-red-500" : "border-gray-300"
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
               } rounded-lg`}
             >
               <Label className="block text-gray-700 text-sm  mb-2">

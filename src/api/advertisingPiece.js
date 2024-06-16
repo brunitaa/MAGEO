@@ -4,10 +4,16 @@ export const getAPsRequest = async () =>
   axios.get("/auth/users/advertising-pieces");
 
 export const getMyAPsRequest = async () =>
-  axios.get("/auth/users/advertising-pieces/me");
+  axios.get("/auth/users/advertising-pieces");
 
-export const createAPRequest = async (advertisiment) =>
-  axios.post("/auth/users/advertising-pieces", advertisiment);
+export const createAPRequest = async (advertisement) => {
+  try {
+    axios.post("/auth/users/advertising-pieces", advertisiment);
+    return res; // Retorna la respuesta del servidor si es necesario
+  } catch (error) {
+    throw new Error(error.response.data.message || error.message);
+  }
+};
 
 export const updateAPRequest = async (id, advertisiment) =>
   axios.put(`/auth/users/advertising-pieces/${id}`, advertisiment);

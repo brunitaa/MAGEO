@@ -456,7 +456,9 @@ function LogisticAdmin() {
           <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto">
@@ -616,7 +618,9 @@ function LogisticAdmin() {
           <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto">
@@ -765,7 +769,9 @@ function LogisticAdmin() {
           <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto">
@@ -911,7 +917,9 @@ function LogisticAdmin() {
           <h3 className="text-2xl  mb-4">2.4 Disertantes</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto w-full">
@@ -923,7 +931,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -946,7 +954,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -969,7 +977,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -999,7 +1007,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -1022,7 +1030,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -1048,7 +1056,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -1071,7 +1079,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -1102,7 +1110,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -1125,7 +1133,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -1150,7 +1158,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -1173,7 +1181,7 @@ function LogisticAdmin() {
                         <div
                           className={`mb-2 p-4 border bg-white ${
                             focusedInput === "title"
-                              ? "border-red-500"
+                              ? "border-univalleColorOne"
                               : "border-gray-300"
                           } rounded-lg`}
                         >
@@ -1220,7 +1228,9 @@ function LogisticAdmin() {
           <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto">
@@ -1367,7 +1377,9 @@ function LogisticAdmin() {
           <br></br>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <Label
@@ -1388,7 +1400,9 @@ function LogisticAdmin() {
           </div>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <Label className="block text-gray-700 text-sm  mb-2">

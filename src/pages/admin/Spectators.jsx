@@ -76,7 +76,9 @@ export function SpectatorsPage() {
           </header>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <label
@@ -89,7 +91,9 @@ export function SpectatorsPage() {
           </div>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <label

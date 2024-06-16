@@ -22,7 +22,7 @@ function Sidebar() {
   };
 
   const sidebarWidth = sidebarOpen ? "lg:w-202" : "lg:w-12";
-  const arrowColor = sidebarOpen ? "text-white" : "text-red-500";
+  const arrowColor = sidebarOpen ? "text-white" : "text-univalleColorOne";
 
   return (
     <>
@@ -43,23 +43,33 @@ function Sidebar() {
       >
         <div className="p-4 lg:flex lg:flex-col lg:justify-between h-full lg:h-auto">
           <div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white"
+            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
             onClick={handleHomeClick}
           >
             <Icon.HouseFill />
             <span className="text-sm ml-3 text-gray-200 font-bold">Home</span>
           </div>
-          <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white">
+          <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
             <Icon.Question />
             <Link to="/manual" className="text-sm ml-3 text-gray-200 font-bold">
               Preguntas
             </Link>
           </div>
           <div className="my-4 bg-gray-600 h-px"></div>
-          <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white">
+          <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
             <Icon.Envelope />
             <Link to="/events" className="text-sm ml-3 text-gray-200 font-bold">
               Solicitar Evento
+            </Link>
+          </div>
+          <div className="my-4 bg-gray-600 h-px"></div>
+          <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
+            <Icon.Calendar2 />
+            <Link
+              to="/calendar"
+              className="text-sm ml-3 text-gray-200 font-bold"
+            >
+              Calendario
             </Link>
           </div>
           {isAdmin && (
@@ -76,7 +86,7 @@ function Sidebar() {
                 }}
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
               >
-                <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white">
+                <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
                   <Icon.People />
                   <Link
                     to="/spectators"
@@ -90,7 +100,7 @@ function Sidebar() {
           )}
           <div className="my-4 bg-gray-600 h-px"></div>
           <div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white"
+            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
             onClick={() => logout()}
           >
             <Icon.BoxArrowInRight />

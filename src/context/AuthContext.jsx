@@ -80,7 +80,10 @@ export const AuthProvider = ({ children }) => {
 
         if (res2.data.data.user.role === "Admin") {
           setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
         }
+        console.log(isAdmin);
 
         setUser(res.data);
         setLoading(false);

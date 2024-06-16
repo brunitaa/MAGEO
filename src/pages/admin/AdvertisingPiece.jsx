@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useForm, useFieldArray } from "react-hook-form";
-import { format, formatISO } from "date-fns";
+
 import { useSpectatorRequest } from "../../context/SpectatorContext";
 import { Label, Button, Input } from "../../components/ui";
 import { useAdvertisingRequest } from "../../context/AdvertisementContext";
@@ -137,7 +137,9 @@ const AdvertisingPieceAdmin = () => {
         </label>
         <div
           className={`mb-2 p-4 border bg-white ${
-            focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            focusedInput === "title"
+              ? "border-univalleColorOne"
+              : "border-gray-300"
           } rounded-lg`}
         >
           <Label className="block text-gray-700 text-sm  mb-2">
@@ -186,7 +188,9 @@ const AdvertisingPieceAdmin = () => {
         </label>
         <div
           className={`mb-2 p-4 border bg-white ${
-            focusedInput === "title" ? "border-red-500" : "border-gray-300"
+            focusedInput === "title"
+              ? "border-univalleColorOne"
+              : "border-gray-300"
           } rounded-lg`}
         >
           <Label className="block text-gray-700 text-sm  mb-2">

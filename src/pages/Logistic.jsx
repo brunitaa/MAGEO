@@ -9,10 +9,20 @@ import SidebarForms from "../components/SideBarForms";
 dayjs.extend(utc);
 import "animate.css";
 import { Input } from "../components/ui";
+import { useEventRequest } from "../context/EventsContext";
 
 function Logistic() {
   const params = useParams();
+  const handleEventChange = (event) => {
+    const selectedEvent = events.find((e) => e._id === event.target.value);
+    setSelectedEventName(selectedEvent ? selectedEvent.event_name : "");
+    setValue("event_id", event.target.value);
+  };
   const navigate = useNavigate();
+  const [selectedEventName, setSelectedEventName] = useState("");
+  const handleFocus = (field) => setFocusedInput(field);
+  const handleBlur = () => setFocusedInput(null);
+  const { events, getMyEvents } = useEventRequest();
   const [focusedInput, setFocusedInput] = useState(null);
   const [mueblesServicios, setmueblesServicios] = useState([
     {
@@ -207,19 +217,20 @@ function Logistic() {
           setSuccessMessage("");
         }, 3000);
       }
-      setTimeout(() => {
-        navigate("/homepage");
-      }, 6000);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
+    getMyEvents();
     const loadEvent = async () => {
       if (params.id) {
         const logistic = await getLogistic(params.id);
         console.log(logistic);
         setValue("state", logistic.state);
+        const firstEvent =
+          logistic.events_id.length > 0 ? logistic.event_id[0]._id : "";
+        setValue("event_id", firstEvent);
 
         if (
           logistic.furniture_services &&
@@ -389,16 +400,50 @@ function Logistic() {
       <SidebarForms></SidebarForms>
       <div>
         <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
-          <div className="bg-white p-4 mb-4 border-t-8 border-red-600 rounded-lg">
+          <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
             <h1 className="text-3xl  mb-2">Logística</h1>
             <p className="text-gray-600">
               Por favor, completa la siguiente información sobre la logística de
               tu evento.
             </p>
           </div>
+          <div className="flex gap-4">
+            <div
+              className={`mb-2 p-4 border bg-white ${
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
+              } rounded-lg`}
+            >
+              <Label>
+                Evento:
+                <select
+                  className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                    focusedInput === "event_id"
+                      ? "border-univalleColorOne"
+                      : "border-gray-300"
+                  }`}
+                  {...register("event_id")}
+                  defaultValue={events.length > 0 ? events[0]._id : ""}
+                  required
+                  onFocus={() => handleFocus("event_id")}
+                  onChange={handleEventChange}
+                >
+                  <option value="">Selecciona el evento </option>
+                  {events.map((event, index) => (
+                    <option key={index} value={event._id}>
+                      {event.event_name}
+                    </option>
+                  ))}
+                </select>
+              </Label>
+            </div>
+          </div>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
@@ -527,7 +572,9 @@ function Logistic() {
           </button>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
@@ -654,7 +701,9 @@ function Logistic() {
           </button>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
@@ -997,7 +1046,9 @@ function Logistic() {
           </button>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
@@ -1126,15 +1177,12 @@ function Logistic() {
           </button>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
-            <Label
-              className="block text-gray-700 text-sm  mb-2"
-              htmlFor="event_name"
-            >
-              Estado
-            </Label>
+            <Label className="block text-gray-700 text-sm  mb-2">Estado</Label>
             <Input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
               name="state"

@@ -66,9 +66,9 @@ export function AdvertisingProvider({ children }) {
   const createAdvertisement = async (advertisement) => {
     try {
       const res = await createAPRequest(advertisement);
-      console.log(res.data);
+      console.log(res.data); // Asegúrate de que res contiene lo que esperas
     } catch (error) {
-      console.log(error);
+      console.log(error); // Maneja el error adecuadamente
     }
   };
 

@@ -303,7 +303,9 @@ function ProtocolAdmin() {
           <h3 className="text-2xl  mb-4">3.1 Requerimientos y Servicios</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto">
@@ -461,7 +463,9 @@ function ProtocolAdmin() {
           </h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto">
@@ -583,7 +587,9 @@ function ProtocolAdmin() {
           <h3 className="text-2xl  mb-4">3.3 Participantes en la Clausura</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto">
@@ -701,7 +707,9 @@ function ProtocolAdmin() {
           <h3 className="text-2xl  mb-4">3.4 Maestro de Ceremonia</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <table className="table-auto">
@@ -793,7 +801,9 @@ function ProtocolAdmin() {
           </div>
           <div
             className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title" ? "border-red-500" : "border-gray-300"
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
             } rounded-lg`}
           >
             <Label className="block text-gray-700 text-sm  mb-2">

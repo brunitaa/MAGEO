@@ -22,6 +22,7 @@ import { LogisticProvider } from "./context/LogisticContext";
 import Logistic from "./pages/Logistic";
 import LogisticAdmin from "./pages/admin/Logistic";
 import Sidebar from "./components/SideBar";
+import CalendarPage from "./pages/CalendarPage";
 
 function App() {
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
@@ -51,6 +52,10 @@ function App() {
                             <Route
                               path="/advertisingPiece"
                               element={<AdvertisingPiece />}
+                            />
+                            <Route
+                              path="/calendar"
+                              element={<CalendarPage />}
                             />
                             <Route
                               path="/spectators"

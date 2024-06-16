@@ -9,11 +9,13 @@ import { useForm } from "react-hook-form";
 import { useSpectatorRequest } from "../context/SpectatorContext";
 import "animate.css";
 import "tailwindcss/tailwind.css"; // Asegúrate de importar Tailwind CSS
+import { useEventRequest } from "../context/EventsContext";
 dayjs.extend(utc);
 
 const AdvertisingPiece = () => {
   const params = useParams();
   const navigate = useNavigate();
+  const { events, getMyEvents } = useEventRequest();
   const { spectators, getSpectators } = useSpectatorRequest();
   const { createAdvertisement, getAdvertisement, updateAdvertisement } =
     useAdvertisingRequest();
@@ -53,6 +55,9 @@ const AdvertisingPiece = () => {
         const advertisement = await getAdvertisement(params.id);
         setValue("title", advertisement.title);
         setValue("area", advertisement.area);
+        const firstEvent =
+          advertisement.events.length > 0 ? advertisement.event[0]._id : "";
+        setValue("event", advertisement.firstEvent);
         const firstSpectator =
           advertisement.spectators.length > 0
             ? advertisement.spectators[0].title
@@ -73,7 +78,7 @@ const AdvertisingPiece = () => {
       <SidebarForms></SidebarForms>
       <div className="flex-grow flex justify-center items-center p-6">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="bg-white p-4 mb-4 border-t-8 border-red-600 rounded-lg">
+          <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
             <h1 className="text-3xl  mb-2">Pieza publicitaria</h1>
             <p className="text-gray-600">
               Por favor, completa la siguiente información para crear o editar

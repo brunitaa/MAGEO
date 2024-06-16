@@ -2,14 +2,19 @@ import { useAdvertisingRequest } from "../../context/AdvertisementContext";
 import { useAuth } from "../../context/AuthContext";
 import { Button, ButtonLink, Card } from "../ui";
 
-export function AdvertisementCard({ advertisement, isAdmin }) {
+export function AdvertisementCard({ advertisement }) {
   const { deleteAdvertisement } = useAdvertisingRequest();
-  console.log(isAdmin);
+  const { isAdmin } = useAuth(); // Obtener el estado de isAdmin del contexto de autenticación
+
   const handleDelete = async () => {
-    await deleteAdvertisement(advertisement._id);
-    window.location.reload();
-    // Llamar a la función para actualizar la lista de anuncios después de borrar
+    try {
+      await deleteAdvertisement(advertisement._id);
+      window.location.reload();
+    } catch (error) {
+      console.log("Error deleting advertisement:", error);
+    }
   };
+
   return (
     <Card>
       <header className="flex justify-between">
@@ -17,19 +22,19 @@ export function AdvertisementCard({ advertisement, isAdmin }) {
       </header>
       <p className="text-slate-600">{advertisement.description}</p>
       <p className="text-slate-600">
-        Observaciones:{advertisement.observations}
+        Observaciones: {advertisement.observations}
       </p>
-      <p className="text-slate-600">Estado:{advertisement.state}</p>
+      <p className="text-slate-600">Estado: {advertisement.state}</p>
       <br />
       <div className="flex gap-x-2 items-center">
         <Button onClick={handleDelete}>Delete</Button>
         {isAdmin ? (
           <ButtonLink to={`/admin/advertisement/${advertisement._id}`}>
-            Edit
+            View
           </ButtonLink>
         ) : (
           <ButtonLink to={`/user/advertisement/${advertisement._id}`}>
-            View
+            Edit
           </ButtonLink>
         )}
       </div>

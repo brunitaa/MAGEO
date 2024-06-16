@@ -15,7 +15,6 @@ import { motion } from "framer-motion";
 
 export function HomePage2() {
   const { events, getMyEvents } = useEventRequest([]);
-
   const { advertisements, getMyAdvertisements } = useAdvertisingRequest([]);
   const { protocols, getMyProtocols } = useprotocolRequest([]);
   const { logistics, getMyLogistics } = useLogisticRequest([]);
@@ -32,36 +31,41 @@ export function HomePage2() {
   return (
     <div className="flex bg-red-100">
       <Sidebar />
-      <div className="ml-64 mr-4 mt-4 p-4">
+
+      <div className="ml-64 mr-4 mt-4 p-4 w-full">
         <motion.h1
-          className="text-2xl font-bold mb-4"
+          className="text-3xl font-bold mb-8 text-gray-800"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           Mis Formularios
         </motion.h1>
-        <section className="mt-8">
+
+        <motion.section
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <motion.h2
-            className="text-2xl font-bold mb-4"
+            className="text-2xl font-bold mb-4 text-gray-800"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5 }}
           >
             Eventos
           </motion.h2>
           {events.length === 0 && (
             <motion.div
-              className="flex justify-center items-center p-10"
+              className="flex justify-center items-center p-10 bg-white rounded-lg shadow-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <div>
-                <h1 className="font-bold text-xl">
-                  No hay eventos aún, por favor añade uno nuevo.
-                </h1>
-              </div>
+              <h1 className="font-bold text-lg text-gray-600">
+                No hay eventos aún. ¡Añade uno nuevo!
+              </h1>
             </motion.div>
           )}
           <motion.div
@@ -74,29 +78,32 @@ export function HomePage2() {
               <EventCard event={event} key={event._id} />
             ))}
           </motion.div>
-        </section>
-        <section className="mt-8">
+        </motion.section>
+
+        <motion.section
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <motion.h2
-            className="text-2xl font-bold mb-4"
+            className="text-2xl font-bold mb-4 text-gray-800"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5 }}
           >
             Protocolos
           </motion.h2>
           {protocols.length === 0 && (
             <motion.div
-              className="flex justify-center items-center p-10"
+              className="flex justify-center items-center p-10 bg-white rounded-lg shadow-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <div>
-                <h1 className="font-bold text-xl">
-                  No hay formularios de protocolo aún, por favor añade uno
-                  nuevo.
-                </h1>
-              </div>
+              <h1 className="font-bold text-lg text-gray-600">
+                No hay formularios de protocolo aún. ¡Añade uno nuevo!
+              </h1>
             </motion.div>
           )}
           <motion.div
@@ -109,30 +116,32 @@ export function HomePage2() {
               <ProtocolCard protocol={protocol} key={protocol._id} />
             ))}
           </motion.div>
-        </section>
+        </motion.section>
 
-        <section className="mt-8">
+        <motion.section
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <motion.h2
-            className="text-2xl font-bold mb-4"
+            className="text-2xl font-bold mb-4 text-gray-800"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5 }}
           >
             Logística
           </motion.h2>
           {logistics.length === 0 && (
             <motion.div
-              className="flex justify-center items-center p-10"
+              className="flex justify-center items-center p-10 bg-white rounded-lg shadow-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <div>
-                <h1 className="font-bold text-xl">
-                  No hay formularios de logistica aún, por favor añade uno
-                  nuevo.
-                </h1>
-              </div>
+              <h1 className="font-bold text-lg text-gray-600">
+                No hay formularios de logística aún. ¡Añade uno nuevo!
+              </h1>
             </motion.div>
           )}
           <motion.div
@@ -149,29 +158,32 @@ export function HomePage2() {
               />
             ))}
           </motion.div>
-        </section>
+        </motion.section>
 
-        <section className="mt-8">
+        <motion.section
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <motion.h2
-            className="text-2xl font-bold mb-4"
+            className="text-2xl font-bold mb-4 text-gray-800"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5 }}
           >
-            Piezas
+            Piezas Publicitarias
           </motion.h2>
           {advertisements.length === 0 && (
             <motion.div
-              className="flex justify-center items-center p-10"
+              className="flex justify-center items-center p-10 bg-white rounded-lg shadow-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <div>
-                <h1 className="font-bold text-xl">
-                  No hay piezas publicitarias aún, por favor añade uno nuevo.
-                </h1>
-              </div>
+              <h1 className="font-bold text-lg text-gray-600">
+                No hay piezas publicitarias aún. ¡Añade una nueva!
+              </h1>
             </motion.div>
           )}
           <motion.div
@@ -187,7 +199,7 @@ export function HomePage2() {
               />
             ))}
           </motion.div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

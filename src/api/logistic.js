@@ -4,7 +4,7 @@ export const getLogisticsRequest = async () =>
   axios.get("/auth/users/logistics");
 
 export const getMyLogisticsRequest = async () =>
-  axios.get("/auth/users/logistics/me");
+  axios.get("/auth/users/logistics");
 
 export const createLogisticRequest = async (logistic) =>
   axios.post("/auth/users/logistics", logistic);

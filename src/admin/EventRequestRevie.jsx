@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
-import { auth } from "../firebase";
+
 import { Label } from "../components/ui/Label";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import Sidebar from "../components/SideBar";

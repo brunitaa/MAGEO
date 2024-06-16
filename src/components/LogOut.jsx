@@ -1,7 +1,7 @@
 import React from "react";
 import { ButtonLink } from "./ui/ButtonLink";
 import { Button } from "./ui/Button";
-import { auth } from "../firebase";
+
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 

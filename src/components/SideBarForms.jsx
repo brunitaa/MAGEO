@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+
 import { signOut } from "firebase/auth";
 import { useAuth } from "../context/AuthContext";
 import * as Icon from "react-bootstrap-icons";
@@ -67,7 +67,7 @@ function SidebarForms() {
           className="p-2 lg:w-72 lg:flex lg:flex-col lg:justify-between h-full lg:h-auto"
         >
           <motion.div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white"
+            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
             onClick={handleHomeClick}
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -81,7 +81,7 @@ function SidebarForms() {
           <div className="my-2 bg-gray-600 h-px"></div>
 
           <motion.div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white"
+            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 120, damping: 20 }}
@@ -96,7 +96,7 @@ function SidebarForms() {
           </motion.div>
           <div className="my-2 bg-gray-600 h-px"></div>
           <motion.div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white"
+            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
             onClick={toggleSubmenu}
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -125,13 +125,13 @@ function SidebarForms() {
             >
               <Link
                 to="/user/logistic"
-                className="block text-sm text-gray-200 font-bold hover:bg-red-600 rounded-md px-4 py-2 transition duration-300"
+                className="block text-sm text-gray-200 font-bold hover:bg-univalleColorOne rounded-md px-4 py-2 transition duration-300"
               >
                 Logística
               </Link>
               <Link
                 to="/user/protocol"
-                className="block text-sm text-gray-200 font-bold hover:bg-red-600 rounded-md px-4 py-2 transition duration-300"
+                className="block text-sm text-gray-200 font-bold hover:bg-univalleColorOne rounded-md px-4 py-2 transition duration-300"
               >
                 Protocolo
               </Link>
@@ -139,7 +139,7 @@ function SidebarForms() {
           )}
           <div className="my-2 bg-gray-600 h-px"></div>
           <motion.div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white"
+            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 120, damping: 20 }}
@@ -155,7 +155,7 @@ function SidebarForms() {
           <div className="my-2 bg-gray-600 h-px"></div>
 
           <motion.div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-red-600 text-white"
+            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
             onClick={handleLogout}
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}

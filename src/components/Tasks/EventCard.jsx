@@ -1,11 +1,11 @@
 import { useAuth } from "../../context/AuthContext";
 import { useEventRequest } from "../../context/EventsContext";
-import { Button, ButtonLink, Card } from "../ui";
+import { Button, ButtonLink } from "../ui";
 import { motion } from "framer-motion";
 
 export function EventCard({ event }) {
   const { deleteEvent } = useEventRequest();
-  const isAdmin = useAuth();
+  const { isAdmin } = useAuth();
 
   const handleDelete = async () => {
     try {
@@ -18,45 +18,69 @@ export function EventCard({ event }) {
 
   return (
     <motion.div
-      className="max-w-md mx-auto my-4 p-4 rounded-lg shadow-md bg-gray-100"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      className=" mx-auto my-4 rounded-lg shadow-lg overflow-hidden event-card-container"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      <header className="flex justify-between">
-        <h2 className="text-xl font-bold">{event.event_name}</h2>
-      </header>
-      <p className="text-gray-600 my-2">{event.event_description}</p>
-      <p className="text-gray-600 my-2">Observaciones: {event.observations}</p>
-      <p className="text-gray-600 my-2">Estado: {event.state}</p>
-      <p className="text-gray-600 my-2">
-        {event.request_date &&
-          new Date(event.request_date).toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-      </p>
+      <div className="relative">
+        <img
+          src={
+            event.image_url || "https://cladera.org/foda/images/subcat-2152.jpg"
+          }
+          alt="Event Image"
+          className="w-full h-48 object-cover"
+        />
+        <div className="absolute inset-0 bg-black opacity-40"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h2 className="text-3xl font-bold text-white z-10 mt-4 px-4">
+            {event.event_name}
+          </h2>
+        </div>
+      </div>
+      <div className="p-4 bg-white">
+        <p className="text-gray-700 mb-4">{event.event_description}</p>
+        <p className="text-gray-700 mb-4">
+          Observaciones: {event.observations}
+        </p>
+        <p className="text-gray-700 mb-4">Estado: {event.state}</p>
+        {event.schedules.map((schedule, index) => (
+          <div key={index} className="mb-4">
+            <p className="text-gray-700">
+              Fecha: {new Date(schedule.date).toLocaleDateString()}
+            </p>
+            <p className="text-gray-700">
+              Hora: {new Date(schedule.time).toLocaleTimeString()}
+            </p>
+            <p className="text-gray-700">Lugar: {schedule.place}</p>
+            <p className="text-gray-700">Formato: {schedule.format}</p>
+            <p className="text-gray-700">
+              Tipo de evento: {schedule.event_type}
+            </p>
+          </div>
+        ))}
+        <p className="text-gray-700 mb-4">
+          Fecha de solicitud:{" "}
+          {new Date(event.request_date).toLocaleDateString()}
+        </p>
 
-      <div className="flex justify-end mt-4 space-x-2">
-        <Button className="bg-red-500 hover:bg-red-600" onClick={handleDelete}>
-          Delete
-        </Button>
-        {isAdmin ? (
-          <ButtonLink
-            to={`/admin/event/${event._id}`}
-            className="bg-blue-500 hover:bg-blue-600"
+        <div className="flex justify-end space-x-4 mt-4">
+          <Button
+            className="bg-univalleColorOne hover:bg-univalleColorOne text-white"
+            onClick={handleDelete}
           >
-            Edit
-          </ButtonLink>
-        ) : (
-          <ButtonLink
-            to={`/user/event/${event._id}`}
-            className="bg-green-500 hover:bg-green-600"
-          >
-            View
-          </ButtonLink>
-        )}
+            Delete
+          </Button>
+          {isAdmin && (
+            <ButtonLink to={`/admin/event/${event._id}`} className="...">
+              View
+            </ButtonLink>
+          )}
+          {!isAdmin && (
+            <ButtonLink to={`/user/event/${event._id}`} className="...">
+              Edit
+            </ButtonLink>
+          )}
+        </div>
       </div>
     </motion.div>
   );
