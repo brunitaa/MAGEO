@@ -1,7 +1,8 @@
+# render.yaml
 services:
   - type: web
-    name: my-react-app
+    name: mageo
     env: static
     staticPublishPath: dist
     buildCommand: npm run build
-    startCommand: npm run start
+    startCommand: npm run preview
