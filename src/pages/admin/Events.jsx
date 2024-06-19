@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
+import SidebarForms from "../../components/SideBarForms";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Button, Input, Label } from "../../components/ui";
 import { useEventRequest } from "../../context/EventsContext";
 import { useForm, useFieldArray } from "react-hook-form";
-import { format, formatISO } from "date-fns";
-import SidebarForms from "../../components/SideBarForms";
 import { useSpectatorRequest } from "../../context/SpectatorContext";
 dayjs.extend(utc);
 
-function EventFormAdmin() {
-  const [successMessage, setSuccessMessage] = useState("");
+function EventAdmin() {
   const params = useParams();
-  const [focusedInput, setFocusedInput] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
   const { createEvent, getEvent, updateEvent, acceptEvent, rejectEvent } =
     useEventRequest();
   const { spectators, getSpectators } = useSpectatorRequest();
+  const [focusedInput, setFocusedInput] = useState(null);
   const navigate = useNavigate();
   const {
     register,
@@ -25,52 +24,10 @@ function EventFormAdmin() {
     formState: { errors },
     control,
   } = useForm();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "schedules",
-  });
 
-  const onSubmit = async (data) => {
+  const onAccept = async () => {
     try {
-      data.schedules.forEach((schedule) => {
-        // Formatea la fecha
-        schedule.date = format(
-          new Date(schedule.date),
-          "yyyy-MM-dd'T'HH:mm:ssxxx"
-        );
-
-        // Formatea el tiempo
-        schedule.time = format(
-          new Date(`2000-01-01T${schedule.time}`),
-          "yyyy-MM-dd'T'HH:mm:ssxxx"
-        );
-      });
-      if (params.id) {
-        console.log(params.id);
-        updateEvent(params.id, {
-          ...data,
-        });
-      } else {
-        console.log(data);
-        createEvent({
-          ...data,
-        });
-      }
-      navigate("/admin");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onAccept = async (data) => {
-    try {
-      console.log(params.id);
-      updateEvent(params.id, {
-        ...data,
-      });
-      acceptEvent(params.id, {
-        ...data,
-      });
+      acceptEvent(params.id);
       setSuccessMessage("Aceptado Correctamente");
       setTimeout(() => {
         setSuccessMessage("");
@@ -79,22 +36,14 @@ function EventFormAdmin() {
       setTimeout(() => {
         navigate("/admin");
       }, 5000);
-
-      navigate("/admin");
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onReject = async (data) => {
+  const onReject = async () => {
     try {
-      console.log(params.id);
-      updateEvent(params.id, {
-        ...data,
-      });
-      rejectEvent(params.id, {
-        ...data,
-      });
+      rejectEvent(params.id);
       setSuccessMessage("Rechazado Correctamente");
       setTimeout(() => {
         setSuccessMessage("");
@@ -103,41 +52,86 @@ function EventFormAdmin() {
       setTimeout(() => {
         navigate("/admin");
       }, 5000);
-
-      navigate("/admin");
     } catch (error) {
       console.log(error);
     }
   };
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "schedules",
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      data.schedules.forEach((schedule) => {
+        // Combina la fecha con la hora para start_time y end_time
+        const combinedStartTime = new Date(
+          `${schedule.date}T${schedule.start_time}`
+        );
+        const combinedEndTime = new Date(
+          `${schedule.date}T${schedule.end_time}`
+        );
+
+        // Formatea la fecha y hora al estilo ISO 8601 para MongoDB
+        schedule.date = new Date(schedule.date).toISOString();
+        schedule.start_time = combinedStartTime.toISOString();
+        schedule.end_time = combinedEndTime.toISOString();
+      });
+
+      // Lógica para crear o actualizar el evento
+      if (params.id) {
+        await updateEvent(params.id, {
+          ...data,
+        });
+        setSuccessMessage("Cambios guardados exitosamente");
+      } else {
+        await createEvent({
+          ...data,
+        });
+        setSuccessMessage("Creado Exitosamente");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 3000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getSpectators();
+
     const loadEvent = async () => {
       if (params.id) {
         const event = await getEvent(params.id);
-        console.log(event);
+
+        // Asigna valores al formulario principal
         setValue("event_name", event.event_name);
         setValue("event_description", event.event_description);
-        setValue(
-          "date",
-          event.date ? dayjs(event.date).utc().format("YYYY-MM-DD") : ""
-        );
         setValue("campus", event.campus);
         setValue("area", event.area);
         setValue("registration_link", event.registration_link);
-        setValue("attendance_control", event.attendance_control);
+        setValue(
+          "attendance_control",
+          event.attendance_control ? "true" : "false"
+        );
 
-        // Asegúrate de que event.schedules exista y sea un array antes de asignarlo
+        // Formatea y asigna los valores de los horarios (schedules)
         if (event.schedules && Array.isArray(event.schedules)) {
-          // Aquí puedes ajustar cómo asignas los valores de los schedules según tu estructura de datos
           event.schedules.forEach((schedule, index) => {
             setValue(`schedules[${index}].place`, schedule.place);
             setValue(
               `schedules[${index}].date`,
-              schedule.date ? schedule.date.slice(0, 10) : ""
+              dayjs(schedule.date).format("YYYY-MM-DD")
             );
             setValue(
-              `schedules[${index}].time`,
-              schedule.time ? schedule.time.slice(0, 10) : ""
+              `schedules[${index}].start_time`,
+              dayjs(schedule.start_time).format("HH:mm")
+            );
+            setValue(
+              `schedules[${index}].end_time`,
+              dayjs(schedule.end_time).format("HH:mm")
             );
             setValue(
               `schedules[${index}].links_to_visual_material`,
@@ -152,23 +146,42 @@ function EventFormAdmin() {
               schedule.activity_objective
             );
             setValue(`schedules[${index}].format`, schedule.format);
+
+            // Asigna espectadores si existen
+            if (schedule.spectators && schedule.spectators.length > 0) {
+              const firstSpectatorId = schedule.spectators[0]._id; // Suponiendo que _id es el campo correcto del espectador
+              setValue(`schedules[${index}].spectators`, firstSpectatorId);
+            }
           });
         }
       }
     };
+
     loadEvent();
   }, []);
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
   return (
-    <>
-      <div className="flex bg-red-100">
-        <SidebarForms></SidebarForms>
-        <div className="flex-grow flex justify-center items-center p-6">
-          <form
-            className="w-full max-w-4xl bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <h1 className="text-3xl  mb-4">Formulario de Solicitud</h1>
+    <div className="flex bg-red-100">
+      <SidebarForms sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div
+        className={`flex-grow p-10  transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
+        <div className="max-w-lg mx-auto">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
+              <h1 className="text-3xl  mb-2">Fomulario de Solicitud</h1>
+              <p className="text-gray-600">
+                Por favor, completa la siguiente información acerca de tu
+                evento.
+              </p>
+            </div>
             <div
               className={`mb-2 p-4 border bg-white ${
                 focusedInput === "title"
@@ -187,9 +200,16 @@ function EventFormAdmin() {
                 name="state"
                 type="text"
                 placeholder="aqui estara el estado"
-                autoFocus
                 readOnly
               />
+            </div>
+            <div
+              className={`mb-2 p-4 border bg-white ${
+                focusedInput === "title"
+                  ? "border-univalleColorOne"
+                  : "border-gray-300"
+              } rounded-lg`}
+            >
               <Label
                 className="block text-gray-700 text-sm  mb-2"
                 htmlFor="event_name"
@@ -219,7 +239,7 @@ function EventFormAdmin() {
               >
                 Descripción del Evento
               </Label>
-              <textarea
+              <Input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="event_description"
                 placeholder="Descripción del Evento"
@@ -317,79 +337,119 @@ function EventFormAdmin() {
                 </select>
               </div>
             </div>
+
             {/* Sección de programación (schedules) */}
-            <h2 className="text-xl  mb-2">Horarios</h2>
+
+            <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
+              <h1 className="text-3xl  mb-2">Horarios</h1>
+              <p className="text-gray-600">
+                Por favor, añade todos los horarios del evento.
+              </p>
+            </div>
+
             {fields.map((schedule, index) => (
               <div key={schedule.id}>
-                <h3 className="text-lg  mb-2">Horario {index + 1}</h3>
-                <div
-                  className={`mb-2 p-4 border bg-white ${
-                    focusedInput === "title"
-                      ? "border-univalleColorOne"
-                      : "border-gray-300"
-                  } rounded-lg`}
-                >
-                  <Label
-                    className="block text-gray-700 text-sm  mb-2"
-                    htmlFor={`schedules[${index}].place`}
-                  >
-                    Lugar
-                  </Label>
-                  <Input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                    name={`schedules[${index}].place`}
-                    type="text"
-                    placeholder="Lugar"
-                    {...register(`schedules[${index}].place`, {
-                      required: true,
-                    })}
-                  />
+                <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg flex items-center justify-between">
+                  <h1 className="text-3xl mb-2">Horario {index + 1}</h1>
+                  <Button type="button" onClick={() => remove(index)}>
+                    Eliminar
+                  </Button>
                 </div>
-                <div
-                  className={`mb-2 p-4 border bg-white ${
-                    focusedInput === "title"
-                      ? "border-univalleColorOne"
-                      : "border-gray-300"
-                  } rounded-lg`}
-                >
-                  <Label
-                    className="block text-gray-700 text-sm  mb-2"
-                    htmlFor={`schedules[${index}].date`}
+                <div className="grid grid-cols-2 gap-4">
+                  <div
+                    className={`mb-2 p-4 border bg-white ${
+                      focusedInput === "title"
+                        ? "border-univalleColorOne"
+                        : "border-gray-300"
+                    } rounded-lg`}
                   >
-                    Fecha
-                  </Label>
-                  <Input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                    name={`schedules[${index}].date`}
-                    type="date"
-                    placeholder="Fecha"
-                    {...register(`schedules[${index}].date`, {
-                      required: true,
-                    })}
-                  />
+                    <Label
+                      className="block text-gray-700 text-sm  mb-2"
+                      htmlFor={`schedules[${index}].place`}
+                    >
+                      Lugar
+                    </Label>
+                    <Input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                      name={`schedules[${index}].place`}
+                      type="text"
+                      placeholder="Lugar"
+                      {...register(`schedules[${index}].place`, {
+                        required: true,
+                      })}
+                    />
+                  </div>
+                  <div
+                    className={`mb-2 p-4 border bg-white ${
+                      focusedInput === "title"
+                        ? "border-univalleColorOne"
+                        : "border-gray-300"
+                    } rounded-lg`}
+                  >
+                    <Label
+                      className="block text-gray-700 text-sm  mb-2"
+                      htmlFor={`schedules[${index}].date`}
+                    >
+                      Fecha
+                    </Label>
+                    <Input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                      name={`schedules[${index}].date`}
+                      type="date"
+                      placeholder="Fecha"
+                      {...register(`schedules[${index}].date`, {
+                        required: true,
+                      })}
+                    />
+                  </div>
                 </div>
-                <div
-                  className={`mb-2 p-4 border bg-white ${
-                    focusedInput === "title"
-                      ? "border-univalleColorOne"
-                      : "border-gray-300"
-                  } rounded-lg`}
-                >
-                  <Label
-                    className="block text-gray-700 text-sm  mb-2"
-                    htmlFor={`schedules[${index}].time`}
+                <div className="grid grid-cols-2 gap-4">
+                  <div
+                    className={`mb-2 p-4 border bg-white ${
+                      focusedInput === "title"
+                        ? "border-univalleColorOne"
+                        : "border-gray-300"
+                    } rounded-lg`}
                   >
-                    Hora
-                  </Label>
-                  <Input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                    name={`schedules[${index}].time`}
-                    type="time"
-                    placeholder="Hora"
-                    {...register(`schedules[${index}].time`, {
-                      required: true,
-                    })}
-                  />
+                    <Label
+                      className="block text-gray-700 text-sm  mb-2"
+                      htmlFor={`schedules[${index}].start_time`}
+                    >
+                      Hora de comienzo
+                    </Label>
+                    <Input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                      name={`schedules[${index}].start_time`}
+                      type="time"
+                      placeholder="Hora"
+                      {...register(`schedules[${index}].start_time`, {
+                        required: true,
+                      })}
+                    />
+                  </div>
+                  <div
+                    className={`mb-2 p-4 border bg-white ${
+                      focusedInput === "title"
+                        ? "border-univalleColorOne"
+                        : "border-gray-300"
+                    } rounded-lg`}
+                  >
+                    <Label
+                      className="block text-gray-700 text-sm  mb-2"
+                      htmlFor={`schedules[${index}].end_time`}
+                    >
+                      Hora de finalizacion
+                    </Label>
+                    <Input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
+                      name={`schedules[${index}].end_time`}
+                      type="time"
+                      placeholder="Hora"
+                      {...register(`schedules[${index}].end_time`, {
+                        required: true,
+                      })}
+                    />
+                  </div>
                 </div>
                 <div
                   className={`mb-2 p-4 border bg-white ${
@@ -609,25 +669,25 @@ function EventFormAdmin() {
               </div>
             ))}
             <div className="flex-grow flex justify-center items-center p-6">
-              <Button
-                type="button"
-                onClick={() => append({})}
-                className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded mx-2"
-              >
-                Agregar Horario
-              </Button>
-              <div className="divider"></div>
-              <Button
-                type="button"
-                onClick={() => remove({})}
-                className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded mx-2"
-              >
-                Eliminar Horario
-              </Button>
-            </div>
-            <br />
+              <div className="flex justify-center items-center p-6">
+                <Button
+                  type="button"
+                  onClick={() => append({})}
+                  className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded mx-2"
+                >
+                  Agregar Horario
+                </Button>
+              </div>
 
-            <br></br>
+              <div className="divider"></div>
+            </div>
+
+            <br />
+            {successMessage && (
+              <div className="bg-green-500 text-white p-2 mb-4 rounded animate__animated animate__fadeIn">
+                {successMessage}
+              </div>
+            )}
             <div
               className={`mb-2 p-4 border bg-white ${
                 focusedInput === "title"
@@ -640,7 +700,7 @@ function EventFormAdmin() {
               </Label>
               <Input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="observations"
+                id="links_to_visual_material"
                 type="text"
                 placeholder={"observations"}
                 {...register(`observations`)}
@@ -660,23 +720,18 @@ function EventFormAdmin() {
             >
               Denegar
             </button>
-            {successMessage && (
-              <div className="bg-green-500 text-white p-2 mb-4 rounded animate__animated animate__fadeIn">
-                {successMessage}
-              </div>
-            )}
-            <br />
-            <button
+
+            <Button
               type="submit"
               className="bg-green-500 hover:bg-green-700 text-white  py-2 px-4 rounded"
             >
               Enviar
-            </button>
+            </Button>
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
-export default EventFormAdmin;
+export default EventAdmin;

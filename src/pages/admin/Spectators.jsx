@@ -31,7 +31,12 @@ export function SpectatorsPage() {
     getSpectatorsAdmin();
   }, []);
 
-  const [focusedInput, setFocusedInput] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   const onSubmit = async (data) => {
     try {
       if (params.id) {
@@ -65,8 +70,12 @@ export function SpectatorsPage() {
 
   return (
     <div className="flex bg-red-100">
-      <Sidebar />
-      <div style={{ margin: "10px 20px" }}>
+      <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div
+        className={`flex-grow p-10  transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={handleSubmit(onSubmit)}
@@ -74,35 +83,29 @@ export function SpectatorsPage() {
           <header>
             <h1 className="text-xl font-bold mb-4">Crear Espectadores</h1>
           </header>
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
+          <div className="mb-2 p-4 border bg-white rounded-lg">
             <label
               htmlFor="title"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Title:
+              Nombre de Espectador:
             </label>
             <Input id="title" type="text" {...register("title")} required />
           </div>
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
+          <div className="mb-2 p-4 border bg-white rounded-lg">
             <label
               htmlFor="value"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Value:
+              Valor:
             </label>
-            <Input id="value" type="number" {...register("value")} required />
+            <Input
+              id="value"
+              type="number"
+              max="15"
+              {...register("value")}
+              required
+            />
           </div>
           <Button type="submit">Submit</Button>
         </form>

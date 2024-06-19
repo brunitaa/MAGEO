@@ -6,12 +6,20 @@ export const getAPsRequest = async () =>
 export const getMyAPsRequest = async () =>
   axios.get("/auth/users/advertising-pieces");
 
-export const createAPRequest = async (advertisement) => {
+export const createAPRequest = async (data) => {
   try {
-    axios.post("/auth/users/advertising-pieces", advertisiment);
-    return res; // Retorna la respuesta del servidor si es necesario
+    const response = await axios.post("/auth/users/advertising-pieces", data);
+    if (response && response.data) {
+      return response.data;
+    } else {
+      throw new Error("Unexpected response structure");
+    }
   } catch (error) {
-    throw new Error(error.response.data.message || error.message);
+    console.error(
+      "Error creating advertising piece:",
+      error.response || error.message
+    );
+    throw new Error(error.response ? error.response.data : "Network Error");
   }
 };
 

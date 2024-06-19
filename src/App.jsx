@@ -23,6 +23,7 @@ import Logistic from "./pages/Logistic";
 import LogisticAdmin from "./pages/admin/Logistic";
 import Sidebar from "./components/SideBar";
 import CalendarPage from "./pages/CalendarPage";
+import { Formularios } from "./pages/admin/Formularios";
 
 function App() {
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
@@ -60,6 +61,10 @@ function App() {
                             <Route
                               path="/spectators"
                               element={<SpectatorsPage />}
+                            />
+                            <Route
+                              path="/formularios"
+                              element={<Formularios />}
                             />
                             <Route
                               path="/spectators/:id"

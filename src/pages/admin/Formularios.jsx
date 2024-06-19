@@ -1,43 +1,44 @@
 import { useEffect, useState } from "react";
-import { useEventRequest } from "../context/EventsContext";
-import { EventCard } from "../components/Tasks/EventCard";
-import Sidebar from "../components/SideBar";
-import { useAdvertisingRequest } from "../context/AdvertisementContext";
-import { AdvertisementCard } from "../components/Tasks/AdvertisementCard";
-import Protocol from "./Protocol";
-import { useprotocolRequest } from "../context/ProtocolContext";
-import { ProtocolCard } from "../components/Tasks/ProtocolCard";
-import { LogisticCard } from "../components/Tasks/LogisticCard";
-import { useLogisticRequest } from "../context/LogisticContext";
-import { useAuth } from "../context/AuthContext";
+import { useEventRequest } from "../../context/EventsContext";
+import { EventCard } from "../../components/Tasks/EventCard";
+import Sidebar from "../../components/SideBar";
+import { AdvertisementCard } from "../../components/Tasks/AdvertisementCard";
+import { ProtocolCard } from "../../components/Tasks/ProtocolCard";
+import { LogisticCard } from "../../components/Tasks/LogisticCard";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAdvertisingRequest } from "../../context/AdvertisementContext";
+import { useprotocolRequest } from "../../context/ProtocolContext";
+import { useLogisticRequest } from "../../context/LogisticContext";
+import { useAuth } from "../../context/AuthContext";
 
-export function HomePage2() {
-  const { events, getMyEvents } = useEventRequest([]);
-  const { advertisements, getMyAdvertisements } = useAdvertisingRequest([]);
-  const { protocols, getMyProtocols } = useprotocolRequest([]);
-  const { logistics, getMyLogistics } = useLogisticRequest([]);
+export function Formularios() {
+  const { events, getEvents } = useEventRequest([]);
+  const { advertisements, getAdvertisements } = useAdvertisingRequest([]);
+  const { protocols, getProtocols } = useprotocolRequest([]);
+  const { logistics, getLogistics } = useLogisticRequest([]);
   const isAdmin = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getEvents();
+    getAdvertisements();
+    getProtocols();
+    getLogistics();
+  }, []);
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  useEffect(() => {
-    getMyEvents();
-    getMyAdvertisements();
-    getMyProtocols();
-    getMyLogistics();
-  }, []);
-
   return (
     <div className="flex bg-red-100">
       <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+
       <div
-        className={`flex-grow p-10  transition-all duration-300 ${
+        className={`flex-grow p-5  transition-all duration-300 ${
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
@@ -77,7 +78,7 @@ export function HomePage2() {
             </motion.div>
           )}
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}

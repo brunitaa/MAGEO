@@ -4,7 +4,7 @@ export const getProtocolsRequest = async () =>
   axios.get("/auth/users/protocols");
 
 export const getMyProtocolsRequest = async () =>
-  axios.get("/auth/users/protocols/me");
+  axios.get("/auth/users/protocols");
 
 export const createProtocolRequest = async (protocol) =>
   axios.post("/auth/users/protocols", protocol);

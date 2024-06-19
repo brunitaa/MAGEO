@@ -3,6 +3,7 @@ import { Label, Input } from "../../components/ui/index";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useprotocolRequest } from "../../context/ProtocolContext";
+import SidebarForms from "../../components/SideBarForms";
 
 function ProtocolAdmin() {
   const params = useParams();
@@ -191,27 +192,21 @@ function ProtocolAdmin() {
       if (params.id) {
         const protocol = await getProtocol(params.id);
         console.log(protocol);
+        const firstEvent = protocol.event ? protocol.event_id._id : "";
+        setValue("event_id", firstEvent);
 
-        // Asegúrate de que event.schedules exista y sea un array antes de asignarlo
-        if (
-          protocol.master_of_ceremonies &&
-          Array.isArray(protocol.master_of_ceremonies)
-        ) {
-          protocol.master_of_ceremonies.forEach((master, index) => {
-            setValue(
-              `master_of_ceremonies[${index}].first_name`,
-              master.first_name
-            );
-            setValue(
-              `master_of_ceremonies[${index}].last_name`,
-              master.last_name
-            );
-            setValue(`master_of_ceremonies[${index}].email`, master.email);
-            setValue(`master_of_ceremonies[${index}].phone`, master.phone);
-            setValue(`master_of_ceremonies[${index}].status`, master.status);
-          });
+        // Asignar valores del maestro de ceremonias
+        if (protocol.master_of_ceremonies) {
+          const { first_name, last_name, email, phone, status } =
+            protocol.master_of_ceremonies;
+          setValue("master_of_ceremonies.first_name", first_name);
+          setValue("master_of_ceremonies.last_name", last_name);
+          setValue("master_of_ceremonies.email", email);
+          setValue("master_of_ceremonies.phone", phone);
+          setValue("master_of_ceremonies.status", status);
         }
 
+        // Asignar valores de cierre, inauguración y requisitos de servicio si existen
         if (protocol.closing_data && Array.isArray(protocol.closing_data)) {
           protocol.closing_data.forEach((closing, index) => {
             setValue(
@@ -234,6 +229,7 @@ function ProtocolAdmin() {
             );
           });
         }
+
         if (
           protocol.inauguration_data &&
           Array.isArray(protocol.inauguration_data)
@@ -262,6 +258,7 @@ function ProtocolAdmin() {
             );
           });
         }
+
         if (
           protocol.service_requirements &&
           Array.isArray(protocol.service_requirements)
@@ -294,11 +291,22 @@ function ProtocolAdmin() {
       }
     };
     loadEvent();
-  }, []);
+  }, [params.id, setValue]);
+
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
     <div className="flex bg-red-100">
-      <div style={{ margin: "10px 20px" }}>
+      <SidebarForms sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div
+        className={`flex-grow p-10  transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
         <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
           <h3 className="text-2xl  mb-4">3.1 Requerimientos y Servicios</h3>
           <div
@@ -439,7 +447,7 @@ function ProtocolAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveRow(index)}
                       >
                         Eliminar
@@ -451,7 +459,7 @@ function ProtocolAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddRow}
             type="button"
             style={{ margin: "10px 20px" }}
@@ -565,7 +573,7 @@ function ProtocolAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveParticipant(index)}
                       >
                         Eliminar
@@ -577,7 +585,7 @@ function ProtocolAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddParticipant}
             type="button"
             style={{ margin: "10px 20px" }}
@@ -685,7 +693,7 @@ function ProtocolAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveParticipant2(index)}
                       >
                         Eliminar
@@ -697,7 +705,7 @@ function ProtocolAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddParticipant2}
             type="button"
             style={{ margin: "10px 20px" }}
@@ -729,10 +737,6 @@ function ProtocolAdmin() {
                   </th>
                   <th className="px-4 py-2">
                     <Label>Estado</Label>
-                  </th>
-
-                  <th className="px-4 py-2">
-                    <Label>Acción</Label>
                   </th>
                 </tr>
               </thead>

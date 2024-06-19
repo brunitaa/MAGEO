@@ -12,18 +12,11 @@ import { Input } from "../components/ui";
 import { useEventRequest } from "../context/EventsContext";
 
 function Logistic() {
-  const params = useParams();
-  const handleEventChange = (event) => {
-    const selectedEvent = events.find((e) => e._id === event.target.value);
-    setSelectedEventName(selectedEvent ? selectedEvent.event_name : "");
-    setValue("event_id", event.target.value);
-  };
-  const navigate = useNavigate();
-  const [selectedEventName, setSelectedEventName] = useState("");
-  const handleFocus = (field) => setFocusedInput(field);
-  const handleBlur = () => setFocusedInput(null);
+  const [successMessage, setSuccessMessage] = useState("");
   const { events, getMyEvents } = useEventRequest();
+  const params = useParams();
   const [focusedInput, setFocusedInput] = useState(null);
+  const navigate = useNavigate();
   const [mueblesServicios, setmueblesServicios] = useState([
     {
       ÍtemName: "",
@@ -84,19 +77,18 @@ function Logistic() {
     },
   ]);
 
-  const { createLogistic, getLogistic, updateLogistic } = useLogisticRequest();
+  const {
+    createLogistic,
+    getLogistic,
+    updateLogistic,
+    acceptLogistic,
+    rejectLogistic,
+  } = useLogisticRequest();
 
   const handleAddRow = () => {
     setmueblesServicios([
       ...mueblesServicios,
-      {
-        ÍtemName: "",
-        quantity: 0,
-        supplier: "",
-        unit: "",
-        unit_price: "",
-        observations: "",
-      },
+      { ÍtemName: "", quantity: 0, observations: "" },
     ]);
   };
   const handleAddDisertante = () => {
@@ -181,6 +173,7 @@ function Logistic() {
     newTransport.splice(index, 1);
     setTransport(newTransport);
   };
+  const handleBlur = () => setFocusedInput(null);
 
   const handleRemoveMaterial = (index) => {
     const newMaterial = [...materialApoyo];
@@ -197,22 +190,49 @@ function Logistic() {
     newDisertantes.splice(index, 1);
     setDisertantes(newDisertantes);
   };
-
-  const [successMessage, setSuccessMessage] = useState("");
+  const allFood = [
+    "NesCafé PZA",
+    "Tés CAJA",
+    "Trimates CAJA",
+    "Agua en bidón BIDON",
+    "Galletas de agua PZA",
+  ];
+  const allMobiliario = [
+    "Mesas cuadradas de madera",
+    "Sillas metálicas",
+    "Data y Sonido",
+    "Micrófonos",
+    "Atril",
+    "Puntero",
+    "Red Wifi",
+    "Punto de Red para retransmisiones",
+    "Soporte Técnico",
+    "Transporte",
+    "Punto registro",
+    "Puntos de corriente",
+  ];
+  const allMaterial = [
+    "Folder amarillo tamaño oficio ",
+    "Folder amarillo tamaño carta",
+    "Hojas bond carta",
+    "Hojas bond Oficio",
+    "Lapicero azul",
+    "Folders sectorizado logo univalle",
+    "Certificados",
+  ];
   const onSubmit = async (data) => {
     try {
       if (params.id) {
         console.log(params.id);
-        await updateLogistic(params.id, {
+        updateLogistic(params.id, {
           ...data,
         });
-        setSuccessMessage("Cambios guardados exitosamente");
       } else {
         console.log(data);
-        await createLogistic({
+        createLogistic({
           ...data,
         });
-        setSuccessMessage("Creado Exitosamente");
+        setSuccessMessage("Creado Correctamente");
         setTimeout(() => {
           setSuccessMessage("");
         }, 3000);
@@ -221,15 +241,14 @@ function Logistic() {
       console.log(error);
     }
   };
+  const state = "Pending";
   useEffect(() => {
-    getMyEvents();
     const loadEvent = async () => {
       if (params.id) {
         const logistic = await getLogistic(params.id);
         console.log(logistic);
-        setValue("state", logistic.state);
-        const firstEvent =
-          logistic.events_id.length > 0 ? logistic.event_id[0]._id : "";
+        setValue("state", state);
+        const firstEvent = logistic.event_id ? logistic.event_id._id : "";
         setValue("event_id", firstEvent);
 
         if (
@@ -294,7 +313,7 @@ function Logistic() {
           logistic.food_services.forEach((food, index) => {
             setValue(`food_services[${index}].item_number`, food.item_number);
             setValue(`food_services[${index}].supplier`, food.supplier);
-            setValue(`food_services[${index}].academic_name`, food.name);
+            setValue(`food_services[${index}].name`, food.name);
             setValue(`food_services[${index}].quantity`, food.quantity);
             setValue(`food_services[${index}].unit`, food.unit);
             setValue(`food_services[${index}].unit_price`, food.unit_price);
@@ -311,7 +330,7 @@ function Logistic() {
               support.item_number
             );
             setValue(`support_material[${index}].supplier`, support.supplier);
-            setValue(`support_material[${index}].academic_name`, support.name);
+            setValue(`support_material[${index}].name`, support.name);
             setValue(`support_material[${index}].quantity`, support.quantity);
             setValue(`support_material[${index}].unit`, support.unit);
             setValue(
@@ -347,6 +366,7 @@ function Logistic() {
                     .format("YYYY-MM-DDTHH:mm")
                 : "" // Asegúrate de manejar correctamente los casos en los que no hay fecha
             );
+
             const responsible_person = speaker.responsible_person;
             if (responsible_person) {
               console.log("HHH");
@@ -394,51 +414,58 @@ function Logistic() {
     };
     loadEvent();
   }, []);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
   return (
     <div className="flex bg-red-100">
-      <SidebarForms></SidebarForms>
-      <div>
+      <SidebarForms sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div
+        className={`flex-grow p-10  transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
         <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
           <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
-            <h1 className="text-3xl  mb-2">Logística</h1>
+            <h1 className="text-3xl mb-2">Formulario de Logística</h1>
             <p className="text-gray-600">
-              Por favor, completa la siguiente información sobre la logística de
-              tu evento.
+              Por favor, completa la siguiente información para crear o editar
+              la Logística del evento.
             </p>
           </div>
-          <div className="flex gap-4">
-            <div
-              className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title"
-                  ? "border-univalleColorOne"
-                  : "border-gray-300"
-              } rounded-lg`}
-            >
-              <Label>
-                Evento:
-                <select
-                  className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
-                    focusedInput === "event_id"
-                      ? "border-univalleColorOne"
-                      : "border-gray-300"
-                  }`}
-                  {...register("event_id")}
-                  defaultValue={events.length > 0 ? events[0]._id : ""}
-                  required
-                  onFocus={() => handleFocus("event_id")}
-                  onChange={handleEventChange}
-                >
-                  <option value="">Selecciona el evento </option>
-                  {events.map((event, index) => (
-                    <option key={index} value={event._id}>
-                      {event.event_name}
-                    </option>
-                  ))}
-                </select>
-              </Label>
-            </div>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "event" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
+            <Label>
+              Elija el evento al que le pertenece:
+              <select
+                className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                  focusedInput === "event"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
+                {...register("event_id", { required: true })}
+                onFocus={() => handleFocus("event_id")}
+                onBlur={handleBlur}
+              >
+                <br></br>
+                <option value="">Selecciona el evento</option>
+                {events.map((event, index) => (
+                  <option key={index} value={event._id}>
+                    {event.event_name}
+                  </option>
+                ))}
+              </select>
+              {errors.spectators && (
+                <span className="text-red-500">Este campo es requerido</span>
+              )}
+            </Label>
           </div>
+          <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -446,8 +473,6 @@ function Logistic() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
-
             <table className="table-auto">
               <thead>
                 <tr>
@@ -457,7 +482,9 @@ function Logistic() {
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
                   </th>
-
+                  <th className="px-4 py-2">
+                    <Label>Numero de Item</Label>
+                  </th>
                   <th className="px-4 py-2">
                     <Label>Proveedor</Label>
                   </th>
@@ -479,19 +506,25 @@ function Logistic() {
                 {mueblesServicios.map((mueble, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <Input
+                      <select
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        name="ÍtemName"
-                        {...register(`furniture_services[${index}].name`)}
                         required
-                      ></Input>
+                        {...register(`furniture_services[${index}].name`)}
+                      >
+                        <option value="">Selecciona un ítem</option>
+                        {allMobiliario.map((option, optionIndex) => (
+                          <option key={optionIndex} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
+                        required
+                        placeholder="Cantidad"
                         {...register(`furniture_services[${index}].quantity`)}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
@@ -502,12 +535,29 @@ function Logistic() {
                         }}
                       />
                     </td>
-
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
+                        placeholder="Precio por Unidad"
+                        {...register(
+                          `furniture_services[${index}].item_number`
+                        )}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value);
+                          setValue(
+                            `furniture_services[${index}].item_number`,
+                            value
+                          );
+                        }}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Input
+                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        required
                         placeholder="Proveedor"
                         {...register(`furniture_services[${index}].supplier`)}
                       />
@@ -516,7 +566,7 @@ function Logistic() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Unidad de Medida"
                         {...register(`furniture_services[${index}].unit`)}
                       />
@@ -525,7 +575,7 @@ function Logistic() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="unit_price"
+                        required
                         placeholder="Precio por Unidad"
                         {...register(`furniture_services[${index}].unit_price`)}
                         onChange={(e) => {
@@ -551,7 +601,7 @@ function Logistic() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveRow(index)}
                       >
                         Eliminar
@@ -563,13 +613,14 @@ function Logistic() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddRow}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
+          <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -577,8 +628,6 @@ function Logistic() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
-
             <table className="table-auto">
               <thead>
                 <tr>
@@ -588,7 +637,9 @@ function Logistic() {
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
                   </th>
-
+                  <th className="px-4 py-2">
+                    <Label>Numero de Item</Label>
+                  </th>
                   <th className="px-4 py-2">
                     <Label>Proveedor</Label>
                   </th>
@@ -610,35 +661,50 @@ function Logistic() {
                 {materialApoyo.map((material, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <Input
+                      <select
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
-                        {...register(`support_material[${index}].name`)}
                         required
-                      ></Input>
+                        {...register(`support_material[${index}].name`)}
+                      >
+                        <option value="">Selecciona un ítem</option>
+                        {allMaterial.map((option, optionIndex) => (
+                          <option key={optionIndex} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="unit_price"
+                        required
                         placeholder="Precio por Unidad"
                         {...register(`support_material[${index}].quantity`)}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Input
+                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        required
+                        placeholder="Precio por Unidad"
+                        {...register(`support_material[${index}].item_number`)}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
                           setValue(
-                            `support_material[${index}].quantity`,
+                            `support_material[${index}].item_number`,
                             value
                           );
                         }}
                       />
                     </td>
-
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Proveedor"
                         {...register(`support_material[${index}].supplier`)}
                       />
@@ -647,7 +713,7 @@ function Logistic() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Unidad de Medida"
                         {...register(`support_material[${index}].unit`)}
                       />
@@ -680,7 +746,7 @@ function Logistic() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveMaterial(index)}
                       >
                         Eliminar
@@ -692,13 +758,14 @@ function Logistic() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddMateril}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
+          <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -706,8 +773,6 @@ function Logistic() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
-
             <table className="table-auto">
               <thead>
                 <tr>
@@ -717,7 +782,9 @@ function Logistic() {
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
                   </th>
-
+                  <th className="px-4 py-2">
+                    <Label>Numero de Item</Label>
+                  </th>
                   <th className="px-4 py-2">
                     <Label>Proveedor</Label>
                   </th>
@@ -739,12 +806,18 @@ function Logistic() {
                 {foodServices.map((food, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
-                      <Input
+                      <select
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`food_services[${index}].name`)}
-                        required
-                      ></Input>
+                      >
+                        <option value="">Selecciona un ítem</option>
+                        {allFood.map((option, optionIndex) => (
+                          <option key={optionIndex} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                     <td className="border px-4 py-2">
                       <Input
@@ -753,18 +826,29 @@ function Logistic() {
                         name="unit_price"
                         placeholder="Precio por Unidad"
                         {...register(`food_services[${index}].quantity`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(`food_services[${index}].quantity`, value);
-                        }}
                       />
                     </td>
-
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        name="unit_price"
+                        placeholder="Precio por Unidad"
+                        {...register(`food_services[${index}].item_number`)}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value);
+                          setValue(
+                            `food_services[${index}].item_number`,
+                            value
+                          );
+                        }}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Input
+                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        required
                         placeholder="Proveedor"
                         {...register(`food_services[${index}].supplier`)}
                       />
@@ -773,7 +857,7 @@ function Logistic() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Unidad de Medida"
                         {...register(`food_services[${index}].unit`)}
                       />
@@ -803,7 +887,7 @@ function Logistic() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveFood(index)}
                       >
                         Eliminar
@@ -815,235 +899,180 @@ function Logistic() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddFood}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <div className={`mb-2 p-4  bg-white rounded-lg`}>
+          <div className="mb-4">
             <h3 className="text-2xl mb-4">2.4 Disertantes</h3>
-
-            <table className="table-auto w-full">
-              <tbody>
-                {disertantes.map((disertante, index) => (
-                  <React.Fragment key={index}>
-                    <tr>
-                      <td className="px-4 py-2">
-                        <div>
-                          <h4 className="text-xl mb-2">Disertante</h4>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Nombre del disertante
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].name`}
-                            {...register(`speakers[${index}].name`)}
-                            placeholder="Nombre del disertante"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Día de llegada
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="datetime-local"
-                            name={`speakers[${index}].arrival_date_and_time`}
-                            {...register(
-                              `speakers[${index}].arrival_date_and_time`
-                            )}
-                            placeholder="Día de llegada"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Día de retorno
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="datetime-local"
-                            name={`speakers[${index}].return_date_and_time`}
-                            {...register(
-                              `speakers[${index}].return_date_and_time`
-                            )}
-                            placeholder="Día de retorno"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">
-                        <h4 className="text-xl mb-2">Alojamiento</h4>
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Nombre
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].accommodation.name`}
-                            {...register(
-                              `speakers[${index}].accommodation.name`
-                            )}
-                            placeholder="Nombre del alojamiento"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Dirección
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].accommodation.address`}
-                            {...register(
-                              `speakers[${index}].accommodation.address`
-                            )}
-                            placeholder="Dirección"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Email
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].accommodation.email`}
-                            {...register(
-                              `speakers[${index}].accommodation.email`
-                            )}
-                            placeholder="Email"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Teléfono
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].accommodation.phone`}
-                            {...register(
-                              `speakers[${index}].accommodation.phone`
-                            )}
-                            placeholder="Teléfono"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">
-                        <h4 className="text-xl mb-2">
-                          Responsable de Recojo y Retorno
-                        </h4>
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Nombre
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].responsible_person.first_name`}
-                            {...register(
-                              `speakers[${index}].responsible_person.first_name`
-                            )}
-                            placeholder="Nombre"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Apellido
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].responsible_person.last_name`}
-                            {...register(
-                              `speakers[${index}].responsible_person.last_name`
-                            )}
-                            placeholder="Apellido"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Email
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].responsible_person.email`}
-                            {...register(
-                              `speakers[${index}].responsible_person.email`
-                            )}
-                            placeholder="Email"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        <div>
-                          <Label className="block text-gray-700 text-sm mb-2">
-                            Teléfono
-                          </Label>
-                          <Input
-                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
-                            name={`speakers[${index}].responsible_person.phone`}
-                            {...register(
-                              `speakers[${index}].responsible_person.phone`
-                            )}
-                            placeholder="Teléfono"
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2">
-                        <button
-                          className="bg-red-800 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                          onClick={() => handleRemoveDisertante(index)}
-                          type="button"
-                        >
-                          Eliminar
-                        </button>
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </table>
+            {disertantes.map((disertante, index) => (
+              <div
+                key={index}
+                className="mb-4 p-4 border bg-white rounded-lg shadow-md"
+              >
+                <div className="mb-4">
+                  <Label className="block text-gray-700 text-sm mb-2">
+                    Nombre del disertante
+                  </Label>
+                  <Input
+                    className="input-field"
+                    type="text"
+                    name={`speakers[${index}].name`}
+                    {...register(`speakers[${index}].name`)}
+                    placeholder="Nombre del disertante"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="block text-gray-700 text-sm mb-2">
+                      Día de llegada
+                    </Label>
+                    <Input
+                      className="input-field"
+                      type="datetime-local"
+                      name={`speakers[${index}].arrival_date_and_time`}
+                      {...register(`speakers[${index}].arrival_date_and_time`)}
+                      placeholder="Día de llegada"
+                    />
+                  </div>
+                  <div>
+                    <Label className="block text-gray-700 text-sm mb-2">
+                      Día de retorno
+                    </Label>
+                    <Input
+                      className="input-field"
+                      type="datetime-local"
+                      name={`speakers[${index}].return_date_and_time`}
+                      {...register(`speakers[${index}].return_date_and_time`)}
+                      placeholder="Día de retorno"
+                    />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <Label className="block text-gray-700 text-sm mb-2">
+                    Alojamiento
+                  </Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Input
+                        className="input-field"
+                        type="text"
+                        name={`speakers[${index}].accommodation.name`}
+                        {...register(`speakers[${index}].accommodation.name`)}
+                        placeholder="Nombre del alojamiento"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        className="input-field"
+                        type="text"
+                        name={`speakers[${index}].accommodation.address`}
+                        {...register(
+                          `speakers[${index}].accommodation.address`
+                        )}
+                        placeholder="Dirección del alojamiento"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <Input
+                        className="input-field"
+                        type="text"
+                        name={`speakers[${index}].accommodation.email`}
+                        {...register(`speakers[${index}].accommodation.email`)}
+                        placeholder="Email del alojamiento"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        className="input-field"
+                        type="text"
+                        name={`speakers[${index}].accommodation.phone`}
+                        {...register(`speakers[${index}].accommodation.phone`)}
+                        placeholder="Teléfono del alojamiento"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <Label className="block text-gray-700 text-sm mb-2">
+                    Responsable de Recojo y Retorno
+                  </Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Input
+                        className="input-field"
+                        type="text"
+                        name={`speakers[${index}].responsible_person.first_name`}
+                        {...register(
+                          `speakers[${index}].responsible_person.first_name`
+                        )}
+                        placeholder="Nombre del responsable"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        className="input-field"
+                        type="text"
+                        name={`speakers[${index}].responsible_person.last_name`}
+                        {...register(
+                          `speakers[${index}].responsible_person.last_name`
+                        )}
+                        placeholder="Apellido del responsable"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <Input
+                        className="input-field"
+                        type="text"
+                        name={`speakers[${index}].responsible_person.email`}
+                        {...register(
+                          `speakers[${index}].responsible_person.email`
+                        )}
+                        placeholder="Email del responsable"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        className="input-field"
+                        type="text"
+                        name={`speakers[${index}].responsible_person.phone`}
+                        {...register(
+                          `speakers[${index}].responsible_person.phone`
+                        )}
+                        placeholder="Teléfono del responsable"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                    onClick={() => handleRemoveDisertante(index)}
+                    type="button"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
+
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddDisertante}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar Disertante
           </button>
+          <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -1051,8 +1080,6 @@ function Logistic() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
-
             <table className="table-auto">
               <thead>
                 <tr>
@@ -1062,7 +1089,9 @@ function Logistic() {
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
                   </th>
-
+                  <th className="px-4 py-2">
+                    <Label>Numero de Item</Label>
+                  </th>
                   <th className="px-4 py-2">
                     <Label>Proveedor</Label>
                   </th>
@@ -1081,14 +1110,13 @@ function Logistic() {
                 </tr>
               </thead>
               <tbody>
-                {transport.map((transport, index) => (
+                {mueblesServicios.map((mueble, index) => (
                   <tr key={index}>
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`transport_services[${index}].name`)}
-                        required
                       />
                     </td>
                     <td className="border px-4 py-2">
@@ -1098,21 +1126,31 @@ function Logistic() {
                         name="unit_price"
                         placeholder="Precio por Unidad"
                         {...register(`transport_services[${index}].quantity`)}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Input
+                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        type="text"
+                        name="unit_price"
+                        placeholder="Precio por Unidad"
+                        {...register(
+                          `transport_services[${index}].item_number`
+                        )}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
                           setValue(
-                            `transport_services[${index}].quantity`,
+                            `transport_services[${index}].item_number`,
                             value
                           );
                         }}
                       />
                     </td>
-
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Proveedor"
                         {...register(`transport_services[${index}].supplier`)}
                       />
@@ -1121,7 +1159,7 @@ function Logistic() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Unidad de Medida"
                         {...register(`transport_services[${index}].unit`)}
                       />
@@ -1156,7 +1194,7 @@ function Logistic() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveTransport(index)}
                       >
                         Eliminar
@@ -1168,39 +1206,31 @@ function Logistic() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddTransport}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-            <Label className="block text-gray-700 text-sm  mb-2">Estado</Label>
-            <Input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-              name="state"
-              type="text"
-              placeholder="aqui estara el estado"
-              autoFocus
-              readOnly
-              {...register(`state`)}
-            />
-          </div>
+          <br></br>
+          <br></br>
+
           {successMessage && (
-            <div className="bg-green-500 text-white p-2 mb-4 rounded animate__animated animate__fadeIn">
+            <div
+              style={{
+                backgroundColor: "green",
+                color: "white",
+                padding: "10px",
+                marginBottom: "10px",
+              }}
+            >
               {successMessage}
             </div>
           )}
           <button
             type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white  py-2 px-4 rounded"
+            className="bg-univalleColorOne hover:bg-univalleColorOne  text-white  py-2 px-4 rounded"
           >
             Enviar
           </button>

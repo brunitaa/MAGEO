@@ -15,7 +15,7 @@ export function ProtocolCard({ protocol }) {
   return (
     <Card>
       <header className="flex justify-between">
-        <h2 className="text-xl font-bold">{protocol.state}</h2>
+        <h2 className="text-xl font-bold">{protocol.event_id.event_name}</h2>
       </header>
 
       <p className="text-slate-600">Estado:{protocol.state}</p>

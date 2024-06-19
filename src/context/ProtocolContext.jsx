@@ -62,12 +62,14 @@ export function ProtocolProvider({ children }) {
     }
   };
 
-  const createProtocol = async (protocol) => {
+  const createProtocol = async (data) => {
     try {
-      const res = await createProtocolRequest(protocol);
-      console.log(res.data);
+      const newProtocol = await createProtocolRequest(data);
+      setProtocols([...protocols, newProtocol]);
+      return newProtocol;
     } catch (error) {
-      console.log(error);
+      console.error("Error creating advertisement:", error);
+      throw error;
     }
   };
 

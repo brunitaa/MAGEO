@@ -13,6 +13,14 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEventRequest } from "../../context/EventsContext";
+import {
+  FaCalendarAlt,
+  FaClipboardList,
+  FaTruck,
+  FaBullhorn,
+  FaUsers,
+  FaMoneyBillAlt,
+} from "react-icons/fa";
 
 export function AdminHomePage() {
   const { events, getEvents } = useEventRequest([]);
@@ -23,6 +31,11 @@ export function AdminHomePage() {
   const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   useEffect(() => {
     getEvents();
@@ -63,17 +76,21 @@ export function AdminHomePage() {
   };
 
   return (
-    <div className="flex bg-gray-100">
-      <Sidebar />
+    <div className="flex bg-red-100">
+      <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
-      <div className="ml-64 mr-4 mt-4 p-4 w-full">
+      <div
+        className={`flex-grow p-10  transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
         <motion.h1
           className="text-3xl font-bold mb-8 text-gray-800"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Mis Formularios
+          Panel de Administración
         </motion.h1>
 
         {/* Sección de estadísticas generales */}
@@ -89,20 +106,7 @@ export function AdminHomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-blue-500 text-white p-6 rounded-lg shadow-md flex items-center">
               <div className="mr-4">
-                <svg
-                  className="w-12 h-12 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M8 7V3m0 0a3 3 0 013 3H5a3 3 0 013-3zm0 4a3 3 0 00-3 3v8a3 3 0 003 3h8a3 3 0 003-3V10a3 3 0 00-3-3H8zm13 13h-1a2 2 0 01-2-2V9a2 2 0 012-2h1m-6 0h6"
-                  ></path>
-                </svg>
+                <FaCalendarAlt className="w-12 h-12 text-white" />
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-2">Total de Eventos</h3>
@@ -111,20 +115,7 @@ export function AdminHomePage() {
             </div>
             <div className="bg-green-500 text-white p-6 rounded-lg shadow-md flex items-center">
               <div className="mr-4">
-                <svg
-                  className="w-12 h-12 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 17h8m0 0v5m0-5l-7-8h-2l-2 4H7l-5-4m5 4v-4h.01M13 17v-4m0 0h-1m1 0V9m0-4V5m-2 2V5a3 3 0 00-6 0v3a3 3 0 006 0V7zm0 0v3m0 0h1.01M5 12h1.01"
-                  ></path>
-                </svg>
+                <FaClipboardList className="w-12 h-12 text-white" />
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-2">Protocolos</h3>
@@ -133,20 +124,7 @@ export function AdminHomePage() {
             </div>
             <div className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex items-center">
               <div className="mr-4">
-                <svg
-                  className="w-12 h-12 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M17 9v4.588c0 .379-.214.725-.552.895l-4.896 2.449A1 1 0 0110 16V8a1 1 0 01.552-.895l4.896-2.449A1 1 0 0117 5.412V10m4-7h-4M7 7H3M7 3H3m4 4v4M3 17h4m0 4H3m4 0V7m0 4v4m4 0h8a2 2 0 002-2v-2a2 2 0 00-2-2h-1m0 0V7m0 4V5a2 2 0 012-2h1"
-                  ></path>
-                </svg>
+                <FaTruck className="w-12 h-12 text-white" />
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-2">Logística</h3>
@@ -155,20 +133,7 @@ export function AdminHomePage() {
             </div>
             <div className="bg-red-500 text-white p-6 rounded-lg shadow-md flex items-center">
               <div className="mr-4">
-                <svg
-                  className="w-12 h-12 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12h6m-3-3v6m9-4a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
+                <FaBullhorn className="w-12 h-12 text-white" />
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-2">Piezas Publicitarias</h3>
@@ -210,7 +175,7 @@ export function AdminHomePage() {
                     })
                   );
                   return eventDay ? (
-                    <div className="bg-blue-600 rounded-full h-6 w-6"></div>
+                    <div className="bg-univalleColorOne rounded-full h-6 w-6"></div>
                   ) : null;
                 }
               }}
@@ -236,6 +201,7 @@ export function AdminHomePage() {
               </h1>
             </motion.div>
           )}
+
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             initial={{ opacity: 0 }}
@@ -245,6 +211,87 @@ export function AdminHomePage() {
             {filteredEvents.map((event) => (
               <EventCard event={event} key={event._id} />
             ))}
+          </motion.div>
+        </motion.section>
+
+        {/* Sección de Anuncios */}
+        <motion.section
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <motion.h2
+            className="text-2xl font-bold mb-4 text-gray-800"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Últimos Anuncios
+          </motion.h2>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            {advertisements.slice(0, 6).map((ad) => (
+              <AdvertisementCard key={ad._id} advertisement={ad} />
+            ))}
+          </motion.div>
+        </motion.section>
+
+        {/* Sección de Protocolos y Logística */}
+        <motion.section
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <motion.div>
+              <motion.h2
+                className="text-2xl font-bold mb-4 text-gray-800"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                Últimos Protocolos
+              </motion.h2>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                {protocols.slice(0, 3).map((protocol) => (
+                  <ProtocolCard key={protocol._id} protocol={protocol} />
+                ))}
+              </motion.div>
+            </motion.div>
+            <motion.div>
+              <motion.h2
+                className="text-2xl font-bold mb-4 text-gray-800"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                Última Logística
+              </motion.h2>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                {logistics.slice(0, 3).map((logistic) => (
+                  <LogisticCard key={logistic._id} logistic={logistic} />
+                ))}
+              </motion.div>
+            </motion.div>
           </motion.div>
         </motion.section>
       </div>

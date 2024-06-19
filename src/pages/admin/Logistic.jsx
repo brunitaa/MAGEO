@@ -447,13 +447,20 @@ function LogisticAdmin() {
     };
     loadEvent();
   }, []);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
   return (
     <div className="flex bg-red-100">
-      <SidebarForms></SidebarForms>
-      <div style={{ margin: "10px 20px" }}>
+      <SidebarForms sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div
+        className={`flex-grow p-10  transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
         <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
-          <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -461,6 +468,14 @@ function LogisticAdmin() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+            <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
+              <h1 className="text-3xl mb-2">Formulario de Logística</h1>
+              <p className="text-gray-600">
+                Por favor, completa la siguiente información para crear o editar
+                la Logística del evento.
+              </p>
+            </div>
+            <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -498,7 +513,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`furniture_services[${index}].name`)}
-                        readOnly
                       >
                         <option value="">Selecciona un ítem</option>
                         {allMobiliario.map((option, optionIndex) => (
@@ -514,7 +528,6 @@ function LogisticAdmin() {
                         type="text"
                         name="unit_price"
                         placeholder="Cantidad"
-                        readOnly
                         {...register(`furniture_services[${index}].quantity`)}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
@@ -534,7 +547,6 @@ function LogisticAdmin() {
                         {...register(
                           `furniture_services[${index}].item_number`
                         )}
-                        readOnly
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
                           setValue(
@@ -548,8 +560,7 @@ function LogisticAdmin() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
-                        readOnly
+                        required
                         placeholder="Proveedor"
                         {...register(`furniture_services[${index}].supplier`)}
                       />
@@ -558,8 +569,7 @@ function LogisticAdmin() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
-                        readOnly
+                        required
                         placeholder="Unidad de Medida"
                         {...register(`furniture_services[${index}].unit`)}
                       />
@@ -569,7 +579,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
-                        readOnly
                         placeholder="Precio por Unidad"
                         {...register(`furniture_services[${index}].unit_price`)}
                         onChange={(e) => {
@@ -586,7 +595,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
-                        readOnly
                         placeholder="Observaciones"
                         {...register(
                           `furniture_services[${index}].observations`
@@ -596,7 +604,7 @@ function LogisticAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveRow(index)}
                       >
                         Eliminar
@@ -608,14 +616,14 @@ function LogisticAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddRow}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
+
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -623,6 +631,7 @@ function LogisticAdmin() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+            <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -660,7 +669,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`support_material[${index}].name`)}
-                        readOnly
                       >
                         <option value="">Selecciona un ítem</option>
                         {allMaterial.map((option, optionIndex) => (
@@ -675,7 +683,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
-                        readOnly
                         placeholder="Precio por Unidad"
                         {...register(`support_material[${index}].quantity`)}
                       />
@@ -685,7 +692,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
-                        readOnly
                         placeholder="Precio por Unidad"
                         {...register(`support_material[${index}].item_number`)}
                         onChange={(e) => {
@@ -701,9 +707,8 @@ function LogisticAdmin() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Proveedor"
-                        readOnly
                         {...register(`support_material[${index}].supplier`)}
                       />
                     </td>
@@ -711,9 +716,8 @@ function LogisticAdmin() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Unidad de Medida"
-                        readOnly
                         {...register(`support_material[${index}].unit`)}
                       />
                     </td>
@@ -723,7 +727,6 @@ function LogisticAdmin() {
                         type="text"
                         name="unit_price"
                         placeholder="Precio por Unidad"
-                        readOnly
                         {...register(`support_material[${index}].unit_price`)}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
@@ -739,7 +742,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
-                        readOnly
                         placeholder="Observaciones"
                         {...register(`support_material[${index}].observations`)}
                       />
@@ -747,7 +749,7 @@ function LogisticAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveMaterial(index)}
                       >
                         Eliminar
@@ -759,14 +761,14 @@ function LogisticAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddMateril}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
+
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -774,6 +776,7 @@ function LogisticAdmin() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+            <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -811,7 +814,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`food_services[${index}].name`)}
-                        readOnly
                       >
                         <option value="">Selecciona un ítem</option>
                         {allFood.map((option, optionIndex) => (
@@ -826,7 +828,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
-                        readOnly
                         placeholder="Precio por Unidad"
                         {...register(`food_services[${index}].quantity`)}
                       />
@@ -837,7 +838,6 @@ function LogisticAdmin() {
                         type="text"
                         name="unit_price"
                         placeholder="Precio por Unidad"
-                        readOnly
                         {...register(`food_services[${index}].item_number`)}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
@@ -852,8 +852,7 @@ function LogisticAdmin() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
-                        readOnly
+                        required
                         placeholder="Proveedor"
                         {...register(`food_services[${index}].supplier`)}
                       />
@@ -862,9 +861,8 @@ function LogisticAdmin() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
+                        required
                         placeholder="Unidad de Medida"
-                        readOnly
                         {...register(`food_services[${index}].unit`)}
                       />
                     </td>
@@ -874,7 +872,6 @@ function LogisticAdmin() {
                         type="text"
                         name="unit_price"
                         placeholder="Precio por Unidad"
-                        readOnly
                         {...register(`food_services[${index}].unit_price`)}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
@@ -887,7 +884,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
-                        readOnly
                         placeholder="Observaciones"
                         {...register(`food_services[${index}].observations`)}
                       />
@@ -895,7 +891,7 @@ function LogisticAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveFood(index)}
                       >
                         Eliminar
@@ -907,14 +903,14 @@ function LogisticAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddFood}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl  mb-4">2.4 Disertantes</h3>
+
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -922,6 +918,7 @@ function LogisticAdmin() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+            <h3 className="text-2xl  mb-4">2.4 Disertantes</h3>
             <table className="table-auto w-full">
               <tbody>
                 {disertantes.map((disertante, index) => (
@@ -941,7 +938,6 @@ function LogisticAdmin() {
                           <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            readOnly
                             name="nombre"
                             {...register(`speakers[${index}].name`)}
                             placeholder="Nombre del disertante"
@@ -965,7 +961,6 @@ function LogisticAdmin() {
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="datetime-local"
                             name="diaLlegada"
-                            readOnly
                             {...register(
                               `speakers[${index}].arrival_date_and_time`
                             )}
@@ -988,7 +983,6 @@ function LogisticAdmin() {
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="datetime-local"
                             name="diaRetorno"
-                            readOnly
                             {...register(
                               `speakers[${index}].return_date_and_time`
                             )}
@@ -1017,7 +1011,6 @@ function LogisticAdmin() {
                           <Input
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
-                            readOnly
                             name="alojamiento"
                             {...register(
                               `speakers[${index}].accommodation.name`
@@ -1041,7 +1034,6 @@ function LogisticAdmin() {
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="alojamiento"
-                            readOnly
                             {...register(
                               `speakers[${index}].accommodation.address`
                             )}
@@ -1067,7 +1059,6 @@ function LogisticAdmin() {
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="alojamiento"
-                            readOnly
                             placeholder="Email"
                             {...register(
                               `speakers[${index}].accommodation.email`
@@ -1090,7 +1081,6 @@ function LogisticAdmin() {
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="alojamiento"
-                            readOnly
                             placeholder="Telefono"
                             {...register(
                               `speakers[${index}].accommodation.phone`
@@ -1122,7 +1112,6 @@ function LogisticAdmin() {
                             type="text"
                             name="responsable"
                             placeholder="Nombre"
-                            readOnly
                             {...register(
                               `speakers[${index}].responsible_person.first_name`
                             )}
@@ -1144,7 +1133,6 @@ function LogisticAdmin() {
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="responsable"
-                            readOnly
                             placeholder="Apellido"
                             {...register(
                               `speakers[${index}].responsible_person.last_name`
@@ -1169,7 +1157,6 @@ function LogisticAdmin() {
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="alojamiento"
-                            readOnly
                             placeholder="Email"
                             {...register(
                               `speakers[${index}].responsible_person.email`
@@ -1192,7 +1179,6 @@ function LogisticAdmin() {
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text"
                             name="alojamiento"
-                            readOnly
                             placeholder="Telefono"
                             {...register(
                               `speakers[${index}].responsible_person.phone`
@@ -1204,7 +1190,7 @@ function LogisticAdmin() {
                     <tr>
                       <td className="border px-4 py-2">
                         <button
-                          className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                          className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                           onClick={() => handleRemoveDisertante(index)}
                           type="button"
                         >
@@ -1218,14 +1204,14 @@ function LogisticAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddDisertante}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar Disertante
           </button>
-          <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
+
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -1233,6 +1219,7 @@ function LogisticAdmin() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+            <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -1270,7 +1257,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         name="ÍtemName"
                         {...register(`transport_services[${index}].name`)}
-                        readOnly
                       />
                     </td>
                     <td className="border px-4 py-2">
@@ -1278,7 +1264,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
-                        readOnly
                         placeholder="Precio por Unidad"
                         {...register(`transport_services[${index}].quantity`)}
                       />
@@ -1289,7 +1274,6 @@ function LogisticAdmin() {
                         type="text"
                         name="unit_price"
                         placeholder="Precio por Unidad"
-                        readOnly
                         {...register(
                           `transport_services[${index}].item_number`
                         )}
@@ -1306,8 +1290,7 @@ function LogisticAdmin() {
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
-                        name="observations"
-                        readOnly
+                        required
                         placeholder="Proveedor"
                         {...register(`transport_services[${index}].supplier`)}
                       />
@@ -1317,7 +1300,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
-                        readOnly
                         placeholder="Unidad de Medida"
                         {...register(`transport_services[${index}].unit`)}
                       />
@@ -1327,7 +1309,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="unit_price"
-                        readOnly
                         placeholder="Precio por Unidad"
                         {...register(`transport_services[${index}].unit_price`)}
                         onChange={(e) => {
@@ -1344,7 +1325,6 @@ function LogisticAdmin() {
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         type="text"
                         name="observations"
-                        readOnly
                         placeholder="Observaciones"
                         {...register(
                           `transport_services[${index}].observations`
@@ -1354,7 +1334,7 @@ function LogisticAdmin() {
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-red-800 hover:bg-red-700 text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                         onClick={() => handleRemoveTransport(index)}
                       >
                         Eliminar
@@ -1366,7 +1346,7 @@ function LogisticAdmin() {
             </table>
           </div>
           <button
-            className="bg-red-800 hover:bg-red-700 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddTransport}
             type="button"
             style={{ margin: "10px 20px" }}
@@ -1394,7 +1374,6 @@ function LogisticAdmin() {
               type="text"
               placeholder="aqui estara el estado"
               autoFocus
-              readOnly
               {...register(`state`)}
             />
           </div>

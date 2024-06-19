@@ -54,13 +54,11 @@ const LoginPage = () => {
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         <div className="p-6 space-y-4 md:space-y-6 sm:p-4 h-full">
-          <h1 className="text-white text-3xl font-bold mb-4">
-            Sign in to your account
-          </h1>
+          <h1 className="text-white text-3xl font-bold mb-4">Inicie Sesión</h1>
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label className="text-white" htmlFor="email">
-                Your email
+                Email
               </label>
               <Input
                 label="Write your email"
@@ -73,7 +71,7 @@ const LoginPage = () => {
             </div>
             <div>
               <label className="text-white" htmlFor="password">
-                Password
+                Contraseña
               </label>
               <Input
                 type="password"
@@ -87,7 +85,7 @@ const LoginPage = () => {
               type="submit"
               className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center text-white dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
             >
-              Sign in
+              Iniciar Sesión
             </Button2>
           </form>
         </div>

@@ -63,12 +63,14 @@ export function AdvertisingProvider({ children }) {
     }
   };
 
-  const createAdvertisement = async (advertisement) => {
+  const createAdvertisement = async (data) => {
     try {
-      const res = await createAPRequest(advertisement);
-      console.log(res.data); // Asegúrate de que res contiene lo que esperas
+      const newAd = await createAPRequest(data);
+      setAdvertisings([...advertisements, newAd]);
+      return newAd;
     } catch (error) {
-      console.log(error); // Maneja el error adecuadamente
+      console.error("Error creating advertisement:", error);
+      throw error;
     }
   };
 

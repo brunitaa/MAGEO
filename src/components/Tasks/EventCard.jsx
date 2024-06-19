@@ -49,7 +49,8 @@ export function EventCard({ event }) {
               Fecha: {new Date(schedule.date).toLocaleDateString()}
             </p>
             <p className="text-gray-700">
-              Hora: {new Date(schedule.time).toLocaleTimeString()}
+              Hora: {new Date(schedule.start_time).toLocaleTimeString()} -{" "}
+              {new Date(schedule.end_time).toLocaleTimeString()}
             </p>
             <p className="text-gray-700">Lugar: {schedule.place}</p>
             <p className="text-gray-700">Formato: {schedule.format}</p>

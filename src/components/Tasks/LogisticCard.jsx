@@ -18,7 +18,7 @@ export function LogisticCard({ logistic }) {
   return (
     <Card>
       <header className="flex justify-between">
-        <h2 className="text-xl font-bold">{logistic.state}</h2>
+        <h2 className="text-xl font-bold">{logistic.event_id.event_name}</h2>
       </header>
       <p className="text-slate-600">Estado: {logistic.state}</p>
       <p className="text-slate-600">Observaciones: {logistic.observations}</p>

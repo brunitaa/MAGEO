@@ -6,6 +6,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useEventRequest } from "../context/EventsContext";
 import Sidebar from "../components/SideBar";
+import "../index.css"; // Importar el archivo CSS personalizado
 
 const CalendarPage = () => {
   const [calendarView, setCalendarView] = useState("dayGridMonth");
@@ -20,11 +21,6 @@ const CalendarPage = () => {
     getEvents();
   }, []);
 
-  useEffect(() => {
-    // Log the events to check if they are being fetched correctly
-    console.log("Events: ", events);
-  }, [events]);
-
   // Preparar eventos para el FullCalendar
   const formattedEvents = events.flatMap((event) =>
     event.schedules.map((schedule) => ({
@@ -37,15 +33,20 @@ const CalendarPage = () => {
     }))
   );
 
-  // Log the formatted events to check if they are in the correct format
-  console.log("Formatted Events: ", formattedEvents);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
     <div className="flex">
-      <div className="fixed">
-        <Sidebar />
-      </div>
-      <div className="ml-64 flex-1 p-4">
+      <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div
+        className={`flex-grow p-10 transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-20"
+        }`}
+      >
         <motion.section
           className="mb-8"
           initial={{ opacity: 0 }}
@@ -56,40 +57,9 @@ const CalendarPage = () => {
             <h2 className="text-2xl font-bold text-gray-800">
               Calendario de Eventos
             </h2>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => handleCalendarViewChange("dayGridMonth")}
-                className={`px-4 py-2 rounded-md ${
-                  calendarView === "dayGridMonth"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-800"
-                } hover:bg-blue-600 hover:text-white focus:outline-none transition duration-300`}
-              >
-                Mes
-              </button>
-              <button
-                onClick={() => handleCalendarViewChange("timeGridWeek")}
-                className={`px-4 py-2 rounded-md ${
-                  calendarView === "timeGridWeek"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-800"
-                } hover:bg-blue-600 hover:text-white focus:outline-none transition duration-300`}
-              >
-                Semana
-              </button>
-              <button
-                onClick={() => handleCalendarViewChange("timeGridDay")}
-                className={`px-4 py-2 rounded-md ${
-                  calendarView === "timeGridDay"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-800"
-                } hover:bg-blue-600 hover:text-white focus:outline-none transition duration-300`}
-              >
-                Día
-              </button>
-            </div>
           </div>
           <FullCalendar
+            locale="es" // Añadir configuración de idioma
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={calendarView}
             events={formattedEvents}
@@ -99,6 +69,21 @@ const CalendarPage = () => {
               right: "dayGridMonth,timeGridWeek,timeGridDay",
             }}
             eventContent={renderEventContent}
+            buttonText={{
+              today: "Hoy",
+              month: "Mes",
+              week: "Semana",
+              day: "Día",
+              list: "Lista",
+            }}
+            allDayText="Todo el día"
+            slotLabelFormat={{
+              hour: "numeric",
+              minute: "2-digit",
+              omitZeroMinute: false,
+              meridiem: "short",
+              hour12: false,
+            }}
           />
         </motion.section>
       </div>
