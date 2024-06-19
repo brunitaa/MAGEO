@@ -130,7 +130,7 @@ function Sidebar({ sidebarOpen, toggleSidebar }) {
             <Icon.BoxArrowInRight />
             {sidebarOpen && (
               <span className="text-sm ml-3 text-gray-200 font-bold">
-                Sierre Sesión
+                Cierre Sesión
               </span>
             )}
           </div>
