@@ -2,8 +2,19 @@
   <!-- Círculo exterior -->
   <circle cx="75" cy="75" r="70" fill="#9E0044" />
   
-  <!-- Texto "UNIVERSIDAD DEL VALLE BOLIVIA" -->
-  <text x="50%" y="50%" text-anchor="middle" alignment-baseline="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16">
-    UNIVERSIDAD DEL VALLE BOLIVIA
-  </text>
+  <!-- Estrella dentro del círculo -->
+  <polygon points="75,30 89,55 121,62 99,84 105,116 75,100 45,116 51,84 29,62 61,55" fill="#FFFFFF" />
+  
+  <!-- Triángulo dentro de la estrella -->
+  <polygon points="75,50 90,90 60,90" fill="#FFD700" />
+  
+  <!-- Líneas decorativas -->
+  <line x1="20" y1="75" x2="130" y2="75" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" />
+  <line x1="75" y1="20" x2="75" y2="130" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" />
+  
+  <!-- Círculos pequeños -->
+  <circle cx="40" cy="40" r="5" fill="#FFFFFF" />
+  <circle cx="110" cy="40" r="5" fill="#FFFFFF" />
+  <circle cx="40" cy="110" r="5" fill="#FFFFFF" />
+  <circle cx="110" cy="110" r="5" fill="#FFFFFF" />
 </svg>
