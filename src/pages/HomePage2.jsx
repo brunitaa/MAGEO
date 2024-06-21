@@ -56,43 +56,43 @@ export function HomePage2() {
           Mis Formularios
         </motion.h1>
 
-        <motion.section
-          className="mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <motion.h2
-            className="text-2xl font-bold mb-4 text-gray-800"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Eventos
-          </motion.h2>
-          {events.length === 0 && (
-            <motion.div
-              className="flex justify-center items-center p-10 bg-white rounded-lg shadow-md"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <h1 className="font-bold text-lg text-gray-600">
-                No hay eventos aún. ¡Añade uno nuevo!
-              </h1>
-            </motion.div>
-          )}
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
-            {events.map((event) => (
-              <EventCard event={event} key={event._id} />
-            ))}
-          </motion.div>
-        </motion.section>
+       <motion.section
+  className="mb-8"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.5, delay: 0.2 }}
+>
+  <motion.h2
+    className="text-2xl font-bold mb-4 text-gray-800"
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
+    Eventos
+  </motion.h2>
+  {events.length === 0 && (
+    <motion.div
+      className="flex justify-center items-center p-10 bg-white rounded-lg shadow-md"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+    >
+      <h1 className="font-bold text-lg text-gray-600">
+        No hay eventos aún. ¡Añade uno nuevo!
+      </h1>
+    </motion.div>
+  )}
+  <motion.div
+    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5, delay: 0.6 }}
+  >
+    {events.map((event) => (
+      <EventCard event={event} key={event._id} />
+    ))}
+  </motion.div>
+</motion.section>
 
         <motion.section
           className="mb-8"
