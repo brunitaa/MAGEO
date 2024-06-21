@@ -98,37 +98,7 @@ const AdvertisingPiece = () => {
                 una pieza publicitaria.
               </p>
             </div>
-            <div
-              className={`mb-2 p-4 border bg-white ${
-                focusedInput === "event" ? "border-red-500" : "border-gray-300"
-              } rounded-lg`}
-            >
-              <Label>
-                Elija el evento al que le pertenece:
-                <select
-                  className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
-                    focusedInput === "event"
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  }`}
-                  {...register("event", { required: true })}
-                  defaultValue={event.length > 0 ? event[0]._id : ""}
-                  onFocus={() => handleFocus("event")}
-                  onBlur={handleBlur}
-                >
-                  <br></br>
-                  <option value="">Selecciona el evento</option>
-                  {events.map((event, index) => (
-                    <option key={index} value={event._id}>
-                      {event.event_name}
-                    </option>
-                  ))}
-                </select>
-                {errors.spectators && (
-                  <span className="text-red-500">Este campo es requerido</span>
-                )}
-              </Label>
-            </div>
+            
             <div
               className={`mb-2 p-4 border bg-white ${
                 focusedInput === "title" ? "border-red-500" : "border-gray-300"
