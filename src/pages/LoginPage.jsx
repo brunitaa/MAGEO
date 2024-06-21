@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button2 } from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, Message, Button, Input, Label } from "../components/ui";
 import { loginSchema } from "../schemas/auth";
@@ -11,34 +10,30 @@ import { motion } from "framer-motion";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
   });
   const { signin, errors: loginErrors, isAuthenticated, isAdmin } = useAuth();
-  const onSubmit = (data) => signin(data);
+
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const onSubmit = async (data) => {
+    try {
+      await signin(data);
+    } catch (error) {
+      setErrorMsg("Inicio de sesión fallido. Por favor, intente de nuevo.");
+    }
+  };
 
   useEffect(() => {
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("isAdmin:", isAdmin);
     if (isAuthenticated) {
       if (isAdmin) {
-        console.log("Redirecting to admin page...");
         navigate("/admin");
       } else {
-        console.log("Redirecting to homepage...");
         navigate("/homepage");
       }
     }
-  }, [isAuthenticated, isAdmin]);
+  }, [isAuthenticated, isAdmin, navigate]);
 
   return (
     <motion.section
@@ -55,16 +50,20 @@ const LoginPage = () => {
       >
         <div className="p-6 space-y-4 md:space-y-6 sm:p-4 h-full">
           <h1 className="text-white text-3xl font-bold mb-4">Inicie Sesión</h1>
+          {errorMsg && <Message type="error">{errorMsg}</Message>}
+          {loginErrors && loginErrors.map((error, index) => (
+            <Message key={index} type="error">{error}</Message>
+          ))}
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label className="text-white" htmlFor="email">
                 Email
               </label>
               <Input
-                label="Write your email"
+                label="Escriba su email"
                 type="email"
                 name="email"
-                placeholder="youremail@domain.tld"
+                placeholder="suemail@dominio.com"
                 {...register("email", { required: true })}
               />
               <p>{errors.email?.message}</p>
@@ -76,7 +75,7 @@ const LoginPage = () => {
               <Input
                 type="password"
                 name="password"
-                placeholder="Write your password"
+                placeholder="Escriba su contraseña"
                 {...register("password", { required: true, minLength: 6 })}
               />
               <p>{errors.password?.message}</p>
@@ -93,4 +92,5 @@ const LoginPage = () => {
     </motion.section>
   );
 };
+
 export default LoginPage;
