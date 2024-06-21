@@ -105,7 +105,7 @@ const AdvertisingPiece = () => {
               } rounded-lg`}
             >
               <Label>
-                Titulo:
+                Titulo
                 <Input
                   type="text"
                   name="title"
