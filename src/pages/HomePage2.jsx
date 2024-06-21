@@ -26,12 +26,18 @@ export function HomePage2() {
     setSidebarOpen(!sidebarOpen);
   };
 
-  useEffect(() => {
-    getMyEvents();
-    getMyAdvertisements();
-    getMyProtocols();
-    getMyLogistics();
-  }, []);
+   useEffect(() => {
+    // Verificar la autenticación al cargar la página
+    if (!isAuthenticated) {
+      navigate("/login"); // Redirigir a la página de inicio de sesión si no está autenticado
+    } else {
+      // Si está autenticado, cargar los datos necesarios
+      getMyEvents();
+      getMyAdvertisements();
+      getMyProtocols();
+      getMyLogistics();
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="flex bg-red-100">
