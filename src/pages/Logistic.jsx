@@ -465,7 +465,7 @@ function Logistic() {
               )}
             </Label>
           </div>
-          <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
+          
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -473,6 +473,7 @@ function Logistic() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+            <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -620,7 +621,7 @@ function Logistic() {
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
+         
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -628,6 +629,7 @@ function Logistic() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+             <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -765,7 +767,7 @@ function Logistic() {
           >
             Agregar fila
           </button>
-          <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
+          
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -773,6 +775,7 @@ function Logistic() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+            <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -907,12 +910,13 @@ function Logistic() {
             Agregar fila
           </button>
           <div className="mb-4">
-            <h3 className="text-2xl mb-4">2.4 Disertantes</h3>
+           
             {disertantes.map((disertante, index) => (
               <div
                 key={index}
                 className="mb-4 p-4 border bg-white rounded-lg shadow-md"
               >
+                 <h3 className="text-2xl mb-4">2.4 Disertantes</h3>
                 <div className="mb-4">
                   <Label className="block text-gray-700 text-sm mb-2">
                     Nombre del disertante
@@ -1072,7 +1076,7 @@ function Logistic() {
           >
             Agregar Disertante
           </button>
-          <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
+         
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -1080,6 +1084,7 @@ function Logistic() {
                 : "border-gray-300"
             } rounded-lg`}
           >
+             <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
             <table className="table-auto">
               <thead>
                 <tr>
