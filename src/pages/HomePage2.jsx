@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { useEventRequest } from "../../context/EventsContext";
-import { EventCard } from "../../components/Tasks/EventCard";
-import Sidebar from "../../components/SideBar";
-import { AdvertisementCard } from "../../components/Tasks/AdvertisementCard";
-import { ProtocolCard } from "../../components/Tasks/ProtocolCard";
-import { LogisticCard } from "../../components/Tasks/LogisticCard";
+import { useEventRequest } from "../context/EventsContext";
+import { EventCard } from "../components/Tasks/EventCard";
+import Sidebar from "../components/SideBar";
+import { AdvertisementCard } from "../components/Tasks/AdvertisementCard";
+import { ProtocolCard } from "../components/Tasks/ProtocolCard";
+import { LogisticCard } from "../components/Tasks/LogisticCard";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useAdvertisingRequest } from "../../context/AdvertisementContext";
-import { useprotocolRequest } from "../../context/ProtocolContext";
-import { useLogisticRequest } from "../../context/LogisticContext";
-import { useAuth } from "../../context/AuthContext";
+import { useAdvertisingRequest } from "../context/AdvertisementContext";
+import { useprotocolRequest } from "../context/ProtocolContext";
+import { useLogisticRequest } from "../context/LogisticContext";
+import { useAuth } from "../context/AuthContext";
 
 export function HomePage2() {
   const { events, getMyEvents } = useEventRequest([]);
