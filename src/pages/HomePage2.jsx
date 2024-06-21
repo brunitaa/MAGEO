@@ -1,49 +1,44 @@
 import { useEffect, useState } from "react";
-import { useEventRequest } from "../context/EventsContext";
-import { EventCard } from "../components/Tasks/EventCard";
-import Sidebar from "../components/SideBar";
-import { useAdvertisingRequest } from "../context/AdvertisementContext";
-import { AdvertisementCard } from "../components/Tasks/AdvertisementCard";
-import Protocol from "./Protocol";
-import { useprotocolRequest } from "../context/ProtocolContext";
-import { ProtocolCard } from "../components/Tasks/ProtocolCard";
-import { LogisticCard } from "../components/Tasks/LogisticCard";
-import { useLogisticRequest } from "../context/LogisticContext";
-import { useAuth } from "../context/AuthContext";
+import { useEventRequest } from "../../context/EventsContext";
+import { EventCard } from "../../components/Tasks/EventCard";
+import Sidebar from "../../components/SideBar";
+import { AdvertisementCard } from "../../components/Tasks/AdvertisementCard";
+import { ProtocolCard } from "../../components/Tasks/ProtocolCard";
+import { LogisticCard } from "../../components/Tasks/LogisticCard";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAdvertisingRequest } from "../../context/AdvertisementContext";
+import { useprotocolRequest } from "../../context/ProtocolContext";
+import { useLogisticRequest } from "../../context/LogisticContext";
+import { useAuth } from "../../context/AuthContext";
 
 export function HomePage2() {
   const { events, getMyEvents } = useEventRequest([]);
   const { advertisements, getMyAdvertisements } = useAdvertisingRequest([]);
   const { protocols, getMyProtocols } = useprotocolRequest([]);
   const { logistics, getMyLogistics } = useLogisticRequest([]);
-  const { isAuthenticated, isAdmin } = useAuth();
+  const isAdmin = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getMyEvents();
+    getMyAdvertisements();
+    getMyProtocols();
+    getMyLogistics();
+  }, []);
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-   useEffect(() => {
-    // Verificar la autenticación al cargar la página
-    if (!isAuthenticated) {
-      navigate("/login"); // Redirigir a la página de inicio de sesión si no está autenticado
-    } else {
-      // Si está autenticado, cargar los datos necesarios
-      getMyEvents();
-      getMyAdvertisements();
-      getMyProtocols();
-      getMyLogistics();
-    }
-  }, [isAuthenticated, navigate]);
-
   return (
     <div className="flex bg-red-100">
       <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+
       <div
-        className={`flex-grow p-10  transition-all duration-300 ${
+        className={`flex-grow p-5  transition-all duration-300 ${
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
@@ -56,43 +51,43 @@ export function HomePage2() {
           Mis Formularios
         </motion.h1>
 
-       <motion.section
-  className="mb-8"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  transition={{ duration: 0.5, delay: 0.2 }}
->
-  <motion.h2
-    className="text-2xl font-bold mb-4 text-gray-800"
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    Eventos
-  </motion.h2>
-  {events.length === 0 && (
-    <motion.div
-      className="flex justify-center items-center p-10 bg-white rounded-lg shadow-md"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
-    >
-      <h1 className="font-bold text-lg text-gray-600">
-        No hay eventos aún. ¡Añade uno nuevo!
-      </h1>
-    </motion.div>
-  )}
-  <motion.div
-    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.5, delay: 0.6 }}
-  >
-    {events.map((event) => (
-      <EventCard event={event} key={event._id} />
-    ))}
-  </motion.div>
-</motion.section>
+        <motion.section
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <motion.h2
+            className="text-2xl font-bold mb-4 text-gray-800"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Eventos
+          </motion.h2>
+          {events.length === 0 && (
+            <motion.div
+              className="flex justify-center items-center p-10 bg-white rounded-lg shadow-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <h1 className="font-bold text-lg text-gray-600">
+                No hay eventos aún. ¡Añade uno nuevo!
+              </h1>
+            </motion.div>
+          )}
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {events.map((event) => (
+              <EventCard event={event} key={event._id} />
+            ))}
+          </motion.div>
+        </motion.section>
 
         <motion.section
           className="mb-8"
