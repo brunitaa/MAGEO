@@ -18,7 +18,7 @@ export function HomePage2() {
   const { advertisements, getMyAdvertisements } = useAdvertisingRequest([]);
   const { protocols, getMyProtocols } = useprotocolRequest([]);
   const { logistics, getMyLogistics } = useLogisticRequest([]);
-  const isAdmin = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
