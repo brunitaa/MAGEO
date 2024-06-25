@@ -8,6 +8,7 @@ export default {
       },
       colors: {
         univalleColorOne: "#9E0044",
+         univalleColorTwo: "#5A0027",
       },
     },
   },
