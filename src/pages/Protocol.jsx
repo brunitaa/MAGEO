@@ -851,7 +851,7 @@ function Protocol() {
                     <td className="border px-4 py-2">
                       <Controller
                         control={control}
-                        name={`closing_data[${index}].phone`}
+                        name={`closing_data[${index}].participant_number`}
                         render={({ field }) => (
                           <Input
                             {...field}
