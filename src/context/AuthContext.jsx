@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       console.log(res.data);
 
       // Set the token cookie with appropriate attributes for production
-      Cookies.set("token", res.data.token, { expires: 7, secure: true, sameSite: 'None' });
+      Cookies.set("token", Cookies.get("token"), { expires: 7, secure: true, sameSite: 'None' });
 
       // Verificar el token del usuario para obtener el rol
       const res2 = await verifyTokenRequest(cookies.token);
