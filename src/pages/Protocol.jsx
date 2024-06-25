@@ -692,12 +692,12 @@ function Protocol() {
                     <td className="border px-4 py-2">
                       <Controller
                         control={control}
-                        name={`inauguration_data[${index}].phone`}
+                        name={`inauguration_data[${index}].participant_number`}
                         render={({ field }) => (
                           <Input
                             {...field}
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="number"
+                            type="text"
                             min="0"
                             required
                             placeholder="Teléfono"
