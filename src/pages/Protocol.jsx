@@ -783,7 +783,7 @@ function Protocol() {
             onClick={() =>
               appendParticipant({
                 name: "",
-                phone: "",
+                participant_number: "",
                 academic_degree: "",
                 company_institution: "",
                 position: "",
@@ -942,7 +942,7 @@ function Protocol() {
             onClick={() =>
               appendParticipant2({
                 name: "",
-                phone: "",
+                participant_number: "",
                 academic_degree: "",
                 company_institution: "",
                 position: "",
