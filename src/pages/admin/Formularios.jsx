@@ -85,7 +85,7 @@ export function Formularios() {
             transition={{ duration: 0.5, delay: 0.6 }}
           >
             {events.map((event) => (
-              <EventList event={event} key={event._id} />
+              <EventCard event={event} key={event._id} />
             ))}
           </motion.div>
         </motion.section>
