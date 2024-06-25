@@ -39,8 +39,8 @@ function App() {
               <SpectatorProvider>
                 <EventProvider>
                   <BrowserRouter>
-                    <div className="flex flex-col min-h-screen">
-                      <main className="flex-grow min-h-screen">
+                    <div className="flex flex-col bg-red-100 min-h-screen">
+                      <main className="flex-grow bg-red-100 min-h-screen">
                         <div className="mx-auto px-10 md:px-0 min--screen">
                           <Routes>
                             <Route path="/" element={<HomePage />} />
