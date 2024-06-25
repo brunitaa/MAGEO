@@ -36,7 +36,6 @@ export function LogisticCard({ logistic }) {
 
       <br />
       <div className="flex gap-x-2 items-center">
-        <ButtonDelete onClick={handleDelete}>Delete</ButtonDelete>
         {isAdmin ? (
           <ButtonLink to={`/admin/logistic/${logistic._id}`}>Ver</ButtonLink>
         ) : (
