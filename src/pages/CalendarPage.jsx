@@ -22,16 +22,19 @@ const CalendarPage = () => {
   }, []);
 
   // Preparar eventos para el FullCalendar
-  const formattedEvents = events.flatMap((event) =>
-    event.schedules.map((schedule) => ({
-      title: event.event_name,
-      start: schedule.start_time,
-      end: schedule.end_time,
-      extendedProps: {
-        place: schedule.place,
-      },
-    }))
-  );
+  const formattedEvents = events
+    .flatMap((event) =>
+      event.schedules.map((schedule) => ({
+        title: event.event_name,
+        start: schedule.start_time,
+        end: schedule.end_time,
+        extendedProps: {
+          place: schedule.place,
+          state: event.state, // Agregar el estado del evento
+        },
+      }))
+    )
+    .filter((event) => event.extendedProps.state === "Accept"); // Filtrar por estado "Accept"
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 

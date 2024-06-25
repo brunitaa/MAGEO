@@ -8,7 +8,7 @@ import { useAdvertisingRequest } from "../context/AdvertisementContext";
 import { useForm } from "react-hook-form";
 import { useSpectatorRequest } from "../context/SpectatorContext";
 import "animate.css";
-import "tailwindcss/tailwind.css"; // Asegúrate de importar Tailwind CSS
+import "tailwindcss/tailwind.css";
 import { useEventRequest } from "../context/EventsContext";
 dayjs.extend(utc);
 
@@ -28,6 +28,7 @@ const AdvertisingPiece = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [focusedInput, setFocusedInput] = useState(null);
+  const [selectedSpectators, setSelectedSpectators] = useState([]);
 
   const handleFocus = (field) => setFocusedInput(field);
   const handleBlur = () => setFocusedInput(null);
@@ -35,12 +36,20 @@ const AdvertisingPiece = () => {
   const onSubmit = async (data) => {
     console.log("Form Data:", data);
     try {
+      // Convertir el array de IDs de espectadores a un array de objetos con la estructura esperada por el backend
+      const spectatorsData = selectedSpectators.map((spectatorId) => ({
+        _id: spectatorId,
+      }));
+
       if (params.id) {
-        await updateAdvertisement(params.id, { ...data });
+        await updateAdvertisement(params.id, {
+          ...data,
+          spectators: spectatorsData,
+        });
         setSuccessMessage("Cambios guardados exitosamente");
         setTimeout(() => setSuccessMessage(""), 3000);
       } else {
-        await createAdvertisement({ ...data });
+        await createAdvertisement({ ...data, spectators: spectatorsData });
         setSuccessMessage("Creado Exitosamente");
         setTimeout(() => setSuccessMessage(""), 3000);
       }
@@ -59,33 +68,47 @@ const AdvertisingPiece = () => {
         const advertisement = await getAdvertisement(params.id);
         setValue("title", advertisement.title);
         setValue("area", advertisement.area);
-        const firstEvent = advertisement.event ? advertisement.event._id : "";
-        setValue("event", firstEvent);
-        const firstSpectator =
-          advertisement.spectators.length > 0
-            ? advertisement.spectators[0]._id
-            : "";
-        setValue("spectators", firstSpectator);
+
         setValue("goals", advertisement.goals);
         setValue("scope", advertisement.scope);
         setValue("description", advertisement.description);
         setValue("visual_references", advertisement.visual_references);
         setValue("registrations_links", advertisement.registrations_links);
+
+        // Setear los IDs de espectadores seleccionados al cargar el anuncio existente
+        const selectedSpectatorsIds = advertisement.spectators.map(
+          (spectator) => spectator._id
+        );
+        setSelectedSpectators(selectedSpectatorsIds);
       }
     };
     loadEvent();
   }, [params.id, getAdvertisement, setValue, getSpectators]);
+
+  const toggleSpectatorSelection = (spectatorId) => {
+    const currentIndex = selectedSpectators.indexOf(spectatorId);
+    const newSelectedSpectators = [...selectedSpectators];
+
+    if (currentIndex === -1) {
+      newSelectedSpectators.push(spectatorId);
+    } else {
+      newSelectedSpectators.splice(currentIndex, 1);
+    }
+
+    setSelectedSpectators(newSelectedSpectators);
+  };
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
   return (
     <div className="flex bg-red-100">
       <SidebarForms sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <div
-        className={`flex-grow p-10  transition-all duration-300 ${
+        className={`flex-grow p-10 transition-all duration-300 ${
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
@@ -98,14 +121,14 @@ const AdvertisingPiece = () => {
                 una pieza publicitaria.
               </p>
             </div>
-            
+
             <div
               className={`mb-2 p-4 border bg-white ${
                 focusedInput === "title" ? "border-red-500" : "border-gray-300"
               } rounded-lg`}
             >
               <Label>
-                Titulo
+                Título:
                 <Input
                   type="text"
                   name="title"
@@ -128,9 +151,9 @@ const AdvertisingPiece = () => {
             >
               <div className="flex gap-4">
                 <Label className="flex-1 block text-gray-700 text-sm mb-2">
-                  Area:
+                  Área:
                   <Input
-                    placeholder="Area"
+                    placeholder="Área"
                     type="text"
                     name="area"
                     {...register("area", { required: true })}
@@ -181,26 +204,22 @@ const AdvertisingPiece = () => {
               <div className="flex gap-4">
                 <Label>
                   Dirigido a:
-                  <select
-                    className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
-                      focusedInput === "spectators"
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                    {...register("spectators", { required: true })}
-                    defaultValue={
-                      spectators.length > 0 ? spectators[0]._id : ""
-                    }
-                    onFocus={() => handleFocus("spectators")}
-                    onBlur={handleBlur}
-                  >
-                    <option value="">Selecciona un espectador</option>
+                  <div className="flex flex-wrap gap-4">
                     {spectators.map((spectator, index) => (
-                      <option key={index} value={spectator._id}>
-                        {spectator.title}
-                      </option>
+                      <Label key={index} className="inline-flex items-center">
+                        <input
+                          type="checkbox"
+                          value={spectator._id}
+                          onChange={() =>
+                            toggleSpectatorSelection(spectator._id)
+                          }
+                          checked={selectedSpectators.includes(spectator._id)}
+                          className="form-checkbox h-5 w-5 text-univalleColorOne focus:ring-univalleColorOne border-gray-300 rounded"
+                        />
+                        <span className="ml-2">{spectator.title}</span>
+                      </Label>
                     ))}
-                  </select>
+                  </div>
                   {errors.spectators && (
                     <span className="text-red-500">
                       Este campo es requerido
@@ -208,7 +227,7 @@ const AdvertisingPiece = () => {
                   )}
                 </Label>
                 <Label>
-                  Alcanze:
+                  Alcance:
                   <select
                     name="scope"
                     {...register("scope", { required: true })}

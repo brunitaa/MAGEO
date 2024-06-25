@@ -143,27 +143,7 @@ function EventForm() {
                 evento.
               </p>
             </div>
-            <div
-              className={`mb-2 p-4 border bg-white ${
-                focusedInput === "title"
-                  ? "border-univalleColorOne"
-                  : "border-gray-300"
-              } rounded-lg`}
-            >
-              <Label
-                className="block text-gray-700 text-sm  mb-2"
-                htmlFor="event_name"
-              >
-                Estado
-              </Label>
-              <Input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                name="state"
-                type="text"
-                placeholder="aqui estara el estado"
-                readOnly
-              />
-            </div>
+
             <div
               className={`mb-2 p-4 border bg-white ${
                 focusedInput === "title"
@@ -220,16 +200,16 @@ function EventForm() {
                   className="block text-gray-700 text-sm  mb-2"
                   htmlFor="area"
                 >
-                  Area
+                  Unidad o Departamento Solicitante
                 </Label>
                 <Input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="area"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
                   type="text"
-                  placeholder={"Area"}
-                  {...register("area")}
-                  required
-                />
+                  placeholder="Unidad o Departamento Solicitante"
+                  {...register(`area`, {
+                    required: true,
+                  })}
+                ></Input>
               </div>
               <div
                 className={`mb-2 p-4 border bg-white ${
@@ -487,26 +467,33 @@ function EventForm() {
                   } rounded-lg`}
                 >
                   <Label
-                    className="block text-gray-700 text-sm  mb-2"
-                    htmlFor={`schedules[${index}].place`}
+                    className="block text-gray-700 text-sm mb-2"
+                    htmlFor={`schedules[${index}].spectators`}
                   >
                     Dirigido a
                   </Label>
-                  <select
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-                    name={`schedules[${index}].place`}
-                    {...register(`schedules[${index}].spectators`, {
-                      required: true,
-                    })}
-                  >
-                    <option value="">Selecciona un espectador</option>
-                    {spectators.map((spectator, index) => (
-                      <option key={index} value={spectator._id}>
-                        {spectator.title}
-                      </option>
+                  <div className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline">
+                    {spectators.map((spectator) => (
+                      <div
+                        key={spectator._id}
+                        className="flex items-center mb-2"
+                      >
+                        <input
+                          type="checkbox"
+                          value={spectator._id}
+                          {...register(`schedules[${index}].spectators`, {
+                            required: true,
+                          })}
+                          className="form-checkbox"
+                        />
+                        <span className="ml-2 text-univalleColorTwo">
+                          {spectator.title}
+                        </span>
+                      </div>
                     ))}
-                  </select>
+                  </div>
                 </div>
+
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
@@ -550,37 +537,7 @@ function EventForm() {
                     required
                   />
                 </div>
-                <div
-                  className={`mb-2 p-4 border bg-white ${
-                    focusedInput === "title"
-                      ? "border-univalleColorOne"
-                      : "border-gray-300"
-                  } rounded-lg`}
-                >
-                  <Label
-                    className="block text-gray-700 text-sm  mb-2"
-                    htmlFor="coordination"
-                  >
-                    Coordinación con
-                  </Label>
-                  <select
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="coordination"
-                    required
-                    {...register(`schedules[${index}].coordination`, {
-                      required: true,
-                    })}
-                  >
-                    <option value="bienestar">Bienestar</option>
-                    <option value="comunicacion">Comunicación</option>
-                    <option value="direccion_carrera">
-                      Dirección de Carrera
-                    </option>
-                    <option value="administracion_marketing">
-                      Administración y Marketing
-                    </option>
-                  </select>
-                </div>
+
                 <div
                   className={`mb-2 p-4 border bg-white ${
                     focusedInput === "title"
@@ -634,7 +591,7 @@ function EventForm() {
                 <Button
                   type="button"
                   onClick={() => append({})}
-                  className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded mx-2"
+                  className="bg-univalleColorOne hover:bg-univalleColorTwo text-white py-2 px-4 rounded mx-2"
                 >
                   Agregar Horario
                 </Button>

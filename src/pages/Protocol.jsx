@@ -1,29 +1,73 @@
 import React, { useEffect, useState } from "react";
 import { Label, Input } from "../components/ui/index";
-import { useParams, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { useprotocolRequest } from "../context/ProtocolContext";
 import SidebarForms from "../components/SideBarForms";
 import { useEventRequest } from "../context/EventsContext";
 
 function Protocol() {
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm();
   const params = useParams();
   const [successMessage, setSuccessMessage] = useState("");
-  const { events, getMyEvents } = useEventRequest();
+  const { events = [], getMyEvents } = useEventRequest(); // Default to empty array
   const navigate = useNavigate();
   const handleBlur = () => setFocusedInput(null);
   const [focusedInput, setFocusedInput] = useState(null);
-  const [ÍtemsRequerimientosServicios, setÍtemsRequerimientosServicios] =
-    useState([
+  const handleFocus = (field) => setFocusedInput(field);
+  const [disertantes, setDisertantes] = useState([
+    {
+      name: "",
+      arrival_date_and_time: "",
+      return_date_and_time: "",
+      accommodation: {
+        name: "",
+        address: "",
+        email: "",
+        phone: "",
+      },
+      responsible_person: {
+        first_name: "",
+        last_name: "",
+        phone: "",
+        email: "",
+      },
+    },
+  ]);
+  const handleAddDisertante = () => {
+    setDisertantes([
+      ...disertantes,
       {
-        ÍtemName: "",
-        quantity: 0,
-        supplier: "",
-        unit: "",
-        unit_price: "",
-        observations: "",
+        name: "",
+        arrival_date_and_time: "",
+        return_date_and_time: "",
+        accommodation: {
+          name: "",
+          address: "",
+          email: "",
+          phone: "",
+        },
+        responsible_person: {
+          first_name: "",
+          last_name: "",
+          phone: "",
+          email: "",
+        },
       },
     ]);
+  };
+  const handleRemoveDisertante = (index) => {
+    const newDisertantes = [...disertantes];
+    newDisertantes.splice(index, 1);
+    setDisertantes(newDisertantes);
+  };
+
   const [Participants, setParticipants] = useState([
     {
       participant_number: "",
@@ -34,7 +78,6 @@ function Protocol() {
       observations: "",
     },
   ]);
-
   const [Participants2, setParticipants2] = useState([
     {
       participant_number: "",
@@ -45,20 +88,34 @@ function Protocol() {
       observations: "",
     },
   ]);
-  const {
-    acceptProtocol,
-    rejectProtocol,
-    createProtocol,
-    getProtocol,
-    updateProtocol,
-  } = useprotocolRequest();
+  const { createProtocol, getProtocol, updateProtocol } = useprotocolRequest();
 
-  const handleAddRow = () => {
-    setÍtemsRequerimientosServicios([
-      ...ÍtemsRequerimientosServicios,
-      { ÍtemName: "", quantity: 0, observations: "" },
-    ]);
-  };
+  const {
+    fields: serviceFields,
+    append: appendService,
+    remove: removeService,
+  } = useFieldArray({
+    control,
+    name: "service_requirements",
+  });
+
+  const {
+    fields: participantFields,
+    append: appendParticipant,
+    remove: removeParticipant,
+  } = useFieldArray({
+    control,
+    name: "inauguration_data",
+  });
+
+  const {
+    fields: participant2Fields,
+    append: appendParticipant2,
+    remove: removeParticipant2,
+  } = useFieldArray({
+    control,
+    name: "closing_data",
+  });
 
   const handleAddParticipant = () => {
     setParticipants([
@@ -87,20 +144,6 @@ function Protocol() {
     ]);
   };
 
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm();
-
-  const handleRemoveRow = (index) => {
-    const newÍtems = [...ÍtemsRequerimientosServicios];
-    newÍtems.splice(index, 1);
-    setÍtemsRequerimientosServicios(newÍtems);
-  };
-
   const handleRemoveParticipant = (index) => {
     const newParticipant = [...Participants];
     newParticipant.splice(index, 1);
@@ -111,7 +154,6 @@ function Protocol() {
     newParticipant.splice(index, 1);
     setParticipants2(newParticipant);
   };
-
   const allÍtems = [
     "Testera",
     "Marbetes",
@@ -120,7 +162,6 @@ function Protocol() {
     "Programa del evento",
     "Atención sala de Consejo",
   ];
-
   const onSubmit = async (data) => {
     try {
       if (params.id) {
@@ -150,7 +191,6 @@ function Protocol() {
         console.log(protocol);
         const firstEvent = protocol.event_id ? protocol.event_id._id : "";
         setValue("event_id", firstEvent);
-
         // Asignar valores del maestro de ceremonias
         if (protocol.master_of_ceremonies) {
           const { first_name, last_name, email, phone, status } =
@@ -161,7 +201,6 @@ function Protocol() {
           setValue("master_of_ceremonies.phone", phone);
           setValue("master_of_ceremonies.status", status);
         }
-
         // Asignar valores de cierre, inauguración y requisitos de servicio si existen
         if (protocol.closing_data && Array.isArray(protocol.closing_data)) {
           protocol.closing_data.forEach((closing, index) => {
@@ -185,7 +224,6 @@ function Protocol() {
             );
           });
         }
-
         if (
           protocol.inauguration_data &&
           Array.isArray(protocol.inauguration_data)
@@ -214,7 +252,6 @@ function Protocol() {
             );
           });
         }
-
         if (
           protocol.service_requirements &&
           Array.isArray(protocol.service_requirements)
@@ -243,14 +280,75 @@ function Protocol() {
               service.observations
             );
           });
+          if (protocol.speakers && Array.isArray(protocol.speakers)) {
+            protocol.speakers.forEach((speaker, index) => {
+              setValue(`speakers[${index}].name`, speaker.name);
+              // Asigna la fecha de llegada y formatea correctamente
+              setValue(
+                `speakers[${index}].arrival_date_and_time`,
+                speaker.arrival_date_and_time
+                  ? dayjs(speaker.arrival_date_and_time)
+                      .utc()
+                      .format("YYYY-MM-DDTHH:mm")
+                  : "" // Asegúrate de manejar correctamente los casos en los que no hay fecha
+              );
+              // Asigna la fecha de retorno
+              setValue(
+                `speakers[${index}].return_date_and_time`,
+                speaker.return_date_and_time
+                  ? dayjs(speaker.return_date_and_time)
+                      .utc()
+                      .format("YYYY-MM-DDTHH:mm")
+                  : "" // Asegúrate de manejar correctamente los casos en los que no hay fecha
+              );
+              const responsible_person = speaker.responsible_person;
+              if (responsible_person) {
+                console.log("HHH");
+                setValue(
+                  `speakers[${index}].responsible_person.first_name`,
+                  responsible_person.first_name
+                );
+                setValue(
+                  `speakers[${index}].responsible_person.phone`,
+                  responsible_person.phone
+                );
+                setValue(
+                  `speakers[${index}].responsible_person.email`,
+                  responsible_person.email
+                );
+                setValue(
+                  `speakers[${index}].responsible_person.last_name`,
+                  responsible_person.last_name
+                );
+              }
+              const accommodation = speaker.accommodation;
+              if (accommodation) {
+                console.log("HHH");
+                setValue(
+                  `speakers[${index}].accommodation.address`,
+                  accommodation.address
+                );
+                setValue(
+                  `speakers[${index}].accommodation.phone`,
+                  accommodation.phone
+                );
+                setValue(
+                  `speakers[${index}].accommodation.email`,
+                  accommodation.email
+                );
+                setValue(
+                  `speakers[${index}].accommodation.name`,
+                  accommodation.name
+                );
+              }
+            });
+          }
         }
       }
     };
     loadEvent();
   }, [params.id, setValue]);
-
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -264,11 +362,16 @@ function Protocol() {
       >
         <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
           <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
-            <h1 className="text-3xl  mb-2">Fomulario de Protocolo</h1>
+            <h1 className="text-3xl mb-2">Formulario de Protocolo</h1>
             <p className="text-gray-600">
               Por favor, completa la siguiente información acerca del protocolo
               de tu evento.
             </p>
+            <Link to="/precios">
+              <button className="bg-univalleColorOne hover:bg-univalleColorOne text-white font-bold py-2 px-4 rounded mt-4">
+                Precios Preferenciales
+              </button>
+            </Link>
           </div>
           <div
             className={`mb-2 p-4 border bg-white ${
@@ -284,17 +387,17 @@ function Protocol() {
                     : "border-gray-300"
                 }`}
                 {...register("event_id", { required: true })}
-                defaultValue={event.length > 0 ? event[0]._id : ""}
+                defaultValue={events.length > 0 ? events[0]._id : ""}
                 onFocus={() => handleFocus("event_id")}
                 onBlur={handleBlur}
               >
-                <br></br>
                 <option value="">Selecciona el evento</option>
-                {events.map((event, index) => (
-                  <option key={index} value={event._id}>
-                    {event.event_name}
-                  </option>
-                ))}
+                {events.length > 0 &&
+                  events.map((event, index) => (
+                    <option key={index} value={event._id}>
+                      {event.event_name}
+                    </option>
+                  ))}
               </select>
               {errors.spectators && (
                 <span className="text-red-500">Este campo es requerido</span>
@@ -302,6 +405,7 @@ function Protocol() {
             </Label>
           </div>
 
+          {/* 3.1 Requerimientos y Servicios */}
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -309,7 +413,7 @@ function Protocol() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <h3 className="text-2xl  mb-4">3.1 Requerimientos y Servicios</h3>
+            <h3 className="text-2xl mb-4">3.1 Requerimientos y Servicios</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -318,12 +422,6 @@ function Protocol() {
                   </th>
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
                   </th>
                   <th className="px-4 py-2">
                     <Label>Unidad de Medida</Label>
@@ -340,14 +438,15 @@ function Protocol() {
                 </tr>
               </thead>
               <tbody>
-                {ÍtemsRequerimientosServicios.map((Ítem, index) => (
-                  <tr key={index}>
+                {serviceFields.map((item, index) => (
+                  <tr key={item.id}>
                     <td className="border px-4 py-2">
                       <select
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        name="ÍtemName"
-                        required
-                        {...register(`service_requirements[${index}].name`)}
+                        name={`service_requirements[${index}].name`}
+                        {...register(`service_requirements[${index}].name`, {
+                          required: true,
+                        })}
                       >
                         <option value="">Selecciona un ítem</option>
                         {allÍtems.map((option, optionIndex) => (
@@ -358,96 +457,71 @@ function Protocol() {
                       </select>
                     </td>
                     <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="number"
-                        name="unit_price"
-                        max="1000"
-                        required
-                        placeholder="Precio por Unidad"
-                        {...register(`service_requirements[${index}].quantity`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `service_requirements[${index}].quantity`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="number"
-                        name="unit_price"
-                        max="50"
-                        required
-                        placeholder="Numero de Item"
-                        {...register(
-                          `service_requirements[${index}].item_number`
+                      <Controller
+                        control={control}
+                        name={`service_requirements[${index}].quantity`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="number"
+                            max="1000"
+                            required
+                            placeholder="Cantidad"
+                          />
                         )}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `service_requirements[${index}].item_number`,
-                            value
-                          );
-                        }}
                       />
                     </td>
+
                     <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`service_requirements[${index}].supplier`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Unidad de Medida"
-                        {...register(`service_requirements[${index}].unit`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        required
-                        placeholder="Precio por Unidad"
-                        {...register(
-                          `service_requirements[${index}].unit_price`
+                      <Controller
+                        control={control}
+                        name={`service_requirements[${index}].unit`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            required
+                            placeholder="Unidad de Medida"
+                          />
                         )}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `service_requirements[${index}].unit_price`,
-                            value
-                          );
-                        }}
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="observations"
-                        placeholder="Observaciones"
-                        {...register(
-                          `service_requirements[${index}].observations`
+                      <Controller
+                        control={control}
+                        name={`service_requirements[${index}].unit_price`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="number"
+                            required
+                            placeholder="Precio por Unidad"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`service_requirements[${index}].observations`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            placeholder="Observaciones"
+                          />
                         )}
                       />
                     </td>
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                        onClick={() => handleRemoveRow(index)}
+                        className="bg-univalleColorOne hover:bg-univalleColorOne text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        onClick={() => removeService(index)}
                       >
                         Eliminar
                       </button>
@@ -458,14 +532,23 @@ function Protocol() {
             </table>
           </div>
           <button
-            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddRow}
+            className="bg-univalleColorOne hover:bg-univalleColorOne text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() =>
+              appendService({
+                name: "",
+                quantity: 0,
+                item_number: 0,
+                supplier: "",
+                unit: "",
+                unit_price: 0,
+                observations: "",
+              })
+            }
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -473,8 +556,94 @@ function Protocol() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <h3 className="text-2xl  mb-4">
-              3.2 Participantes en la Inauguración
+            <h3 className="text-2xl mb-4">3.2 Maestro de Ceremonia</h3>
+            <table className="table-auto">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2">
+                    <Label>Nombre</Label>
+                  </th>
+                  <th className="px-4 py-2">
+                    <Label>Apellido</Label>
+                  </th>
+                  <th className="px-4 py-2">
+                    <Label>Email</Label>
+                  </th>
+                  <th className="px-4 py-2">
+                    <Label>Telefono</Label>
+                  </th>
+                  <th className="px-4 py-2">
+                    <Label>Estado</Label>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border px-4 py-2">
+                    <Input
+                      className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      name="first_name"
+                      placeholder="Nombre"
+                      required
+                      {...register(`master_of_ceremonies.first_name`)}
+                    />
+                  </td>
+                  <td className="border px-4 py-2">
+                    <Input
+                      className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      name="last_name"
+                      required
+                      placeholder="Apellido"
+                      {...register(`master_of_ceremonies.last_name`)}
+                    />
+                  </td>
+                  <td className="border px-4 py-2">
+                    <Input
+                      className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      required
+                      placeholder="Email"
+                      {...register(`master_of_ceremonies.email`)}
+                    />
+                  </td>
+                  <td className="border px-4 py-2">
+                    <Input
+                      className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      required
+                      placeholder="Telefono"
+                      {...register(`master_of_ceremonies.phone`)}
+                    />
+                  </td>
+                  <td className="border px-4 py-2">
+                    <select
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      required
+                      placeholder={"Si o No?"}
+                      {...register(`master_of_ceremonies.status`)}
+                    >
+                      <option value="true">Si</option>
+                      <option value="false">No</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* 3.4 Participantes en la Inauguración */}
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "title"
+                ? "border-univalleColorOne"
+                : "border-gray-300"
+            } rounded-lg`}
+          >
+            <h3 className="text-2xl mb-4">
+              3.4 Participantes en la Inauguración
             </h3>
             <table className="table-auto">
               <thead>
@@ -483,10 +652,10 @@ function Protocol() {
                     <Label>Nombre</Label>
                   </th>
                   <th className="px-4 py-2">
-                    <Label>Telefono</Label>
+                    <Label>Teléfono</Label>
                   </th>
                   <th className="px-4 py-2">
-                    <Label>Titulo Academico</Label>
+                    <Label>Título Académico</Label>
                   </th>
                   <th className="px-4 py-2">
                     <Label>Institución de la Empresa</Label>
@@ -503,79 +672,103 @@ function Protocol() {
                 </tr>
               </thead>
               <tbody>
-                {Participants.map((participant, index) => (
-                  <tr key={index}>
+                {participantFields.map((item, index) => (
+                  <tr key={item.id}>
                     <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="name"
-                        placeholder="Nombre"
-                        required
-                        {...register(`inauguration_data[${index}].name`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="phone"
-                        min="0"
-                        required
-                        {...register(
-                          `inauguration_data[${index}].participant_number`
-                        )}
-                      />
-                    </td>
-
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Titulo Academico"
-                        {...register(
-                          `inauguration_data[${index}].academic_degree`
-                        )}
-                      />
-                    </td>
-
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        placeholder="Posición"
-                        required
-                        {...register(`inauguration_data[${index}].position`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Institución de la Empresa"
-                        {...register(
-                          `inauguration_data[${index}].company_institution`
+                      <Controller
+                        control={control}
+                        name={`inauguration_data[${index}].name`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            placeholder="Nombre"
+                            required
+                          />
                         )}
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="observations"
-                        placeholder="Observaciones"
-                        {...register(
-                          `inauguration_data[${index}].observations`
+                      <Controller
+                        control={control}
+                        name={`inauguration_data[${index}].phone`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            min="0"
+                            required
+                            placeholder="Teléfono"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`inauguration_data[${index}].academic_degree`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            required
+                            placeholder="Título Académico"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`inauguration_data[${index}].company_institution`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            required
+                            placeholder="Institución de la Empresa"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`inauguration_data[${index}].position`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            required
+                            placeholder="Posición"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`inauguration_data[${index}].observations`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            placeholder="Observaciones"
+                          />
                         )}
                       />
                     </td>
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                        onClick={() => handleRemoveParticipant(index)}
+                        className="bg-univalleColorOne hover:bg-univalleColorOne text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        onClick={() => removeParticipant(index)}
                       >
                         Eliminar
                       </button>
@@ -586,8 +779,17 @@ function Protocol() {
             </table>
           </div>
           <button
-            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddParticipant}
+            className="bg-univalleColorOne hover:bg-univalleColorOne text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() =>
+              appendParticipant({
+                name: "",
+                phone: "",
+                academic_degree: "",
+                company_institution: "",
+                position: "",
+                observations: "",
+              })
+            }
             type="button"
             style={{ margin: "10px 20px" }}
           >
@@ -601,7 +803,7 @@ function Protocol() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <h3 className="text-2xl  mb-4">3.3 Participantes en la Clausura</h3>
+            <h3 className="text-2xl mb-4">3.5 Participantes en la Clausura</h3>
             <table className="table-auto">
               <thead>
                 <tr>
@@ -629,75 +831,103 @@ function Protocol() {
                 </tr>
               </thead>
               <tbody>
-                {Participants2.map((participant, index) => (
-                  <tr key={index}>
+                {participant2Fields.map((item, index) => (
+                  <tr key={item.id}>
                     <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="name"
-                        placeholder="Nombre"
-                        required
-                        {...register(`closing_data[${index}].name`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="quantity"
-                        required
-                        min="0"
-                        {...register(
-                          `closing_data[${index}].participant_number`
-                        )}
-                      />
-                    </td>
-
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Titulo Academico"
-                        {...register(`closing_data[${index}].academic_degree`)}
-                      />
-                    </td>
-
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Posición"
-                        {...register(`closing_data[${index}].position`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Institución de la Empresa"
-                        {...register(
-                          `closing_data[${index}].company_institution`
+                      <Controller
+                        control={control}
+                        name={`closing_data[${index}].name`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            placeholder="Nombre"
+                            required
+                          />
                         )}
                       />
                     </td>
                     <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="observations"
-                        placeholder="Observaciones"
-                        {...register(`closing_data[${index}].observations`)}
+                      <Controller
+                        control={control}
+                        name={`closing_data[${index}].phone`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            min="0"
+                            required
+                            placeholder="Teléfono"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`closing_data[${index}].academic_degree`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            required
+                            placeholder="Título Académico"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`closing_data[${index}].company_institution`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            required
+                            placeholder="Institución de la Empresa"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`closing_data[${index}].position`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            required
+                            placeholder="Posición"
+                          />
+                        )}
+                      />
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Controller
+                        control={control}
+                        name={`closing_data[${index}].observations`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            type="text"
+                            placeholder="Observaciones"
+                          />
+                        )}
                       />
                     </td>
                     <td className="border px-4 py-2">
                       <button
                         type="button"
-                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                        onClick={() => handleRemoveParticipant2(index)}
+                        className="bg-univalleColorOne hover:bg-univalleColorOne text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                        onClick={() => removeParticipant2(index)}
                       >
                         Eliminar
                       </button>
@@ -708,98 +938,22 @@ function Protocol() {
             </table>
           </div>
           <button
-            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddParticipant2}
+            className="bg-univalleColorOne hover:bg-univalleColorOne text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() =>
+              appendParticipant2({
+                name: "",
+                phone: "",
+                academic_degree: "",
+                company_institution: "",
+                position: "",
+                observations: "",
+              })
+            }
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar fila
           </button>
-
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-            <h3 className="text-2xl  mb-4">3.4 Maestro de Ceremonia</h3>
-            <table className="table-auto">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2">
-                    <Label>Nombre</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Apellido</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Email</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Telefono</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Estado</Label>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <td className="border px-4 py-2">
-                  <Input
-                    className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    name="first_name"
-                    placeholder="Nombre"
-                    required
-                    {...register(`master_of_ceremonies.first_name`)}
-                  />
-                </td>
-                <td className="border px-4 py-2">
-                  <Input
-                    className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    name="last_name"
-                    required
-                    placeholder="Apellido"
-                    {...register(`master_of_ceremonies.last_name`)}
-                  />
-                </td>
-
-                <td className="border px-4 py-2">
-                  <Input
-                    className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    required
-                    placeholder="Email"
-                    {...register(`master_of_ceremonies.email`)}
-                  />
-                </td>
-
-                <td className="border px-4 py-2">
-                  <Input
-                    className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    required
-                    placeholder="Telefono"
-                    {...register(`master_of_ceremonies.phone`)}
-                  />
-                </td>
-                <td className="border px-4 py-2">
-                  <select
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    type="text"
-                    required
-                    placeholder={"Si o No?"}
-                    {...register(`master_of_ceremonies.status`)}
-                  >
-                    <option value="true">Si</option>
-                    <option value="false">No</option>
-                  </select>
-                </td>
-              </tbody>
-            </table>
-          </div>
 
           {successMessage && (
             <div

@@ -11,6 +11,7 @@ import { useAdvertisingRequest } from "../../context/AdvertisementContext";
 import { useprotocolRequest } from "../../context/ProtocolContext";
 import { useLogisticRequest } from "../../context/LogisticContext";
 import { useAuth } from "../../context/AuthContext";
+import EventList from "../../components/Lists/EventList";
 
 export function Formularios() {
   const { events, getEvents } = useEventRequest([]);
@@ -84,7 +85,7 @@ export function Formularios() {
             transition={{ duration: 0.5, delay: 0.6 }}
           >
             {events.map((event) => (
-              <EventCard event={event} key={event._id} />
+              <EventList event={event} key={event._id} />
             ))}
           </motion.div>
         </motion.section>

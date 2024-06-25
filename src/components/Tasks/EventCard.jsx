@@ -1,16 +1,17 @@
+import React from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import { useEventRequest } from "../../context/EventsContext";
 import { Button, ButtonLink } from "../ui";
-import { motion } from "framer-motion";
 
-export function EventCard({ event }) {
+export function EventCard({ event, onDelete }) {
   const { deleteEvent } = useEventRequest();
   const { isAdmin } = useAuth();
 
   const handleDelete = async () => {
     try {
       await deleteEvent(event._id);
-      window.location.reload();
+      onDelete(event._id); // Llama a la función onDelete para actualizar el estado local
     } catch (error) {
       console.log("Error deleting event:", error);
     }

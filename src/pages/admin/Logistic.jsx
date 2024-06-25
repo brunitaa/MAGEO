@@ -1353,8 +1353,7 @@ function LogisticAdmin() {
           >
             Agregar fila
           </button>
-          <br></br>
-          <br></br>
+
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -1398,14 +1397,14 @@ function LogisticAdmin() {
           <button
             type="button"
             onClick={() => onAccept()}
-            className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
+            className="bg-univalleColorOne hover:bg-univalleColorTwo text-white  py-2 px-4 rounded"
           >
             Aceptar
           </button>
           <button
             type="button"
             onClick={() => onReject()}
-            className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
+            className="bg-univalleColorOne hover:bg-univalleColorTwo text-white  py-2 px-4 rounded"
           >
             Denegar
           </button>

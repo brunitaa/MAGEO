@@ -673,7 +673,7 @@ function EventAdmin() {
                 <Button
                   type="button"
                   onClick={() => append({})}
-                  className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded mx-2"
+                  className="bg-univalleColorOne hover:bg-univalleColorTwo text-white py-2 px-4 rounded mx-2"
                 >
                   Agregar Horario
                 </Button>
@@ -709,14 +709,14 @@ function EventAdmin() {
             <button
               type="button"
               onClick={() => onAccept()}
-              className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
+              className="bg-univalleColorOne hover:bg-univalleColorTwo text-white  py-2 px-4 rounded"
             >
               Aceptar
             </button>
             <button
               type="button"
               onClick={() => onReject()}
-              className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
+              className="bg-univalleColorOne hover:bg-univalleColorTwo text-white  py-2 px-4 rounded"
             >
               Denegar
             </button>

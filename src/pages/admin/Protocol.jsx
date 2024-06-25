@@ -824,14 +824,14 @@ function ProtocolAdmin() {
           <button
             type="button"
             onClick={() => onAccept()}
-            className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
+            className="bg-univalleColorOne hover:bg-univalleColorTwo text-white  py-2 px-4 rounded"
           >
             Aceptar
           </button>
           <button
             type="button"
             onClick={() => onReject()}
-            className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
+            className="bg-univalleColorOne hover:bg-univalleColorTwo text-white  py-2 px-4 rounded"
           >
             Denegar
           </button>

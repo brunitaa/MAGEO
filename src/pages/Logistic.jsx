@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Label } from "../components/ui";
-import { useParams, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { useLogisticRequest } from "../context/LogisticContext";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -10,23 +10,22 @@ dayjs.extend(utc);
 import "animate.css";
 import { Input } from "../components/ui";
 import { useEventRequest } from "../context/EventsContext";
+import MobiliarioServicio from "./Logistic/MobiliariaServicio/MobiliarioServicio";
+import MobiliarioServicioOtros from "./Logistic/MobiliariaServicio/MobiliariServicioOtros";
+import MaterialApoyo from "./Logistic/MobiliariaServicio/Material de Apoyo/MaterialApoyo";
+import MaterialApoyoOtros from "./Logistic/MobiliariaServicio/Material de Apoyo/MaterialApoyoOtros";
+import Alimentacion from "./Logistic/MobiliariaServicio/Alimentacion/Alimentacion";
+import AlimentacionOtros from "./Logistic/MobiliariaServicio/Alimentacion/AlimentacionOtros";
+import Transporte from "./Logistic/MobiliariaServicio/Transporte/Transporte";
 
 function Logistic() {
-  const [successMessage, setSuccessMessage] = useState("");
-  const { events, getMyEvents } = useEventRequest();
-  const params = useParams();
-  const [focusedInput, setFocusedInput] = useState(null);
-  const navigate = useNavigate();
-  const [mueblesServicios, setmueblesServicios] = useState([
-    {
-      ÍtemName: "",
-      quantity: 0,
-      supplier: "",
-      unit: "",
-      unit_price: "",
-      observations: "",
-    },
-  ]);
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm();
   const [disertantes, setDisertantes] = useState([
     {
       name: "",
@@ -46,51 +45,6 @@ function Logistic() {
       },
     },
   ]);
-  const [materialApoyo, setmaterialApoyo] = useState([
-    {
-      ÍtemName: "",
-      quantity: 0,
-      supplier: "",
-      unit: "",
-      unit_price: "",
-      observations: "",
-    },
-  ]);
-  const [foodServices, setFoodServices] = useState([
-    {
-      ÍtemName: "",
-      quantity: 0,
-      supplier: "",
-      unit: "",
-      unit_price: "",
-      observations: "",
-    },
-  ]);
-  const [transport, setTransport] = useState([
-    {
-      ÍtemName: "",
-      quantity: 0,
-      supplier: "",
-      unit: "",
-      unit_price: "",
-      observations: "",
-    },
-  ]);
-
-  const {
-    createLogistic,
-    getLogistic,
-    updateLogistic,
-    acceptLogistic,
-    rejectLogistic,
-  } = useLogisticRequest();
-
-  const handleAddRow = () => {
-    setmueblesServicios([
-      ...mueblesServicios,
-      { ÍtemName: "", quantity: 0, observations: "" },
-    ]);
-  };
   const handleAddDisertante = () => {
     setDisertantes([
       ...disertantes,
@@ -113,83 +67,62 @@ function Logistic() {
       },
     ]);
   };
-
-  const handleAddMateril = () => {
-    setmaterialApoyo([
-      ...materialApoyo,
-      {
-        name: "",
-        quantity: 0,
-        supplier: "",
-        unit: "",
-        unit_price: "",
-        observations: "",
-      },
-    ]);
-  };
-  const handleAddTransport = () => {
-    setTransport([
-      ...transport,
-      {
-        name: "",
-        quantity: 0,
-        supplier: "",
-        unit: "",
-        unit_price: "",
-        observations: "",
-      },
-    ]);
-  };
-
-  const handleAddFood = () => {
-    setFoodServices([
-      ...foodServices,
-      {
-        name: "",
-        quantity: 0,
-        supplier: "",
-        unit: "",
-        unit_price: "",
-        observations: "",
-      },
-    ]);
-  };
-
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm();
-
-  const handleRemoveRow = (index) => {
-    const newÍtems = [...mueblesServicios];
-    newÍtems.splice(index, 1);
-    setmueblesServicios(newÍtems);
-  };
-  const handleRemoveTransport = (index) => {
-    const newTransport = [...transport];
-    newTransport.splice(index, 1);
-    setTransport(newTransport);
-  };
-  const handleBlur = () => setFocusedInput(null);
-
-  const handleRemoveMaterial = (index) => {
-    const newMaterial = [...materialApoyo];
-    newMaterial.splice(index, 1);
-    setmaterialApoyo(newMaterial);
-  };
-  const handleRemoveFood = (index) => {
-    const newFood = [...foodServices];
-    newFood.splice(index, 1);
-    setFoodServices(newFood);
-  };
   const handleRemoveDisertante = (index) => {
     const newDisertantes = [...disertantes];
     newDisertantes.splice(index, 1);
     setDisertantes(newDisertantes);
   };
+  const [successMessage, setSuccessMessage] = useState("");
+  const handleBlur = () => setFocusedInput(null);
+  const { events, getMyEvents } = useEventRequest();
+  const params = useParams();
+  const [focusedInput, setFocusedInput] = useState(null);
+  const handleFocus = (field) => setFocusedInput(field);
+  const navigate = useNavigate();
+  const {
+    fields: furnitureFields,
+    append: appendFurniture,
+    remove: removeFurniture,
+  } = useFieldArray({
+    control,
+    name: "furniture_services",
+  });
+
+  const {
+    fields: materialFields,
+    append: appendMaterial,
+    remove: removeMaterial,
+  } = useFieldArray({
+    control,
+    name: "support_material",
+  });
+
+  const {
+    fields: foodFields,
+    append: appendFood,
+    remove: removeFood,
+  } = useFieldArray({
+    control,
+    name: "food_services",
+  });
+
+  const {
+    fields: transportFields,
+    append: appendTransport,
+    remove: removeTransport,
+  } = useFieldArray({
+    control,
+    name: "transport_services",
+  });
+
+  const {
+    createLogistic,
+    getLogistic,
+    updateLogistic,
+    acceptLogistic,
+    rejectLogistic,
+  } = useLogisticRequest();
+
   const allFood = [
     "NesCafé PZA",
     "Tés CAJA",
@@ -221,6 +154,7 @@ function Logistic() {
     "Certificados",
   ];
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       if (params.id) {
         console.log(params.id);
@@ -434,6 +368,11 @@ function Logistic() {
               Por favor, completa la siguiente información para crear o editar
               la Logística del evento.
             </p>
+            <Link to="/precios">
+              <button className="bg-univalleColorOne hover:bg-univalleColorOne text-white font-bold py-2 px-4 rounded mt-4">
+                Precios Preferenciales
+              </button>
+            </Link>
           </div>
           <div
             className={`mb-2 p-4 border bg-white ${
@@ -452,7 +391,6 @@ function Logistic() {
                 onFocus={() => handleFocus("event_id")}
                 onBlur={handleBlur}
               >
-                <br></br>
                 <option value="">Selecciona el evento</option>
                 {events.map((event, index) => (
                   <option key={index} value={event._id}>
@@ -465,458 +403,72 @@ function Logistic() {
               )}
             </Label>
           </div>
-          
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-            <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
-            <table className="table-auto">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2">
-                    <Label>Ítem</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Cantidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Unidad de Medida</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Precio por Unidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Observaciones</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Acción</Label>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {mueblesServicios.map((mueble, index) => (
-                  <tr key={index}>
-                    <td className="border px-4 py-2">
-                      <select
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        required
-                        {...register(`furniture_services[${index}].name`)}
-                      >
-                        <option value="">Selecciona un ítem</option>
-                        {allMobiliario.map((option, optionIndex) => (
-                          <option key={optionIndex} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Cantidad"
-                        {...register(`furniture_services[${index}].quantity`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `furniture_services[${index}].quantity`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Precio por Unidad"
-                        {...register(
-                          `furniture_services[${index}].item_number`
-                        )}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `furniture_services[${index}].item_number`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`furniture_services[${index}].supplier`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Unidad de Medida"
-                        {...register(`furniture_services[${index}].unit`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Precio por Unidad"
-                        {...register(`furniture_services[${index}].unit_price`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `furniture_services[${index}].unit_price`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="observations"
-                        placeholder="Observaciones"
-                        {...register(
-                          `furniture_services[${index}].observations`
-                        )}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <button
-                        type="button"
-                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                        onClick={() => handleRemoveRow(index)}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button
-            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddRow}
-            type="button"
-            style={{ margin: "10px 20px" }}
-          >
-            Agregar fila
-          </button>
-         
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-             <h3 className="text-2xl  mb-4">2.2 Material de apoyo</h3>
-            <table className="table-auto">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2">
-                    <Label>Ítem</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Cantidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Unidad de Medida</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Precio por Unidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Observaciones</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Acción</Label>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {materialApoyo.map((material, index) => (
-                  <tr key={index}>
-                    <td className="border px-4 py-2">
-                      <select
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        name="ÍtemName"
-                        required
-                        {...register(`support_material[${index}].name`)}
-                      >
-                        <option value="">Selecciona un ítem</option>
-                        {allMaterial.map((option, optionIndex) => (
-                          <option key={optionIndex} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Precio por Unidad"
-                        {...register(`support_material[${index}].quantity`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Precio por Unidad"
-                        {...register(`support_material[${index}].item_number`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `support_material[${index}].item_number`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`support_material[${index}].supplier`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Unidad de Medida"
-                        {...register(`support_material[${index}].unit`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(`support_material[${index}].unit_price`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `support_material[${index}].unit_price`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="observations"
-                        placeholder="Observaciones"
-                        {...register(`support_material[${index}].observations`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <button
-                        type="button"
-                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                        onClick={() => handleRemoveMaterial(index)}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button
-            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddMateril}
-            type="button"
-            style={{ margin: "10px 20px" }}
-          >
-            Agregar fila
-          </button>
-          
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-            <h3 className="text-2xl  mb-4">2.3 Alimentación</h3>
-            <table className="table-auto">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2">
-                    <Label>Ítem</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Cantidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Unidad de Medida</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Precio por Unidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Observaciones</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Acción</Label>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {foodServices.map((food, index) => (
-                  <tr key={index}>
-                    <td className="border px-4 py-2">
-                      <select
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        name="ÍtemName"
-                        {...register(`food_services[${index}].name`)}
-                      >
-                        <option value="">Selecciona un ítem</option>
-                        {allFood.map((option, optionIndex) => (
-                          <option key={optionIndex} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(`food_services[${index}].quantity`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(`food_services[${index}].item_number`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `food_services[${index}].item_number`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`food_services[${index}].supplier`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Unidad de Medida"
-                        {...register(`food_services[${index}].unit`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(`food_services[${index}].unit_price`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(`food_services[${index}].unit_price`, value);
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="observations"
-                        placeholder="Observaciones"
-                        {...register(`food_services[${index}].observations`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <button
-                        type="button"
-                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                        onClick={() => handleRemoveFood(index)}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button
-            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddFood}
-            type="button"
-            style={{ margin: "10px 20px" }}
-          >
-            Agregar fila
-          </button>
-          <div className="mb-4">
-           
+          {/* Componente para Mobiliario y Servicios */}
+          <MobiliarioServicio
+            furnitureFields={furnitureFields}
+            allMobiliario={allMobiliario} // Asegúrate de definir 'allMobiliario' adecuadamente
+            appendFurniture={appendFurniture}
+            removeFurniture={removeFurniture}
+            control={control}
+            register={register}
+            setValue={setValue}
+          />
+
+          {/* Componente para Mobiliario y Servicios Otros 
+          <MobiliarioServicioOtros
+            furnitureFieldsOthers={furnitureFieldsOthers}
+            appendFurnitureOthers={appendFurnitureOthers}
+            removeFurnitureOthers={removeFurnitureOthers}
+            control={control}
+            register={register}
+            setValue={setValue}
+          />*/}
+          {/* 2.2 Material de apoyo */}
+          <MaterialApoyo
+            materialFields={materialFields}
+            allMaterial={allMaterial}
+            appendMaterial={appendMaterial}
+            removeMaterial={removeMaterial}
+            control={control}
+            register={register}
+            setValue={setValue}
+          />
+          {/*<MaterialApoyoOtros
+            materialFieldsOthers={materialFieldsOthers}
+            appendMaterialOthers={appendMaterialOthers}
+            removeMaterialOthers={removeMaterialOthers}
+            control={control}
+            register={register}
+            setValue={setValue}
+          />*/}
+
+          {/* 2.3 Alimentación */}
+          <Alimentacion
+            foodFields={foodFields}
+            allFood={allFood}
+            appendFood={appendFood}
+            removeFood={removeFood}
+            control={control}
+            register={register}
+            setValue={setValue}
+          />
+          {/*} <AlimentacionOtros
+            foodFieldsOthers={foodFieldsOthers}
+            appendFoodOthers={appendFoodOthers}
+            removeFoodOthers={removeFoodOthers}
+            control={control}
+            register={register}
+            setValue={setValue}
+          />*/}
+          {/*Disertane*/}
+          <div className="mb-4 p-4 border bg-white rounded-lg shadow-md">
+            <h3 className="text-2xl mb-4">3.3 Disertantes</h3>
+
             {disertantes.map((disertante, index) => (
               <div
                 key={index}
                 className="mb-4 p-4 border bg-white rounded-lg shadow-md"
               >
-                 <h3 className="text-2xl mb-4">2.4 Disertantes</h3>
                 <div className="mb-4">
                   <Label className="block text-gray-700 text-sm mb-2">
                     Nombre del disertante
@@ -1057,7 +609,7 @@ function Logistic() {
                 </div>
                 <div className="mt-4 flex justify-end">
                   <button
-                    className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-univalleColorOne hover:bg-univalleColorTwo text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                     onClick={() => handleRemoveDisertante(index)}
                     type="button"
                   >
@@ -1069,158 +621,23 @@ function Logistic() {
           </div>
 
           <button
-            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-univalleColorOne  hover:bg-univalleColorTwo  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAddDisertante}
             type="button"
             style={{ margin: "10px 20px" }}
           >
             Agregar Disertante
           </button>
-         
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-             <h3 className="text-2xl  mb-4">2.5 Transporte</h3>
-            <table className="table-auto">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2">
-                    <Label>Ítem</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Cantidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Unidad de Medida</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Precio por Unidad</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Observaciones</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Acción</Label>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {mueblesServicios.map((mueble, index) => (
-                  <tr key={index}>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        name="ÍtemName"
-                        {...register(`transport_services[${index}].name`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(`transport_services[${index}].quantity`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(
-                          `transport_services[${index}].item_number`
-                        )}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `transport_services[${index}].item_number`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`transport_services[${index}].supplier`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Unidad de Medida"
-                        {...register(`transport_services[${index}].unit`)}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(`transport_services[${index}].unit_price`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `transport_services[${index}].unit_price`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="observations"
-                        placeholder="Observaciones"
-                        {...register(
-                          `transport_services[${index}].observations`
-                        )}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <button
-                        type="button"
-                        className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-                        onClick={() => handleRemoveTransport(index)}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button
-            className="bg-univalleColorOne  hover:bg-univalleColorOne  text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddTransport}
-            type="button"
-            style={{ margin: "10px 20px" }}
-          >
-            Agregar fila
-          </button>
-          <br></br>
-          <br></br>
 
+          {/* 2.4 Transporte */}
+          <Transporte
+            transportFields={transportFields}
+            appendTransport={appendTransport}
+            removeTransport={removeTransport}
+            control={control}
+            register={register}
+            setValue={setValue}
+          />
           {successMessage && (
             <div
               style={{
