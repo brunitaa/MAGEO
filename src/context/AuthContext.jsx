@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
       console.log(res.data);
 
-      // Set the token cookie with appropriate attributes for production
+      // Set the token cookie with an expiration date
       const cookies = Cookies.set("token", Cookies.get("token"), {
         expires: 7,
         secure: true,

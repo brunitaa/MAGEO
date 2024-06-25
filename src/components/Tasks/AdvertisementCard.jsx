@@ -3,6 +3,19 @@ import { useAdvertisingRequest } from "../../context/AdvertisementContext";
 import { useAuth } from "../../context/AuthContext";
 import { Button, ButtonLink, Card } from "../ui";
 
+function translateState(state) {
+  switch (state) {
+    case "Pending":
+      return "Pendiente";
+    case "Accept":
+      return "Aceptado";
+    case "Reject":
+      return "Rechazado";
+    default:
+      return state;
+  }
+}
+
 export function AdvertisementCard({ advertisement }) {
   const { deleteAdvertisement } = useAdvertisingRequest();
   const { isAdmin } = useAuth();
@@ -12,7 +25,7 @@ export function AdvertisementCard({ advertisement }) {
       await deleteAdvertisement(advertisement._id);
       window.location.reload(); // Recargar la página después de eliminar (considera una mejor solución para evitar recargar toda la página)
     } catch (error) {
-      console.log("Error deleting advertisement:", error);
+      console.log("Error eliminando anuncio:", error);
     }
   };
 
@@ -28,7 +41,8 @@ export function AdvertisementCard({ advertisement }) {
       </p>
       <div className="flex flex-col gap-2">
         <p className="text-sm text-gray-600">
-          <span className="font-semibold">Estado:</span> {advertisement.state}
+          <span className="font-semibold">Estado:</span>{" "}
+          {translateState(advertisement.state)}
         </p>
         <p className="text-sm text-gray-600">
           <span className="font-semibold">Observaciones:</span>{" "}
@@ -44,14 +58,14 @@ export function AdvertisementCard({ advertisement }) {
         </Button>
         {isAdmin ? (
           <ButtonLink
-            to={`/admin/advertisement/${advertisement._id}`}
+            to={`/admin/anuncio/${advertisement._id}`}
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded focus:outline-none focus:shadow-outline"
           >
             Ver
           </ButtonLink>
         ) : (
           <ButtonLink
-            to={`/user/advertisement/${advertisement._id}`}
+            to={`/usuario/anuncio/${advertisement._id}`}
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded focus:outline-none focus:shadow-outline"
           >
             Editar

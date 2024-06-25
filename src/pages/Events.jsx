@@ -22,6 +22,8 @@ function EventForm() {
     handleSubmit,
     formState: { errors },
     control,
+    reset,
+    watch,
   } = useForm();
 
   const { fields, append, remove } = useFieldArray({
@@ -84,8 +86,11 @@ function EventForm() {
           event.attendance_control ? "true" : "false"
         );
 
-        // Formatea y asigna los valores de los horarios (schedules)
-        if (event.schedules && Array.isArray(event.schedules)) {
+        // Si hay horarios existentes, mostrar automáticamente la sección de horarios
+        if (event.schedules && event.schedules.length > 0) {
+          setValue("showSchedules", true); // Suponiendo que tienes un campo para manejar la visibilidad de los horarios
+
+          // Llenar los datos de los horarios
           event.schedules.forEach((schedule, index) => {
             setValue(`schedules[${index}].place`, schedule.place);
             setValue(
@@ -105,7 +110,7 @@ function EventForm() {
               schedule.links_to_visual_material
             );
             setValue(`schedules[${index}].event_type`, schedule.event_type);
-            setValue(`schedules[${index}].spectators`, schedule.spectators); // Ajusta según cómo manejas los espectadores
+            setValue(`schedules[${index}].spectators`, schedule.spectators); // Ajustar según cómo manejas los espectadores
             setValue(`schedules[${index}].coordination`, schedule.coordination);
             setValue(`schedules[${index}].scope`, schedule.scope);
             setValue(`schedules[${index}].description`, schedule.description);

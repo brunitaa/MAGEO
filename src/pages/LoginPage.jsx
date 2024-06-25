@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button2 } from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, Message, Button, Input, Label } from "../components/ui";
 import { loginSchema } from "../schemas/auth";
@@ -11,20 +10,42 @@ import { motion } from "framer-motion";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState(null);
+  const { signin, errors: loginErrors, isAuthenticated, isAdmin } = useAuth();
+  const [errorMessage, setErrorMessage] = useState(null); // Estado para almacenar el mensaje de error
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
-  const { signin, errors: loginErrors, isAuthenticated, isAdmin } = useAuth();
-  const onSubmit = (data) => signin(data);
+
+  const onSubmit = async (data) => {
+    try {
+      await signin(data);
+      // Limpiar los errores y resetear el formulario si el inicio de sesión es exitoso
+      setErrorMessage(null);
+      reset();
+    } catch (error) {
+      console.error("Login error:", error);
+      let message =
+        "Error al intentar iniciar sesión. Por favor, inténtelo de nuevo.";
+      if (error.response && error.response.data && error.response.data.error) {
+        const { error: backendError } = error.response.data;
+        if (backendError === "Incorrect password") {
+          message = "Contraseña incorrecta. Por favor, inténtelo de nuevo.";
+        } else if (backendError === "User not found") {
+          message =
+            "El email proporcionado no está registrado. Por favor, verifique e inténtelo de nuevo.";
+        } else {
+          message = backendError; // Otro tipo de errores que puedan venir del backend
+        }
+      }
+      setErrorMessage(message);
+    }
+  };
 
   useEffect(() => {
     console.log("isAuthenticated:", isAuthenticated);
@@ -55,6 +76,7 @@ const LoginPage = () => {
       >
         <div className="p-6 space-y-4 md:space-y-6 sm:p-4 h-full">
           <h1 className="text-white text-3xl font-bold mb-4">Inicie Sesión</h1>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label className="text-white" htmlFor="email">
@@ -67,7 +89,7 @@ const LoginPage = () => {
                 placeholder="youremail@domain.tld"
                 {...register("email", { required: true })}
               />
-              <p>{errors.email?.message}</p>
+              <p className="text-red-500">{errors.email?.message}</p>
             </div>
             <div>
               <label className="text-white" htmlFor="password">
@@ -79,7 +101,7 @@ const LoginPage = () => {
                 placeholder="Write your password"
                 {...register("password", { required: true, minLength: 6 })}
               />
-              <p>{errors.password?.message}</p>
+              <p className="text-red-500">{errors.password?.message}</p>
             </div>
             <Button2
               type="submit"
@@ -93,4 +115,5 @@ const LoginPage = () => {
     </motion.section>
   );
 };
+
 export default LoginPage;

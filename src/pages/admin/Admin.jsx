@@ -249,7 +249,7 @@ export function AdminHomePage() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -264,6 +264,7 @@ export function AdminHomePage() {
                 Últimos Protocolos
               </motion.h2>
               <motion.div
+                className="space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
@@ -283,6 +284,7 @@ export function AdminHomePage() {
                 Última Logística
               </motion.h2>
               <motion.div
+                className="space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
