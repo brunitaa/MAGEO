@@ -62,7 +62,6 @@ const AdvertisingPiece = () => {
 
   useEffect(() => {
     getSpectators();
-    getMyEvents();
     const loadEvent = async () => {
       if (params.id) {
         const advertisement = await getAdvertisement(params.id);

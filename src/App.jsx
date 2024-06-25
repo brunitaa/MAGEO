@@ -25,6 +25,7 @@ import { Formularios } from "./pages/admin/Formularios";
 import PriceList from "./pages/PriceList";
 import ProfilePage from "./pages/Profile";
 import { UserProvider } from "./context/UserContext";
+import Footer from "./components/Footer";
 
 function App() {
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);

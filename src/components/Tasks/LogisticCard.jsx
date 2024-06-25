@@ -1,6 +1,6 @@
 import { useAuth } from "../../context/AuthContext";
 import { useLogisticRequest } from "../../context/LogisticContext";
-import { Button, ButtonLink, Card } from "../ui";
+import { Button, ButtonLink, Card, ButtonDelete } from "../ui";
 
 export function LogisticCard({ logistic }) {
   const { deleteLogistic } = useLogisticRequest();
@@ -33,14 +33,14 @@ export function LogisticCard({ logistic }) {
         <h2 className="text-xl font-bold">{logistic.event_id.event_name}</h2>
       </header>
       <p className="text-slate-600">Estado: {translateState(logistic.state)}</p>
-      <p className="text-slate-600">Observaciones: {logistic.observations}</p>
+
       <br />
       <div className="flex gap-x-2 items-center">
-        <Button onClick={handleDelete}>Delete</Button>
+        <ButtonDelete onClick={handleDelete}>Delete</ButtonDelete>
         {isAdmin ? (
-          <ButtonLink to={`/admin/logistic/${logistic._id}`}>View</ButtonLink>
+          <ButtonLink to={`/admin/logistic/${logistic._id}`}>Ver</ButtonLink>
         ) : (
-          <ButtonLink to={`/user/logistic/${logistic._id}`}>Edit</ButtonLink>
+          <ButtonLink to={`/user/logistic/${logistic._id}`}>Editar</ButtonLink>
         )}
       </div>
     </Card>

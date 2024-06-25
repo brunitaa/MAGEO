@@ -27,6 +27,7 @@ const ProfilePage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [editing, setEditing] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
 
   useEffect(() => {
     fetchUserInformation(); // Load user information on component mount
@@ -67,6 +68,7 @@ const ProfilePage = () => {
       });
       setSuccessMessage("Contraseña cambiada exitosamente");
       setTimeout(() => setSuccessMessage(""), 3000);
+      setShowPasswordForm(false); // Hide password form after successful update
     } catch (error) {
       console.error("Error changing password:", error);
       setErrorMessage(error.message || "Error changing password");
@@ -247,20 +249,30 @@ const ProfilePage = () => {
               </div>
             </div>
             {!editing && (
-              <Button type="button" onClick={handleEditClick}>
+              <Button type="button" onClick={handleEditClick} className="mr-2">
                 Editar
               </Button>
             )}
             {editing && (
-              <div className="flex">
-                <Button type="submit">Guardar</Button>
+              <div className="flex mb-4">
+                <Button type="submit" className="mr-2">
+                  Guardar
+                </Button>
                 <Button
                   type="button"
-                  className="ml-2"
                   onClick={() => setEditing(false)}
+                  className="mr-2"
                 >
                   Cancelar
                 </Button>
+                {!showPasswordForm && (
+                  <Button
+                    onClick={() => setShowPasswordForm(true)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+                  >
+                    Cambiar Contraseña
+                  </Button>
+                )}
               </div>
             )}
             {successMessage && (
@@ -276,53 +288,65 @@ const ProfilePage = () => {
           </form>
 
           {/* Formulario para cambiar contraseña */}
-          <form onSubmit={handleSubmit(handlePasswordChangeSubmit)}>
-            <div className="bg-white p-4 mt-4 border-t-8 border-red-500 rounded-lg">
-              <h1 className="text-3xl mb-2">Cambiar Contraseña</h1>
-              <div className="mb-2 p-4 border bg-white rounded-lg">
-                <Label>
-                  Nueva Contraseña:
-                  <Input
-                    type="password"
-                    {...register("new_password", {
-                      required: "Este campo es requerido",
-                      minLength: {
-                        value: 6,
-                        message:
-                          "La contraseña debe tener al menos 6 caracteres",
-                      },
-                    })}
-                    className="border p-2 rounded-md w-full"
-                  />
-                  {errors.new_password && (
-                    <span className="text-red-500">
-                      {errors.new_password.message}
-                    </span>
-                  )}
-                </Label>
+          {showPasswordForm && (
+            <form onSubmit={handleSubmit(handlePasswordChangeSubmit)}>
+              <div className="bg-white p-4 mt-4 border-t-8 border-red-500 rounded-lg">
+                <h1 className="text-3xl mb-2">Cambiar Contraseña</h1>
+                <div className="mb-2 p-4 border bg-white rounded-lg">
+                  <Label>
+                    Nueva Contraseña:
+                    <Input
+                      type="password"
+                      {...register("new_password", {
+                        minLength: {
+                          value: 6,
+                          message:
+                            "La contraseña debe tener al menos 6 caracteres",
+                        },
+                      })}
+                      className="border p-2 rounded-md w-full"
+                    />
+                    {errors.new_password && (
+                      <span className="text-red-500">
+                        {errors.new_password.message}
+                      </span>
+                    )}
+                  </Label>
+                </div>
+                <div className="mb-2 p-4 border bg-white rounded-lg">
+                  <Label>
+                    Confirmar Nueva Contraseña:
+                    <Input
+                      type="password"
+                      {...register("confirm_password", {
+                        validate: (value) =>
+                          value === watch("new_password") ||
+                          "Las contraseñas no coinciden",
+                      })}
+                      className="border p-2 rounded-md w-full"
+                    />
+                    {errors.confirm_password && (
+                      <span className="text-red-500">
+                        {errors.confirm_password.message}
+                      </span>
+                    )}
+                  </Label>
+                </div>
+                <div className="flex">
+                  <Button type="submit" className="mr-2">
+                    Guardar Contraseña
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setShowPasswordForm(false)}
+                    className="mr-2"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
               </div>
-              <div className="mb-2 p-4 border bg-white rounded-lg">
-                <Label>
-                  Confirmar Nueva Contraseña:
-                  <Input
-                    type="password"
-                    {...register("confirm_password", {
-                      validate: (value) =>
-                        value === watch("new_password") ||
-                        "Las contraseñas no coinciden",
-                    })}
-                    className="border p-2 rounded-md w-full"
-                  />
-                  {errors.confirm_password && (
-                    <span className="text-red-500">
-                      {errors.confirm_password.message}
-                    </span>
-                  )}
-                </Label>
-              </div>
-              <Button type="submit">Guardar Contraseña</Button>
-            </div>
-          </form>
+            </form>
+          )}
         </div>
       </div>
     </div>

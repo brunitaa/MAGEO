@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, Message, Button, Input, Label } from "../components/ui";
 import { loginSchema } from "../schemas/auth";
 import { motion } from "framer-motion";
+import Footer from "../components/Footer";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -62,57 +63,67 @@ const LoginPage = () => {
   }, [isAuthenticated, isAdmin]);
 
   return (
-    <motion.section
-      className="bg-univalleColorOne h-screen w-screen flex justify-center items-center"
+    <motion.div
+      className="flex flex-col min-h-screen bg-univalleColorOne"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.div
-        className="w-80 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-univalleColorOne dark:border-red-900"
-        initial={{ opacity: 0, y: 20 }}
+      <motion.section
+        className="flex flex-grow justify-center items-center"
+        initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        transition={{ duration: 0.5 }}
       >
-        <div className="p-6 space-y-4 md:space-y-6 sm:p-4 h-full">
-          <h1 className="text-white text-3xl font-bold mb-4">Inicie Sesión</h1>
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-            <div>
-              <label className="text-white" htmlFor="email">
-                Email
-              </label>
-              <Input
-                label="Write your email"
-                type="email"
-                name="email"
-                placeholder="youremail@domain.tld"
-                {...register("email", { required: true })}
-              />
-              <p className="text-red-500">{errors.email?.message}</p>
-            </div>
-            <div>
-              <label className="text-white" htmlFor="password">
-                Contraseña
-              </label>
-              <Input
-                type="password"
-                name="password"
-                placeholder="Write your password"
-                {...register("password", { required: true, minLength: 6 })}
-              />
-              <p className="text-red-500">{errors.password?.message}</p>
-            </div>
-            <Button2
-              type="submit"
-              className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center text-white dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            >
-              Iniciar Sesión
-            </Button2>
-          </form>
-        </div>
-      </motion.div>
-    </motion.section>
+        <motion.div
+          className="w-80 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-univalleColorOne dark:border-red-900"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-4 h-full">
+            <h1 className="text-white text-3xl font-bold mb-4">
+              Inicie Sesión
+            </h1>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+              <div>
+                <label className="text-white" htmlFor="email">
+                  Email
+                </label>
+                <Input
+                  label="Escribe tu Email"
+                  type="email"
+                  name="email"
+                  placeholder="email@dominio.tld"
+                  {...register("email", { required: true })}
+                />
+                <p className="text-white-500">{errors.email?.message}</p>
+              </div>
+              <div>
+                <label className="text-white" htmlFor="password">
+                  Contraseña
+                </label>
+                <Input
+                  type="password"
+                  name="password"
+                  placeholder="Escribe tu contraseña"
+                  {...register("password", { required: true, minLength: 6 })}
+                />
+                <p className="text-white-500">{errors.password?.message}</p>
+              </div>
+              <Button2
+                type="submit"
+                className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center text-white dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Iniciar Sesión
+              </Button2>
+            </form>
+          </div>
+        </motion.div>
+      </motion.section>
+      <Footer />
+    </motion.div>
   );
 };
 

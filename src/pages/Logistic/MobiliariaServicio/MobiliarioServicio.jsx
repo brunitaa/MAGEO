@@ -73,8 +73,9 @@ function MobiliarioServicio({
                       <Input
                         {...field}
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
+                        type="number"
                         required
+                        max="100"
                         placeholder="Cantidad"
                         onChange={(e) =>
                           setValue(
@@ -109,7 +110,7 @@ function MobiliarioServicio({
                       <Input
                         {...field}
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
+                        type="number"
                         required
                         placeholder="Precio por Unidad"
                         onChange={(e) =>

@@ -5,3 +5,4 @@ export { Input } from "./Input";
 export { Message } from "./Message";
 export { Label } from "./Label";
 export { Modal } from "./Modal";
+export { ButtonDelete } from "./ButtonDelete";

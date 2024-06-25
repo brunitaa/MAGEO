@@ -128,12 +128,6 @@ export function EventCard({ event, onDelete }) {
         </p>
 
         <div className="flex justify-end space-x-4 mt-4">
-          <Button
-            className="bg-univalleColorOne hover:bg-univalleColorOne text-white"
-            onClick={handleDelete}
-          >
-            Eliminar
-          </Button>
           {isAdmin && (
             <ButtonLink to={`/admin/event/${event._id}`} className="...">
               Ver

@@ -461,6 +461,13 @@ function LogisticAdmin() {
         }`}
       >
         <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
+          <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
+            <h1 className="text-3xl mb-2">Formulario de Logística</h1>
+            <p className="text-gray-600">
+              Por favor, completa la siguiente información para crear o editar
+              la Logística del evento.
+            </p>
+          </div>
           <div
             className={`mb-2 p-4 border bg-white ${
               focusedInput === "title"
@@ -468,13 +475,6 @@ function LogisticAdmin() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
-              <h1 className="text-3xl mb-2">Formulario de Logística</h1>
-              <p className="text-gray-600">
-                Por favor, completa la siguiente información para crear o editar
-                la Logística del evento.
-              </p>
-            </div>
             <h3 className="text-2xl  mb-4">2.1 Mobiliario y Servicios</h3>
             <table className="table-auto">
               <thead>
@@ -485,12 +485,7 @@ function LogisticAdmin() {
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
                   </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
-                  </th>
+
                   <th className="px-4 py-2">
                     <Label>Unidad de Medida</Label>
                   </th>
@@ -538,33 +533,7 @@ function LogisticAdmin() {
                         }}
                       />
                     </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(
-                          `furniture_services[${index}].item_number`
-                        )}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `furniture_services[${index}].item_number`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`furniture_services[${index}].supplier`)}
-                      />
-                    </td>
+
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -641,12 +610,7 @@ function LogisticAdmin() {
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
                   </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
-                  </th>
+
                   <th className="px-4 py-2">
                     <Label>Unidad de Medida</Label>
                   </th>
@@ -687,31 +651,7 @@ function LogisticAdmin() {
                         {...register(`support_material[${index}].quantity`)}
                       />
                     </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(`support_material[${index}].item_number`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `support_material[${index}].item_number`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`support_material[${index}].supplier`)}
-                      />
-                    </td>
+
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -786,12 +726,7 @@ function LogisticAdmin() {
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
                   </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
-                  </th>
+
                   <th className="px-4 py-2">
                     <Label>Unidad de Medida</Label>
                   </th>
@@ -832,31 +767,7 @@ function LogisticAdmin() {
                         {...register(`food_services[${index}].quantity`)}
                       />
                     </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(`food_services[${index}].item_number`)}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `food_services[${index}].item_number`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`food_services[${index}].supplier`)}
-                      />
-                    </td>
+
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -1229,12 +1140,7 @@ function LogisticAdmin() {
                   <th className="px-4 py-2">
                     <Label>Cantidad</Label>
                   </th>
-                  <th className="px-4 py-2">
-                    <Label>Numero de Item</Label>
-                  </th>
-                  <th className="px-4 py-2">
-                    <Label>Proveedor</Label>
-                  </th>
+
                   <th className="px-4 py-2">
                     <Label>Unidad de Medida</Label>
                   </th>
@@ -1268,33 +1174,7 @@ function LogisticAdmin() {
                         {...register(`transport_services[${index}].quantity`)}
                       />
                     </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="unit_price"
-                        placeholder="Precio por Unidad"
-                        {...register(
-                          `transport_services[${index}].item_number`
-                        )}
-                        onChange={(e) => {
-                          const value = parseFloat(e.target.value);
-                          setValue(
-                            `transport_services[${index}].item_number`,
-                            value
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Input
-                        className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        required
-                        placeholder="Proveedor"
-                        {...register(`transport_services[${index}].supplier`)}
-                      />
-                    </td>
+
                     <td className="border px-4 py-2">
                       <Input
                         className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -1353,61 +1233,36 @@ function LogisticAdmin() {
           >
             Agregar fila
           </button>
-
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-            <Label
-              className="block text-gray-700 text-sm  mb-2"
-              htmlFor="event_name"
+          <div className="flex flex-wrap gap-4">
+            {/* Botón Aceptar */}
+            <button
+              type="button"
+              onClick={() => onAccept()}
+              className="bg-univalleColorOne hover:bg-univalleColorTwo text-white py-2 px-4 rounded"
             >
-              Estado
-            </Label>
-            <Input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline"
-              name="state"
-              type="text"
-              placeholder="aqui estara el estado"
-              autoFocus
-              {...register(`state`)}
-            />
+              Aceptar
+            </button>
+
+            {/* Botón Denegar */}
+            <button
+              type="button"
+              onClick={() => onReject()}
+              className="bg-univalleColorOne hover:bg-univalleColorTwo text-white py-2 px-4 rounded"
+            >
+              Denegar
+            </button>
+
+            {/* Mensaje de éxito */}
+
+            {/* Botón Enviar */}
+            <button
+              type="submit"
+              className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded"
+            >
+              Enviar
+            </button>
           </div>
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-            <Label className="block text-gray-700 text-sm  mb-2">
-              Observaciones
-            </Label>
-            <Input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="links_to_visual_material"
-              type="text"
-              placeholder={"observations"}
-              {...register(`observations`)}
-            />
-          </div>
-          <button
-            type="button"
-            onClick={() => onAccept()}
-            className="bg-univalleColorOne hover:bg-univalleColorTwo text-white  py-2 px-4 rounded"
-          >
-            Aceptar
-          </button>
-          <button
-            type="button"
-            onClick={() => onReject()}
-            className="bg-univalleColorOne hover:bg-univalleColorTwo text-white  py-2 px-4 rounded"
-          >
-            Denegar
-          </button>
+          <div className="divider"></div>
           {successMessage && (
             <div
               style={{
@@ -1415,17 +1270,12 @@ function LogisticAdmin() {
                 color: "white",
                 padding: "10px",
                 marginBottom: "10px",
+                borderRadius: "4px",
               }}
             >
               {successMessage}
             </div>
           )}
-          <button
-            type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white  py-2 px-4 rounded"
-          >
-            Enviar
-          </button>
         </form>
       </div>
     </div>

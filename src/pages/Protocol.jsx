@@ -192,14 +192,19 @@ function Protocol() {
         const firstEvent = protocol.event_id ? protocol.event_id._id : "";
         setValue("event_id", firstEvent);
         // Asignar valores del maestro de ceremonias
-        if (protocol.master_of_ceremonies) {
-          const { first_name, last_name, email, phone, status } =
-            protocol.master_of_ceremonies;
-          setValue("master_of_ceremonies.first_name", first_name);
-          setValue("master_of_ceremonies.last_name", last_name);
-          setValue("master_of_ceremonies.email", email);
-          setValue("master_of_ceremonies.phone", phone);
-          setValue("master_of_ceremonies.status", status);
+        const { master_of_ceremonies } = protocol;
+        if (master_of_ceremonies) {
+          setValue(
+            "master_of_ceremonies.first_name",
+            master_of_ceremonies.first_name
+          );
+          setValue(
+            "master_of_ceremonies.last_name",
+            master_of_ceremonies.last_name
+          );
+          setValue("master_of_ceremonies.email", master_of_ceremonies.email);
+          setValue("master_of_ceremonies.phone", master_of_ceremonies.phone);
+          setValue("master_of_ceremonies.status", master_of_ceremonies.status);
         }
         // Asignar valores de cierre, inauguración y requisitos de servicio si existen
         if (protocol.closing_data && Array.isArray(protocol.closing_data)) {
@@ -465,7 +470,7 @@ function Protocol() {
                             {...field}
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="number"
-                            max="1000"
+                            max="100"
                             required
                             placeholder="Cantidad"
                           />
@@ -497,6 +502,7 @@ function Protocol() {
                             {...field}
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="number"
+                            max="100"
                             required
                             placeholder="Precio por Unidad"
                           />
@@ -643,7 +649,7 @@ function Protocol() {
             } rounded-lg`}
           >
             <h3 className="text-2xl mb-4">
-              3.4 Participantes en la Inauguración
+              3.3 Participantes en la Inauguración
             </h3>
             <table className="table-auto">
               <thead>
@@ -803,7 +809,7 @@ function Protocol() {
                 : "border-gray-300"
             } rounded-lg`}
           >
-            <h3 className="text-2xl mb-4">3.5 Participantes en la Clausura</h3>
+            <h3 className="text-2xl mb-4">3.4 Participantes en la Clausura</h3>
             <table className="table-auto">
               <thead>
                 <tr>

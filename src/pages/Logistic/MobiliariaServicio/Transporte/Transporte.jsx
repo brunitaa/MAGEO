@@ -31,7 +31,7 @@ function Transporte({
             : "border-gray-300"
         } rounded-lg`}
       >
-        <h3 className="text-2xl mb-4">2.4 Transporte</h3>
+        <h3 className="text-2xl mb-4">2.5 Transporte</h3>
         <table className="table-auto">
           <thead>
             <tr>

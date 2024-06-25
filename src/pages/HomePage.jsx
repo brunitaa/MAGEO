@@ -35,36 +35,6 @@ function HomePage() {
             Comenzar
           </Link>
         </header>
-
-        <footer className="mt-8 p-4 bg-univalleColorTwo text-white text-center">
-          <h2 className="text-2xl py-2 font-bold">Más Información</h2>
-          <div className="flex justify-center space-x-4">
-            <a
-              href="https://github.com/brunitaa/MAGEO"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gray-800 text-white px-6 py-3 rounded-md inline-block hover:bg-gray-600 transition-colors duration-300"
-            >
-              Repositorio Frontend
-            </a>
-            <a
-              href="https://github.com/iamcarlosdaniel/MAGEO"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gray-800 text-white px-6 py-3 rounded-md inline-block hover:bg-gray-600 transition-colors duration-300"
-            >
-              Repositorio Backend
-            </a>
-            <a
-              href="https://youtu.be/mURb_t4A9dA?si=XtmGUYt9Ie44iYsH"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gray-800 text-white px-6 py-3 rounded-md inline-block hover:bg-gray-600 transition-colors duration-300"
-            >
-              YouTube
-            </a>
-          </div>
-        </footer>
       </motion.div>
     </motion.section>
   );

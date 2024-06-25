@@ -308,6 +308,36 @@ function ProtocolAdmin() {
         }`}
       >
         <form style={{ margin: "10px 20px" }} onSubmit={handleSubmit(onSubmit)}>
+          <div
+            className={`mb-2 p-4 border bg-white ${
+              focusedInput === "event" ? "border-red-500" : "border-gray-300"
+            } rounded-lg`}
+          >
+            <div className="bg-white p-4 mb-4 border-t-8 border-univalleColorOne rounded-lg">
+              <h1 className="text-3xl mb-2">Formulario de Protocolo</h1>
+              <p className="text-gray-600">
+                Por favor, completa la siguiente información acerca del
+                protocolo de tu evento.
+              </p>
+            </div>
+            <Label>
+              Evento seleccionado:
+              <input
+                className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                  focusedInput === "event"
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
+                type="text"
+                {...register(`event_id`)}
+                readOnly
+                onFocus={() => handleFocus("event_id")}
+              />
+              {errors.event_id && (
+                <span className="text-red-500">Este campo es requerido</span>
+              )}
+            </Label>
+          </div>
           <h3 className="text-2xl  mb-4">3.1 Requerimientos y Servicios</h3>
           <div
             className={`mb-2 p-4 border bg-white ${
@@ -803,24 +833,7 @@ function ProtocolAdmin() {
               </tbody>
             </table>
           </div>
-          <div
-            className={`mb-2 p-4 border bg-white ${
-              focusedInput === "title"
-                ? "border-univalleColorOne"
-                : "border-gray-300"
-            } rounded-lg`}
-          >
-            <Label className="block text-gray-700 text-sm  mb-2">
-              Observaciones
-            </Label>
-            <Input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="links_to_visual_material"
-              type="text"
-              placeholder={"observations"}
-              {...register(`observations`)}
-            />
-          </div>
+
           <button
             type="button"
             onClick={() => onAccept()}

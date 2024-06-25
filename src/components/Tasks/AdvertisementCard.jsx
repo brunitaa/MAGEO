@@ -1,7 +1,7 @@
 import React from "react";
 import { useAdvertisingRequest } from "../../context/AdvertisementContext";
 import { useAuth } from "../../context/AuthContext";
-import { Button, ButtonLink, Card } from "../ui";
+import { Button, ButtonDelete, ButtonLink, Card } from "../ui";
 
 function translateState(state) {
   switch (state) {
@@ -50,27 +50,25 @@ export function AdvertisementCard({ advertisement }) {
         </p>
       </div>
       <div className="mt-4 flex justify-between items-center">
-        <Button
-          onClick={handleDelete}
-          className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded focus:outline-none focus:shadow-outline"
-        >
-          Eliminar
-        </Button>
-        {isAdmin ? (
-          <ButtonLink
-            to={`/admin/anuncio/${advertisement._id}`}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded focus:outline-none focus:shadow-outline"
-          >
-            Ver
-          </ButtonLink>
-        ) : (
-          <ButtonLink
-            to={`/usuario/anuncio/${advertisement._id}`}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded focus:outline-none focus:shadow-outline"
-          >
-            Editar
-          </ButtonLink>
-        )}
+        <div className="ml-2">
+          {" "}
+          {/* Espacio entre los botones */}
+          {isAdmin ? (
+            <ButtonLink
+              to={`/admin/advertisement/${advertisement._id}`}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded focus:outline-none focus:shadow-outline"
+            >
+              Ver
+            </ButtonLink>
+          ) : (
+            <ButtonLink
+              to={`/user/advertisement/${advertisement._id}`}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded focus:outline-none focus:shadow-outline"
+            >
+              Editar
+            </ButtonLink>
+          )}
+        </div>
       </div>
     </Card>
   );

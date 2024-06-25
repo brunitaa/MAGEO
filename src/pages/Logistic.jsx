@@ -462,7 +462,7 @@ function Logistic() {
           />*/}
           {/*Disertane*/}
           <div className="mb-4 p-4 border bg-white rounded-lg shadow-md">
-            <h3 className="text-2xl mb-4">3.3 Disertantes</h3>
+            <h3 className="text-2xl mb-4">2.4 Disertantes</h3>
 
             {disertantes.map((disertante, index) => (
               <div
