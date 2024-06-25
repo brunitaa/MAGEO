@@ -36,43 +36,82 @@ function Sidebar({ sidebarOpen, toggleSidebar }) {
         transition={{ type: "spring", stiffness: 120, damping: 20 }}
       >
         <div className="p-4 flex flex-col justify-between h-full">
-          <div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
-            onClick={handleHomeClick}
+          <motion.div
+            initial={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            animate={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
           >
-            <Icon.HouseFill />
-            {sidebarOpen && (
-              <span className="text-sm ml-3 text-gray-200 font-bold">Home</span>
-            )}
-          </div>
+            <div
+              className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
+              onClick={handleHomeClick}
+            >
+              <Icon.HouseFill />
+              {sidebarOpen && (
+                <span className="text-sm ml-3 text-gray-200 font-bold">
+                  Home
+                </span>
+              )}
+            </div>
+          </motion.div>
 
-          <div className="my-4 bg-gray-600 h-px"></div>
-          <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
-            <Icon.Envelope />
-            {sidebarOpen && (
-              <Link
-                to="/events"
-                className="text-sm ml-3 text-gray-200 font-bold"
-              >
-                Solicitar Evento
-              </Link>
-            )}
-          </div>
-          <div className="my-4 bg-gray-600 h-px"></div>
-          <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
-            <Icon.Calendar2 />
-            {sidebarOpen && (
-              <Link
-                to="/calendar"
-                className="text-sm ml-3 text-gray-200 font-bold"
-              >
-                Calendario
-              </Link>
-            )}
-          </div>
+          <motion.div
+            initial={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            animate={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
+          >
+            <div className="my-4 bg-gray-600 h-px"></div>
+            <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
+              <Icon.Envelope />
+              {sidebarOpen && (
+                <Link
+                  to="/events"
+                  className="text-sm ml-3 text-gray-200 font-bold"
+                >
+                  Solicitar Evento
+                </Link>
+              )}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            animate={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
+          >
+            <div className="my-4 bg-gray-600 h-px"></div>
+            <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
+              <Icon.Calendar2 />
+              {sidebarOpen && (
+                <Link
+                  to="/calendar"
+                  className="text-sm ml-3 text-gray-200 font-bold"
+                >
+                  Calendario
+                </Link>
+              )}
+            </div>
+          </motion.div>
+
           {isAdmin && (
             <>
-              <div className="my-4 bg-gray-600 h-px"></div>
               <motion.div
                 initial={{
                   x: sidebarOpen ? 0 : -300,
@@ -84,6 +123,7 @@ function Sidebar({ sidebarOpen, toggleSidebar }) {
                 }}
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
               >
+                <div className="my-4 bg-gray-600 h-px"></div>
                 <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
                   <Icon.People />
                   {sidebarOpen && (
@@ -96,7 +136,7 @@ function Sidebar({ sidebarOpen, toggleSidebar }) {
                   )}
                 </div>
               </motion.div>
-              <div className="my-4 bg-gray-600 h-px"></div>
+
               <motion.div
                 initial={{
                   x: sidebarOpen ? 0 : -300,
@@ -108,6 +148,7 @@ function Sidebar({ sidebarOpen, toggleSidebar }) {
                 }}
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
               >
+                <div className="my-4 bg-gray-600 h-px"></div>
                 <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
                   <Icon.People />
                   {sidebarOpen && (
@@ -122,18 +163,56 @@ function Sidebar({ sidebarOpen, toggleSidebar }) {
               </motion.div>
             </>
           )}
-          <div className="my-4 bg-gray-600 h-px"></div>
-          <div
-            className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
-            onClick={() => logout()}
+
+          <motion.div
+            initial={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            animate={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
           >
-            <Icon.BoxArrowInRight />
-            {sidebarOpen && (
-              <span className="text-sm ml-3 text-gray-200 font-bold">
-                Cierre Sesión
-              </span>
-            )}
-          </div>
+            <div className="my-4 bg-gray-600 h-px"></div>
+            <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white">
+              <Icon.Person />
+              {sidebarOpen && (
+                <Link
+                  to="/profile"
+                  className="text-sm ml-3 text-gray-200 font-bold"
+                >
+                  Perfil
+                </Link>
+              )}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            animate={{
+              x: sidebarOpen ? 0 : -300,
+              opacity: sidebarOpen ? 1 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
+          >
+            <div className="my-4 bg-gray-600 h-px"></div>
+            <div
+              className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-univalleColorOne text-white"
+              onClick={() => logout()}
+            >
+              <Icon.BoxArrowInRight />
+              {sidebarOpen && (
+                <span className="text-sm ml-3 text-gray-200 font-bold">
+                  Cierre Sesión
+                </span>
+              )}
+            </div>
+          </motion.div>
         </div>
       </motion.div>
     </>
