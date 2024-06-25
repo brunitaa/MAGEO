@@ -697,7 +697,7 @@ function Protocol() {
                           <Input
                             {...field}
                             className="shadow appearance-none border rounded w-full py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            type="text"
+                            type="number"
                             min="0"
                             required
                             placeholder="Teléfono"
